@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "souris-gui-test"
+name = "souris_gui_test"
 version = "0.1.0"
 description = "Test gui for souris app"
 authors = ["MooSee2 <52461645+MooSee2@users.noreply.github.com>"]
