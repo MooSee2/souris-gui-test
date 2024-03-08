@@ -1,10 +1,9 @@
-from dash import html, dash_table, Input, Output, State, callback
-
 import base64
 import datetime
 import io
 
 import pandas as pd
+from dash import Input, Output, State, callback, dash_table, html
 
 
 def parse_contents(contents, filename, date):
@@ -54,3 +53,19 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
             parse_contents(c, n, d)
             for c, n, d in zip(list_of_contents, list_of_names, list_of_dates)
         ]
+
+
+@callback(
+    Output("output-inputs", "children"),
+    Input("calc-button", "n_clicks"),
+    State("city-of-weyburn", "value"),
+    State("the-lake", "value"),
+    State("pumpage", "value"),
+    State("pipe", "value"),
+    prevent_initial_call=True,
+)
+def add_reported_flows(clicks, city_of_weyburn, the_lake, pumpage, pipe):
+    try:
+        return int(city_of_weyburn) + int(the_lake) + int(pumpage) + int(pipe)
+    except TypeError:
+        return 0

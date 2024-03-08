@@ -1,3 +1,5 @@
+from datetime import date
+from datetime import datetime as dt
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 
@@ -25,62 +27,143 @@ navbar = dbc.NavbarSimple(
 
 
 aside = html.Aside(
-    [html.Div(style={"height": "20px", "width": "150px", "background": "blue"}, id="in-aside")]
-)
-
-
-tab1_content = dbc.Card(
-    dbc.CardBody(
-        [
-            dcc.Upload(
-                id="upload-data",
-                children=html.Div(
-                    [
-                        "Drag and Drop or ",
-                        html.A("Select Files"),
+    children=[
+        # html.Div(
+        #     className="config-card",
+        #     children=[
+        #     ],
+        # ),
+        html.Div(
+            className="config-card",
+            children=[
+                html.H4("Settings"),
+                html.Br(),
+                html.H6("Met Station"),
+                dcc.Dropdown(
+                    options=[
+                        {"label": "Gildford", "value": "Gildford"},
+                        {"label": "Eastern Crossing", "value": "MRatEC"},
+                    ],
+                    value="MRatEC",
+                    clearable=False,
+                    # optionHeight=20,
+                ),
+                html.Br(),
+                html.Div(
+                    className="input-container",
+                    children=[
+                        html.H6("Evaporation Start"),
+                        dcc.DatePickerSingle(date=date(int(dt.now().year), 4, 15)),
                     ],
                 ),
-            ),
-            html.Div(
-                id="output-data-upload",
-                children=[],
-            ),
-        ]
-    ),
-    className="mt-3",
-)
-
-tab2_content = dbc.Card(
-    dbc.CardBody(
-        [
-            html.P("This is tab 2!", className="card-text"),
-            html.Div(className="tab2-thing"),
-            html.Div(className="tab2-thing"),
-            html.Div(className="tab2-thing"),
-            html.Div(className="tab2-thing"),
-            html.Div(className="tab2-thing"),
-            html.Div(className="tab2-thing"),
-            html.Div(className="tab2-thing"),
-            html.Div(className="tab2-thing"),
-            html.Div(className="tab2-thing"),
-        ]
-    ),
-    className="mt-3",
-)
-
-
-tabs = dbc.Tabs(
-    [
-        dbc.Tab(tab1_content, label="Input"),
-        dbc.Tab(tab2_content, label="Report"),
-        dbc.Tab(html.P("Meow!"), label="Calculated"),
+                html.Div(
+                    className="input-container",
+                    children=[
+                        html.H6("Evaporation End"),
+                        dcc.DatePickerSingle(date=date(int(dt.now().year), 10, 15)),
+                    ],
+                ),
+            ],
+        ),
+        html.Div(
+            className="reported-flows-card",
+            children=[
+                html.H4("Reported flows"),
+                html.Div(
+                    className="input-container",
+                    children=[
+                        html.H6("City of Weyburn"),
+                        dbc.Input(id="city-of-weyburn", placeholder="Units: DAM3", class_name="reported-flows-input", type="number"),
+                    ],
+                ),
+                html.Div(
+                    className="input-container",
+                    children=[
+                        "The Lake",
+                        dbc.Input(id="the-lake", placeholder="Units: DAM3", class_name="reported-flows-input", type="number"),
+                    ],
+                ),
+                html.Div(
+                    className="input-container",
+                    children=[
+                        "Pumpage",
+                        dbc.Input(id="pumpage", placeholder="Units: DAM3", class_name="reported-flows-input", type="number"),
+                    ],
+                ),
+                html.Div(
+                    className="input-container",
+                    children=[
+                        "Pipe",
+                        dbc.Input(id="pipe", placeholder="Units: DAM3", class_name="reported-flows-input", type="number"),
+                    ],
+                ),
+            ],
+        ),
+        html.Div(
+            className="calculate-card",
+            children=[dbc.Button("Calculate", color="secondary", id="calc-button")],
+        ),
     ],
 )
 
-
 main = html.Main(
     children=[
-        tabs,
+        dbc.Tabs(
+            [
+                dbc.Tab(
+                    id="tabtab",
+                    label="Input",
+                    children=dbc.Card(
+                        className="mt-3",
+                        children=dbc.CardBody(
+                            [
+                                dcc.Upload(
+                                    id="upload-data",
+                                    children=html.Div(
+                                        [
+                                            "Drag and Drop or ",
+                                            html.A("Select Files"),
+                                        ],
+                                    ),
+                                ),
+                                html.Div(
+                                    id="output-data-upload",
+                                    children=[],
+                                ),
+                                html.Div(
+                                    id="output-inputs",
+                                    children=["100"],
+                                ),
+                            ]
+                        ),
+                    ),
+                ),
+                dbc.Tab(
+                    label="Report",
+                    children=dbc.Card(
+                        className="mt-3",
+                        children=dbc.CardBody(
+                            [
+                                html.P("This is tab 2!", className="card-text"),
+                                html.Div(className="tab2-thing"),
+                                html.Div(className="tab2-thing"),
+                                html.Div(className="tab2-thing"),
+                                html.Div(className="tab2-thing"),
+                                html.Div(className="tab2-thing"),
+                                html.Div(className="tab2-thing"),
+                                html.Div(className="tab2-thing"),
+                                html.Div(className="tab2-thing"),
+                                html.Div(className="tab2-thing"),
+                            ]
+                        ),
+                    ),
+                ),
+                dbc.Tab(
+                    label="Calculated",
+                    children=html.P("Meow!"),
+                ),
+            ],
+        ),
     ],
 )
 

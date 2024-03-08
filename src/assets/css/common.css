@@ -14,9 +14,21 @@ body,
 }
 
 aside {
-    width: 200px;
+    margin-top: 20px;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 40px);
     overflow-y: auto;
-    background-color: #f4f4f4;
+    align-items: stretch;
+}
+
+aside > :last-child {
+    order: 1; /* Sends the last child to the end */
+}
+
+aside > :not(:last-child) {
+    order: 0; /* Keeps other children at the top */
 }
 
 main {
@@ -66,6 +78,30 @@ main {
     margin: 10px;
 }
 
-.js-plotly-plot.plotly.cursor-ew-resize {
-    cursor: crosshair;
+.reported-flows {
+    width: 100%;
+    height: 30px;
+    margin: 5px;
 }
+
+.reported-flows-input {
+    font-size: 12px;
+}
+
+.DateInput,
+.DateInput_1,
+.DateInput_input {
+    font-size: 12px;
+    width: 100%;
+    padding: 0px;
+}
+/* 
+.calculate-card {
+    align-self: flex-end;
+} */
+
+/*
+.DateRangePickerInput {
+    display: flex;
+    flex-direction: row;
+} */
