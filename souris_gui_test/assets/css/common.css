@@ -15,28 +15,32 @@ body,
 
 aside {
     margin-top: 20px;
-    padding: 0 1rem;
+    padding: 0 1rem 1rem;
     display: flex;
     flex-direction: column;
     height: calc(100vh - 40px);
     overflow-y: auto;
+    overflow-x: auto;
     align-items: stretch;
+    background-color: rgb(235, 235, 235);
 }
-
+/* 
 aside > :last-child {
-    order: 1; /* Sends the last child to the end */
+    order: 1;
 }
 
 aside > :not(:last-child) {
-    order: 0; /* Keeps other children at the top */
-}
+    order: 0;
+} */
 
 main {
     display: flex;
     flex-direction: column;
     flex: 1;
-    margin: 4px;
-    overflow: auto;
+    height: calc(100vh - 40px);
+    margin-top: 20px;
+    padding: 0 0.5rem;
+    overflow-y: auto;
 }
 
 .nav-tabs {
@@ -77,6 +81,10 @@ main {
     text-align: center;
     margin: 10px;
 }
+/* 
+.reported-flows-card {
+    flex: 1;
+} */
 
 .reported-flows {
     width: 100%;
@@ -88,20 +96,20 @@ main {
     font-size: 12px;
 }
 
+
+ 
 .DateInput,
 .DateInput_1,
 .DateInput_input {
-    font-size: 12px;
+    font-size: 1rem;
     width: 100%;
-    padding: 0px;
-}
-/* 
-.calculate-card {
-    align-self: flex-end;
-} */
 
-/*
-.DateRangePickerInput {
-    display: flex;
-    flex-direction: row;
+}
+
+td.CalendarDay {
+    padding: 0;
+  }
+
+/* .SingleDatePickerInput {
+    overflow-x: visible;    
 } */

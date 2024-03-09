@@ -58,10 +58,10 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
 @callback(
     Output("output-inputs", "children"),
     Input("calc-button", "n_clicks"),
-    State("city-of-weyburn", "value"),
-    State("the-lake", "value"),
-    State("pumpage", "value"),
-    State("pipe", "value"),
+    State("weyburn-pumpage-input", "value"),
+    State("pipeline-input", "value"),
+    State("long-creek-minor-project-diversion-input", "value"),
+    State("us-diversion-input", "value"),
     prevent_initial_call=True,
 )
 def add_reported_flows(clicks, city_of_weyburn, the_lake, pumpage, pipe):
