@@ -1,9 +1,10 @@
 from datetime import date
 from datetime import datetime as dt
-from dash import html, dcc, dash_table
-import dash_bootstrap_components as dbc
-import souris_gui_test.utils.constants as const
 
+import data.test_data as td
+import dash_bootstrap_components as dbc
+import data.constants as const
+from dash import dash_table, dcc, html
 
 navbar = dbc.NavbarSimple(
     id="navbar",
@@ -145,7 +146,7 @@ aside = html.Aside(
         html.Br(),
         html.Div(
             className="calculate-card",
-            children=[dbc.Button("Calculate", color="secondary", id="calc-button")],
+            children=[dbc.Button("Begin Apportionment", color="secondary", id="apportion-button")],
         ),
     ],
 )
@@ -157,57 +158,32 @@ main = html.Main(
             [
                 dbc.Tab(
                     id="tabtab",
-                    label="Input",
+                    label="Discharge data",
                     children=dbc.Card(
                         className="mt-3",
                         children=dbc.CardBody(
                             [
-                                dcc.Upload(
-                                    id="upload-data",
-                                    children=html.Div(
-                                        [
-                                            "Drag and Drop or ",
-                                            html.A("Select Files"),
-                                        ],
-                                    ),
-                                ),
+                                # dcc.Upload(
+                                #     id="upload-data",
+                                #     children=html.Div(
+                                #         [
+                                #             "Drag and Drop or ",
+                                #             html.A("Select Files"),
+                                #         ],
+                                #     ),
+                                # ),
                                 dash_table.DataTable(
-                                    [
-                                        {
-                                            "05NA006": i,
-                                            "05NB020": i * 10,
-                                            "05NB016": i * 100,
-                                            "05NB016": i * -1,
-                                            "05ND012": i * -10,
-                                            "05NB001": i * -100,
-                                            "05NB036": i * 7,
-                                            "05NB011": i * 88,
-                                            "05NB018": i * 510,
-                                            "05NA003": i * -5,
-                                            "05NB040": i * 5,
-                                            "05NB041": i * 50,
-                                            "05NB038": i * 8,
-                                            "05NB014": i * 5,
-                                            "05NB035": i * 9,
-                                            "05NB033": i * 7,
-                                            "05NB039": i * 12,
-                                        }
-                                        for i in range(10)
-                                    ],
-                                    const.station_names,
-                                    style_table={'minWidth': '100%'},
-                                    style_cell={'textAlign': 'left', 'whiteSpace': 'normal', 'overflow': 'hidden', 'textOverflow': 'ellipsis'},
-                                    # style_cell_conditional=[
-                                    #     {'if': {'column_id': '05NB016'},
-                                    #     'width': '50%'},
-                                    #     {'if': {'column_id': '05ND012'},
-                                    #     'width': '50%'},
-                                    # ],
+                                    td.discharge_data.to_dict("records"),
+                                    const.discharge_station_names,
+                                    style_table={"minWidth": "100%"},
+                                    style_cell={"textAlign": "center", "whiteSpace": "normal", "overflow": "hidden", "textOverflow": "ellipsis"},
                                     style_data={
-                                        'whiteSpace': 'normal',
-                                        'height': 'auto',
+                                        "whiteSpace": "normal",
+                                        "height": "auto",
                                     },
                                     merge_duplicate_headers=True,
+                                    editable=True,
+                                    fixed_rows={"headers": True},
                                 ),
                                 html.Div(
                                     id="output-data-upload",
@@ -216,6 +192,72 @@ main = html.Main(
                                 html.Div(
                                     id="output-inputs",
                                     children=["100"],
+                                ),
+                            ]
+                        ),
+                    ),
+                ),
+                dbc.Tab(
+                    label="Reservoir Data",
+                    children=dbc.Card(
+                        className="mt-3",
+                        children=dbc.CardBody(
+                            [
+                                dash_table.DataTable(
+                                    td.reservoir_data.to_dict("records", index=True),
+                                    const.reservoir_station_names,
+                                    # style_table={"minWidth": "100%"},
+                                    # style_cell={"textAlign": "center", "whiteSpace": "normal", "overflow": "hidden", "textOverflow": "ellipsis"},
+                                    # style_cell={
+                                    #     "whiteSpace": "normal",
+                                    #     "height": "auto",
+                                    # },
+                                    style_data={
+                                        "whiteSpace": "normal",
+                                    },
+                                    css=[
+                                        {
+                                            "selector": ".dash-spreadsheet td div",
+                                            "rule": """
+                                            line-height: 15px;
+                                            max-height: 30px; min-height: 30px; height: 30px;
+                                            display: block;
+                                            overflow-y: hidden;
+                                        """,
+                                        }
+                                    ],
+                                    merge_duplicate_headers=True,
+                                    editable=True,
+                                    fixed_rows={"headers": True},
+                                    style_table={"height": "100%", "maxHeight": "100%"},
+                                ),
+                            ]
+                        ),
+                    ),
+                ),
+                dbc.Tab(
+                    label="Met Data",
+                    children=dbc.Card(
+                        className="mt-3",
+                        children=dbc.CardBody(
+                            [
+                                dash_table.DataTable(
+                                    td.met_data.to_dict("records", index=True),
+                                    const.met_station_names,
+                                    style_table={"minWidth": "100%"},
+                                    style_header={
+                                        "textAlign": "center",
+                                        "whiteSpace": "normal",
+                                        "overflow": "hidden",
+                                        "textOverflow": "ellipsis",
+                                    },
+                                    # style_data={
+                                    #     "whiteSpace": "normal",
+                                    #     "height": "auto",
+                                    # },
+                                    merge_duplicate_headers=True,
+                                    editable=True,
+                                    fixed_rows={"headers": True},
                                 ),
                             ]
                         ),

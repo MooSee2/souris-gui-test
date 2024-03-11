@@ -24,6 +24,7 @@ aside {
     align-items: stretch;
     background-color: rgb(235, 235, 235);
 }
+
 /* 
 aside > :last-child {
     order: 1;
@@ -81,6 +82,7 @@ main {
     text-align: center;
     margin: 10px;
 }
+
 /* 
 .reported-flows-card {
     flex: 1;
@@ -96,8 +98,6 @@ main {
     font-size: 12px;
 }
 
-
- 
 .DateInput,
 .DateInput_1,
 .DateInput_input {
@@ -108,8 +108,12 @@ main {
 
 td.CalendarDay {
     padding: 0;
-  }
+}
 
-/* .SingleDatePickerInput {
-    overflow-x: visible;    
+.dash-table-container .dash-spreadsheet-container table {
+    font-size: 0.85rem;
+}
+/* 
+.dash-spreadsheet.dash-freeze-left {
+    max-width: none !important;
 } */
