@@ -80,7 +80,7 @@ main = html.Main(
         dbc.Tabs(
             [
                 dbc.Tab(
-                    id="tabtab",
+                    # id="tabtab",
                     label="Reported Flows",
                     children=dbc.Card(
                         className="mt-3",
@@ -89,7 +89,6 @@ main = html.Main(
                                 html.Div(
                                     className="config-card",
                                     children=[
-                                        # html.H4("Reported flows"),
                                         html.Div(
                                             className="input-container",
                                             children=[
@@ -167,7 +166,7 @@ main = html.Main(
                     ),
                 ),
                 dbc.Tab(
-                    id="tabtab",
+                    # id="tabtab",
                     label="Discharge data",
                     children=dbc.Card(
                         className="mt-3",
@@ -214,14 +213,9 @@ main = html.Main(
                         children=dbc.CardBody(
                             [
                                 dash_table.DataTable(
-                                    td.reservoir_data.to_dict("records", index=True),
+                                    td.reservoir_data.to_dict("records"),
                                     const.reservoir_station_names,
-                                    # style_table={"minWidth": "100%"},
                                     style_cell={"textAlign": "center"},  # "whiteSpace": "normal", "overflow": "hidden", "textOverflow": "ellipsis"
-                                    # style_cell={
-                                    #     "whiteSpace": "normal",
-                                    #     "height": "auto",
-                                    # },
                                     style_data={
                                         "whiteSpace": "normal",
                                     },
@@ -239,7 +233,6 @@ main = html.Main(
                                     merge_duplicate_headers=True,
                                     editable=True,
                                     fixed_rows={"headers": True},
-                                    # style_table={"height": "100%", "maxHeight": "100%"},
                                     style_cell_conditional=[
                                         {"if": {"column_id": "datetime"}, "width": "10%"},
                                         {"if": {"column_id": "05NA006"}, "width": "10%"},

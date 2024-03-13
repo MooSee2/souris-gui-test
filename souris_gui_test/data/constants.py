@@ -14,14 +14,12 @@ discharge_station_names = [
 ]
 
 reservoir_station_names = [
-    # {"name": ["Reservoir Elevation", "Units", "staid", "Datetime"], "id": "cat"},
-    # {"name": ["Reservoir Elevation", "Units", "staid", "Name"], "id": "dog"},
-    {"name": ["Reservoir Elevation", "Units", "staid", "Datetime"], "id": "datetime"},
-    {"name": ["Reservoir Elevation", "Units: meters", "05NA006", "Larson"], "id": "05NA006"},
-    {"name": ["Reservoir Elevation", "Units: meters", "05NB020", "Nickle Lake"], "id": "05NB020"},
-    {"name": ["Reservoir Elevation", "Units: meters", "05NB016", "Roughbark"], "id": "05NB016"},
-    {"name": ["Reservoir Elevation", "Units: meters", "05NC002", "Moose Mountain Lake"], "id": "05NC002"},
-    {"name": ["Reservoir Elevation", "Units: meters", "05ND012", "Grant Devine"], "id": "05ND012"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", "Station ID", "Datetime"], "id": "datetime"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", "05NA006", "Larson"], "id": "05NA006"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", "05NB020", "Nickle Lake"], "id": "05NB020"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", "05NB016", "Roughbark"], "id": "05NB016"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", "05NC002", "Moose Mountain Lake"], "id": "05NC002"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", "05ND012", "Grant Devine"], "id": "05ND012"},
 ]
 
 # {"name": "", "id": ""},
