@@ -6,6 +6,7 @@ import dash_bootstrap_components as dbc
 import data.constants as const
 from dash import dash_table, dcc, html
 
+
 navbar = dbc.NavbarSimple(
     id="navbar",
     children=[
@@ -28,14 +29,19 @@ aside = html.Aside(
                     className="input-container",
                     children=[
                         html.H6("Water year"),
-                        dbc.Input(id="water-year-input", placeholder="Example: 2024", class_name="reported-flows-input", type="number", step=1, min=2023, max=2099),
+                        dcc.Dropdown(
+                            id="apportionment-year",
+                            options=const.available_years,
+                            clearable=False,
+                            value=const.current_year,
+                        ),
                     ],
                 ),
                 html.Div(
                     className="input-container",
                     children=[
                         html.H6("Evaporation Start"),
-                        dcc.DatePickerSingle(id="evap-start-picker", className="evap-date-picker", date=date(int(dt.now().year), 4, 15)),
+                        dcc.DatePickerSingle(id="evap-start-picker", className="evap-date-picker", date=date(const.current_year, 4, 15)),
                     ],
                 ),
                 html.Div(

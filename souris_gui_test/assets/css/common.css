@@ -89,7 +89,7 @@ main {
 }
 
 .reported-flows-input {
-    font-size: 1rem;
+    font-size: 0.85rem;
     padding: 2px 6px;
     /* color: #333;
     font-weight: var(--bs-body-font-weight);

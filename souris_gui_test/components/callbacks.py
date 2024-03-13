@@ -1,6 +1,7 @@
 import base64
 import datetime
 import io
+from datetime import datetime as dt
 
 import pandas as pd
 from dash import Input, Output, State, callback, dash_table, html
@@ -55,17 +56,18 @@ from dash import Input, Output, State, callback, dash_table, html
 #         ]
 
 
-# @callback(
-#     Output("output-inputs", "children"),
-#     Input("apportion-button", "n_clicks"),
-#     State("weyburn-pumpage-input", "value"),
-#     State("pipeline-input", "value"),
-#     State("long-creek-minor-project-diversion-input", "value"),
-#     State("us-diversion-input", "value"),
-#     prevent_initial_call=True,
-# )
-# def add_reported_flows(clicks, city_of_weyburn, the_lake, pumpage, pipe):
-#     try:
-#         return int(city_of_weyburn) + int(the_lake) + int(pumpage) + int(pipe)
-#     except TypeError:
-#         return 0
+@callback(
+    Output("evap-start-picker", "date"),
+    Output("evap-end-picker", "date"),
+    Input("apportionment-year", "value"),
+    State("evap-start-picker", "date"),
+    State("evap-end-picker", "date"),
+    prevent_initial_call=True,
+)
+def update_evap_years(selected_year, start_date, end_date):
+    if not selected_year:
+        selected_year = dt.now().year
+
+    start_date = dt.strptime(f"{selected_year}-{start_date[5:]}", "%Y-%m-%d").date()
+    end_date = dt.strptime(f"{selected_year}-{end_date[5:]}", "%Y-%m-%d").date()
+    return start_date, end_date

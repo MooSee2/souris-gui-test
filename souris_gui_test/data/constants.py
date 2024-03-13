@@ -1,3 +1,9 @@
+from datetime import datetime as dt
+
+current_year = dt.now().year
+available_years = [{"label": year, "value": year} for year in range(2022, current_year + 1)]
+available_years.reverse()
+
 discharge_station_names = [
     {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Estevan", "05NB001"], "id": "05NB001"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Souris River below Rafterty", "05NB036"], "id": "05NB036"},
