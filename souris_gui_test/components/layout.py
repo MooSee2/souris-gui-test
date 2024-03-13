@@ -34,6 +34,20 @@ aside = html.Aside(
                 html.Div(
                     className="input-container",
                     children=[
+                        html.H6("Evaporation Start"),
+                        dcc.DatePickerSingle(id="evap-start-picker", className="evap-date-picker", date=date(int(dt.now().year), 4, 15)),
+                    ],
+                ),
+                html.Div(
+                    className="input-container",
+                    children=[
+                        html.H6("Evaporation End"),
+                        dcc.DatePickerSingle(id="evap-end-picker", className="evap-datepicker", date=date(int(dt.now().year), 10, 15)),
+                    ],
+                ),
+                html.Div(
+                    className="input-container",
+                    children=[
                         html.H6("Met Station"),
                         dcc.Dropdown(
                             options=[
@@ -44,20 +58,6 @@ aside = html.Aside(
                             clearable=False,
                             # optionHeight=20,
                         ),
-                    ],
-                ),
-                html.Div(
-                    className="input-container",
-                    children=[
-                        html.H6("Evaporation Start"),
-                        dcc.DatePickerSingle(id="evap-start-picker", className="evap-date-picker", date=date(int(dt.now().year), 4, 15)),
-                    ],
-                ),
-                html.Div(
-                    className="input-container",
-                    children=[
-                        html.H6("Evaporation End"),
-                        dcc.DatePickerSingle(id="evap-end-picker", className="evap-datepicker", date=date(int(dt.now().year), 10, 15)),
                     ],
                 ),
                 # html.Div(

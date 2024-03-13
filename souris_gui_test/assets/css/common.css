@@ -19,7 +19,7 @@ aside {
     flex-direction: column;
     height: calc(100vh - 40px);
     overflow-y: auto;
-    overflow-x: overlay;
+    overflow-x: visible;
     align-items: stretch;
     background-color: rgb(235, 235, 235);
 }
@@ -89,8 +89,11 @@ main {
 }
 
 .reported-flows-input {
-    font-size: 12px;
+    font-size: 1rem;
     padding: 2px 6px;
+    /* color: #333;
+    font-weight: var(--bs-body-font-weight);
+    font-family: var(--bs-body-font-family); */
 }
 
 .input-dates-container {
@@ -102,7 +105,7 @@ main {
 .DateInput_1,
 .DateInput_input {
     font-size: 1rem;
-    width: 5.2rem;
+    width: 100%;
     padding: 2px;
 
 }
@@ -116,13 +119,9 @@ td.CalendarDay {
 }
 
 .config-card {
-    margin-top: 6px;
+    margin-top: 8px;
 }
 
-
-.dash-table-container .dash-spreadsheet-container table {
-    font-size: 0.85rem;
-}
 
 
 
