@@ -2,6 +2,9 @@ import base64
 import datetime
 import io
 from datetime import datetime as dt
+import data.test_data as td
+import plotly.express as px
+
 
 import pandas as pd
 from dash import Input, Output, State, callback, dash_table, html
@@ -71,3 +74,13 @@ def update_evap_years(selected_year, start_date, end_date):
     start_date = dt.strptime(f"{selected_year}-{start_date[5:]}", "%Y-%m-%d").date()
     end_date = dt.strptime(f"{selected_year}-{end_date[5:]}", "%Y-%m-%d").date()
     return start_date, end_date
+
+
+@callback(
+    Output("timeseries-plot", "figure"),
+    Input("timeseries-dropdown", "value"),
+)
+def timeseries_graph(staid):
+    data = td.discharge_data
+    fig = px.line(data_frame=data, x=data.index, y="05NB001")
+    return fig

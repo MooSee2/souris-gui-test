@@ -19,7 +19,8 @@ navbar = dbc.NavbarSimple(
 )
 
 
-aside = html.Aside(
+aside = html.Div(
+    id="asideaside",
     children=[
         html.Div(
             className="config-card",
@@ -28,7 +29,21 @@ aside = html.Aside(
                 html.Div(
                     className="input-container",
                     children=[
-                        html.H6("Water year"),
+                        html.Div(
+                            id="water-year-tip",
+                            className="header-info-container",
+                            children=[
+                                html.Div(
+                                    className="HH6",
+                                    children=["Water year"],
+                                ),
+                                html.Div(className="fa-solid fa-info"),
+                            ],
+                        ),
+                        dbc.Tooltip(
+                            "This is a bunch, " "of test text to explain what this field is for.",
+                            target="water-year-tip",
+                        ),
                         dcc.Dropdown(
                             id="apportionment-year",
                             options=const.available_years,
@@ -40,21 +55,58 @@ aside = html.Aside(
                 html.Div(
                     className="input-container",
                     children=[
-                        html.H6("Evaporation Start"),
+                        html.Div(
+                            id="evap-start-tip",
+                            className="header-info-container",
+                            children=[
+                                html.Div(
+                                    className="HH6",
+                                    children="Evaporation Start",
+                                ),
+                                html.Div(className="fa-solid fa-info"),
+                            ],
+                        ),
+                        dbc.Tooltip(
+                            "This is a bunch, " "of test text to explain what this field is for.",
+                            target="evap-start-tip",
+                        ),
+                        # style={"width": "100%"},
                         dcc.DatePickerSingle(id="evap-start-picker", className="evap-date-picker", date=date(const.current_year, 4, 15)),
                     ],
                 ),
                 html.Div(
                     className="input-container",
                     children=[
-                        html.H6("Evaporation End"),
-                        dcc.DatePickerSingle(id="evap-end-picker", className="evap-datepicker", date=date(int(dt.now().year), 10, 15)),
+                        html.Div(
+                            id="evap-end-tip",
+                            className="header-info-container",
+                            children=[
+                                html.Div(className="HH6", children="Evaporation End"),
+                                html.Div(className="fa-solid fa-info"),
+                            ],
+                        ),
+                        dbc.Tooltip(
+                            "This is a bunch, " "of test text to explain what this field is for.",
+                            target="evap-end-tip",
+                        ),
+                        dcc.DatePickerSingle(id="evap-end-picker", className="evap-date-picker", date=date(int(dt.now().year), 10, 15)),
                     ],
                 ),
                 html.Div(
                     className="input-container",
                     children=[
-                        html.H6("Met Station"),
+                        html.Div(
+                            id="met-station-tip",
+                            className="header-info-container",
+                            children=[
+                                html.Div(className="HH6", children="Met Station"),
+                                html.Div(className="fa-solid fa-info"),
+                            ],
+                        ),
+                        dbc.Tooltip(
+                            "This is a bunch, " "of test text to explain what this field is for.",
+                            target="met-station-tip",
+                        ),
                         dcc.Dropdown(
                             options=[
                                 {"label": "Gildford", "value": "Gildford"},
@@ -62,15 +114,9 @@ aside = html.Aside(
                             ],
                             value="MRatEC",
                             clearable=False,
-                            # optionHeight=20,
                         ),
                     ],
                 ),
-                # html.Div(
-                #     className="input-dates-container",
-                #     children=[
-                #     ],
-                # ),
             ],
         ),
         html.Div(
@@ -301,8 +347,32 @@ main = html.Main(
                     ),
                 ),
                 dbc.Tab(
-                    label="Calculated",
-                    children=html.P("Meow!"),
+                    label="Graphs",
+                    children=dbc.Card(
+                        className="mt-3",
+                        children=dbc.CardBody(
+                            [
+                                dbc.DropdownMenu(
+                                    id="timeseries-dropdown",
+                                    children = [
+                                        dbc.DropdownMenuItem("Header", header=True),
+                                        dbc.DropdownMenuItem("An item"),
+                                        dbc.DropdownMenuItem(divider=True),
+                                        dbc.DropdownMenuItem("Active and disabled", header=True),
+                                        dbc.DropdownMenuItem("Active item", active=True),
+                                        dbc.DropdownMenuItem("Disabled item", disabled=True),
+                                        dbc.DropdownMenuItem(divider=True),
+                                        html.P(
+                                            "You can have other content here like text if you like.",
+                                            className="text-muted px-4 mt-4",
+                                        ),
+                                    ],
+                                    label="Stations",
+                                ),
+                                dcc.Graph(id="timeseries-plot"),
+                            ]
+                        ),
+                    ),
                 ),
             ],
         ),

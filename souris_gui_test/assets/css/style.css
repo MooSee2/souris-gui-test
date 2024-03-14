@@ -3,6 +3,12 @@ h6 {
     margin-bottom: 0.25rem;
 }
 
+.HH6 {
+    display: inline;
+    padding-right: 0.5rem;
+    font-size: 1.1rem;
+}
+
 h4 {
     font-size: 1.5rem;
     border-top: 1px solid;
@@ -11,12 +17,16 @@ h4 {
     margin-bottom: 8px;
 }
 
+/* .fa-solid {
+    height: 0.8rem;
+} */
+
 .dash-table-container .dash-spreadsheet-container table {
     font-size: 0.85rem;
 }
 
 .column-header-name, .dash-cell-value {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 .Select-value-label {

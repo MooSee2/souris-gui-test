@@ -13,11 +13,12 @@ body,
     height: 40px;
 }
 
-aside {
+#asideaside {
     padding: 0 6px 6px 6px;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 40px);
+    /* height: calc(100vh - 40px); */
+    width: 14rem;
     overflow-y: auto;
     overflow-x: visible;
     align-items: stretch;
@@ -59,10 +60,6 @@ main {
     background-color: cadetblue;
 }
 
-/* .card-body {
-    overflow-y: auto;
-} */
-
 #interior-container {
     display: flex;
     flex-direction: row;
@@ -91,9 +88,6 @@ main {
 .reported-flows-input {
     font-size: 0.85rem;
     padding: 2px 6px;
-    /* color: #333;
-    font-weight: var(--bs-body-font-weight);
-    font-family: var(--bs-body-font-family); */
 }
 
 .input-dates-container {
@@ -101,32 +95,56 @@ main {
     justify-content: space-between;
 }
 
-.DateInput,
+/* .DateInput,
 .DateInput_1,
 .DateInput_input {
     font-size: 1rem;
     width: 100%;
     padding: 2px;
 
-}
+} */
 
 td.CalendarDay {
     padding: 0;
-}
-
-.evap-date-picker {
-    width: 100%;
 }
 
 .config-card {
     margin-top: 8px;
 }
 
-
-
-
+ 
+.header-info-container {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 8px;
+    align-items: center;
+    margin-top: 4px;
+    margin-bottom: 2px;
+}
 
 /* 
 .dash-spreadsheet.dash-freeze-left {
     max-width: none !important;
 } */
+
+.DateInput, .DateInput_1 {
+    border-radius: 4px 0 0 4px !important;
+}
+
+.DateInput_input, .DateInput_input_1, .evap-date-picker, .SingleDatePicker, .SingleDatePickerInput {
+    Height: 34px !important;
+    Width: 100% !important;
+    border-radius: inherit;
+}
+
+.SingleDatePickerInput__withBorder {
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #ccc !important;
+}
+
+.info-box {
+    display: flex;
+    justify-content: center;
+    width: 1rem;
+}
+

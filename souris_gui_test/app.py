@@ -15,7 +15,12 @@ import dash_bootstrap_components as dbc
 load_dotenv()
 logger.debug(f"ENV LOG_LEVEL= {os.getenv('LOG_LEVEL')}")
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+external_stylesheets = [
+    dbc.themes.BOOTSTRAP,
+    dbc.icons.FONT_AWESOME,
+]
+
+app = Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(
     children=make_layout(),
