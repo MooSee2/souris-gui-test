@@ -15,6 +15,7 @@ reservoir_data = pd.DataFrame(
     index=pd.date_range("2024-01-01", periods=100, freq="d")
 )
 reservoir_data["datetime"] = reservoir_data.index.strftime('%Y-%m-%d')
+reservoir_data.index.name = "datetime"
 
 discharge_data = pd.DataFrame(
     [
@@ -34,8 +35,9 @@ discharge_data = pd.DataFrame(
         }
         for i in range(100)
     ],
-    index=pd.date_range("2024-01-01", periods=100, freq="d")
+    index=pd.date_range("2024-01-01", periods=100, freq="d"),
 )
+discharge_data.index.name = "datetime"
 
 met_data = pd.DataFrame(
     [
@@ -55,4 +57,4 @@ met_data = pd.DataFrame(
     ],
     index=pd.DatetimeIndex(pd.date_range("2024-01-01", periods=100, freq="d"))
 )
-met_data.index.name = "index"
+met_data.index.name = "datetime"

@@ -148,3 +148,15 @@ td.CalendarDay {
     width: 1rem;
 }
 
+#load-modal-body {
+    display: flex;
+    justify-content: space-around;    
+}
+
+.info-container {
+    display: flex;
+    justify-content: center;
+    height: 1.2rem;
+    width: 1rem;
+    flex-wrap: wrap;
+}

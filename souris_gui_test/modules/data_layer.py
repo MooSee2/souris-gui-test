@@ -1,0 +1,24 @@
+import pandas as pd
+from sqlalchemy import create_engine
+from sqlalchemy.inspection import inspect
+
+
+
+
+# class SQLEngineSerializer:
+#     def serialize(self):
+#         return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+#     @staticmethod
+#     def serialize_list(l):
+#         return [m.serialize() for m in l]
+
+
+def make_dropdown_options(data: set[tuple]) -> list[dict]:
+    return [{"label": staid, "value": name, "group": group} for staid, name, group in data]
+
+
+def load_data() -> tuple[pd.DataFrame]:
+    import data.test_data as td
+
+    return td.discharge_data, td.met_data, td.reservoir_data

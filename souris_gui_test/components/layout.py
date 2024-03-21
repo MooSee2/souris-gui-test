@@ -1,11 +1,12 @@
 from datetime import date
 from datetime import datetime as dt
 
-import data.test_data as td
 import dash_bootstrap_components as dbc
 import data.constants as const
+import modules.data_layer as dl
+import data.test_data as td
 from dash import dash_table, dcc, html
-
+import dash_mantine_components as dmc
 
 navbar = dbc.NavbarSimple(
     id="navbar",
@@ -18,6 +19,23 @@ navbar = dbc.NavbarSimple(
     dark=True,
 )
 
+load_modal = dbc.Modal(
+    [
+        dbc.ModalHeader(dbc.ModalTitle("Load Application Data")),
+        dbc.ModalBody(
+            id="load-modal-body",
+            children=[
+                dbc.Button(id="query-data-button", children=["Query data from web"]),
+                dbc.Button(id="load-from-csv-button", children=["From CSV"]),
+                dcc.Loading(html.Div(id="loading-data-div", children=["Load data from either web or local sources."]),),
+            ],
+        ),
+        dbc.ModalFooter(
+        ),
+    ],
+    id="load-data-modal",
+    is_open=False,
+)
 
 aside = html.Div(
     id="asideaside",
@@ -30,14 +48,13 @@ aside = html.Div(
                     className="input-container",
                     children=[
                         html.Div(
-                            id="water-year-tip",
                             className="header-info-container",
                             children=[
                                 html.Div(
                                     className="HH6",
                                     children=["Water year"],
                                 ),
-                                html.Div(className="fa-solid fa-info"),
+                                html.Div(id="water-year-tip", className="info-container", children=html.Div(className="fa-solid fa-info")),
                             ],
                         ),
                         dbc.Tooltip(
@@ -56,14 +73,14 @@ aside = html.Div(
                     className="input-container",
                     children=[
                         html.Div(
-                            id="evap-start-tip",
+                            
                             className="header-info-container",
                             children=[
                                 html.Div(
                                     className="HH6",
                                     children="Evaporation Start",
                                 ),
-                                html.Div(className="fa-solid fa-info"),
+                                html.Div(id="evap-start-tip", className="info-container", children=html.Div(className="fa-solid fa-info")),
                             ],
                         ),
                         dbc.Tooltip(
@@ -78,11 +95,11 @@ aside = html.Div(
                     className="input-container",
                     children=[
                         html.Div(
-                            id="evap-end-tip",
+                            
                             className="header-info-container",
                             children=[
                                 html.Div(className="HH6", children="Evaporation End"),
-                                html.Div(className="fa-solid fa-info"),
+                                html.Div(id="evap-end-tip", className="info-container", children=html.Div(className="fa-solid fa-info")),
                             ],
                         ),
                         dbc.Tooltip(
@@ -96,11 +113,11 @@ aside = html.Div(
                     className="input-container",
                     children=[
                         html.Div(
-                            id="met-station-tip",
+                            
                             className="header-info-container",
                             children=[
                                 html.Div(className="HH6", children="Met Station"),
-                                html.Div(className="fa-solid fa-info"),
+                                html.Div(id="met-station-tip", className="info-container", children=html.Div(className="fa-solid fa-info")),
                             ],
                         ),
                         dbc.Tooltip(
@@ -121,7 +138,15 @@ aside = html.Div(
         ),
         html.Div(
             className="config-card",
-            children=[dbc.Button("Begin Apportionment", color="secondary", id="apportion-button")],
+            children=[dbc.Button("Load Data", color="secondary", id="load-data-button", n_clicks=0)],
+        ),
+        load_modal,
+        html.Button(id="data-downloaded-signal", style={"display": "none"}),
+        html.Div(
+            className="config-card",
+            children=[
+                dbc.Button("Begin Apportionment", color="secondary", id="apportion-button", disabled=True),
+            ],
         ),
     ],
 )
@@ -348,31 +373,46 @@ main = html.Main(
                 ),
                 dbc.Tab(
                     label="Graphs",
-                    children=dbc.Card(
-                        className="mt-3",
-                        children=dbc.CardBody(
-                            [
-                                dbc.DropdownMenu(
-                                    id="timeseries-dropdown",
-                                    children = [
-                                        dbc.DropdownMenuItem("Header", header=True),
-                                        dbc.DropdownMenuItem("An item"),
-                                        dbc.DropdownMenuItem(divider=True),
-                                        dbc.DropdownMenuItem("Active and disabled", header=True),
-                                        dbc.DropdownMenuItem("Active item", active=True),
-                                        dbc.DropdownMenuItem("Disabled item", disabled=True),
-                                        dbc.DropdownMenuItem(divider=True),
-                                        html.P(
-                                            "You can have other content here like text if you like.",
-                                            className="text-muted px-4 mt-4",
+                    children=[
+                        dbc.Card(
+                            className="mt-3",
+                            children=[
+                                dbc.CardBody(
+                                    children=[
+                                        html.Div(
+                                            [
+                                                dmc.MultiSelect(
+                                                    label="Select category",
+                                                    placeholder="Select Station",
+                                                    searchable=True,
+                                                    data=dl.make_dropdown_options(const.stations),
+                                                    id="timeseries-dropdown",
+                                                ),
+                                            ]
                                         ),
-                                    ],
-                                    label="Stations",
+                                        # dbc.DropdownMenu(
+                                        #     id="timeseries-dropdown",
+                                        #     children=[
+                                        #         dbc.DropdownMenuItem("Header", header=True),
+                                        #         dbc.DropdownMenuItem("An item"),
+                                        #         dbc.DropdownMenuItem(divider=True),
+                                        #         dbc.DropdownMenuItem("Active and disabled", header=True),
+                                        #         dbc.DropdownMenuItem("Active item", active=True),
+                                        #         dbc.DropdownMenuItem("Disabled item", disabled=True),
+                                        #         dbc.DropdownMenuItem(divider=True),
+                                        #         html.P(
+                                        #             "You can have other content here like text if you like.",
+                                        #             className="text-muted px-4 mt-4",
+                                        #         ),
+                                        #     ],
+                                        #     label="Stations",
+                                        # ),
+                                        dcc.Graph(id="timeseries-plot"),
+                                    ]
                                 ),
-                                dcc.Graph(id="timeseries-plot"),
-                            ]
+                            ],
                         ),
-                    ),
+                    ],
                 ),
             ],
         ),
