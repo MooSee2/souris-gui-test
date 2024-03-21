@@ -1,7 +1,7 @@
 from .server import db
 
 
-class gapminder(db.Model):
+class reservoir(db.Model):
     __tablename__ = "reservoir"
 
     datetime = db.Column(db.String, primary_key=True)

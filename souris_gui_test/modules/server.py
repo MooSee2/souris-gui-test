@@ -7,54 +7,54 @@ from sqlalchemy.pool import SingletonThreadPool
 objects may cause side effects
 """
 
-# from flask import Flask
-# from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-# class Config(object):
-#     SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
-#     SQLALCHEMY_TRACK_MODIFICATIONS = False
+class Config(object):
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-# db = SQLAlchemy()
+db = SQLAlchemy()
 
 
-# def create_app():
-#     server = Flask(__name__)
-#     server.config.from_object(Config)
-#     db.init_app(server)
+def create_app():
+    server = Flask(__name__)
+    server.config.from_object(Config)
+    db.init_app(server)
     
-#     with server.app_context():
-#         df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder2007.csv')
-#         df.to_sql('gapminder2007', con=db.engine, if_exists='replace')
+    with server.app_context():
+        df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder2007.csv')
+        df.to_sql('gapminder2007', con=db.engine, if_exists='replace')
 
-#     from .dashboard import create_dashapp
-#     dash_app = create_dashapp(server)
-#     return server # or dash app if you use debug mode in dash import SQLAlchemy
+    from .dashboard import create_dashapp
+    dash_app = create_dashapp(server)
+    return server # or dash app if you use debug mode in dash import SQLAlchemy
 
-# class Config(object):
-#     SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
-#     SQLALCHEMY_TRACK_MODIFICATIONS = False
+class Config(object):
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-# db = SQLAlchemy()
+db = SQLAlchemy()
 
 
-# def create_app():
-#     server = Flask(__name__)
-#     server.config.from_object(Config)
-#     db.init_app(server)
+def create_app():
+    server = Flask(__name__)
+    server.config.from_object(Config)
+    db.init_app(server)
     
-#     with server.app_context():
-#         df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder2007.csv')
-#         df.to_sql('gapminder2007', con=db.engine, if_exists='replace')
+    with server.app_context():
+        df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder2007.csv')
+        df.to_sql('gapminder2007', con=db.engine, if_exists='replace')
 
-#     from .dashboard import create_dashapp
-#     dash_app = create_dashapp(server)
-#     return server # or dash app if you use debug mode in dash
+    from .dashboard import create_dashapp
+    dash_app = create_dashapp(server)
+    return server # or dash app if you use debug mode in dash
 
-engine = create_engine(
-    "sqlite+pysqlite:///:memory:",
-    connect_args={"check_same_thread": False},
-    poolclass=SingletonThreadPool,
-)
+# engine = create_engine(
+#     "sqlite+pysqlite:///:memory:",
+#     connect_args={"check_same_thread": False},
+#     poolclass=SingletonThreadPool,
+# )
 
 
 def commit_df_to_db(data: dict[str, pd.DataFrame]) -> None:
