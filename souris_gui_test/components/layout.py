@@ -7,6 +7,8 @@ import modules.data_layer as dl
 import data.test_data as td
 from dash import dash_table, dcc, html
 import dash_mantine_components as dmc
+import plotly.express as px
+
 
 navbar = dbc.NavbarSimple(
     id="navbar",
@@ -428,6 +430,7 @@ def make_layout():
             children=[
                 aside,
                 main,
+                dbc.Button(id="start_button", style={"display": "none"}),
             ],
         ),
     ]

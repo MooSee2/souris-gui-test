@@ -112,7 +112,7 @@ td.CalendarDay {
     margin-top: 8px;
 }
 
- 
+
 .header-info-container {
     display: flex;
     justify-content: space-between;
@@ -127,12 +127,28 @@ td.CalendarDay {
     max-width: none !important;
 } */
 
-.DateInput, .DateInput_1 {
+.DateInput_input__focused {
+    border-bottom: 0px;
+}
+
+.DateInput,
+.DateInput_1 {
     border-radius: 4px 0 0 4px !important;
 }
 
-.DateInput_input, .DateInput_input_1, .evap-date-picker, .SingleDatePicker, .SingleDatePickerInput {
-    Height: 34px !important;
+.DateInput_input {
+    margin-left: 10px;
+}
+
+.DateInput_input,
+.DateInput_input_1,
+.evap-date-picker,
+.SingleDatePicker,
+.SingleDatePickerInput {
+    padding: revert;
+    font-size: 0.85rem;
+    line-height: revert;
+    Height: 100% !important;
     Width: 100% !important;
     border-radius: inherit;
 }
@@ -150,7 +166,7 @@ td.CalendarDay {
 
 #load-modal-body {
     display: flex;
-    justify-content: space-around;    
+    justify-content: space-around;
 }
 
 .info-container {

@@ -15,7 +15,8 @@ from sqlalchemy.inspection import inspect
 
 
 def make_dropdown_options(data: set[tuple]) -> list[dict]:
-    return [{"label": staid, "value": name, "group": group} for staid, name, group in data]
+    dropdowns = [{"label": staid, "value": name, "group": group} for staid, name, group in data]
+    return sorted(dropdowns, key=lambda x: x["group"])
 
 
 def load_data() -> tuple[pd.DataFrame]:

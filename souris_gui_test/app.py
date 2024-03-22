@@ -1,12 +1,11 @@
+import sys
+sys.dont_write_bytecode = True
 import os
 
-from dash import Dash, html
 from dotenv import load_dotenv
 from loguru import logger
+from modules.dashboard import create_dashapp
 
-import components.callbacks
-from components.layout import make_layout
-import dash_bootstrap_components as dbc
 
 # from flask_cache import Cache
 
@@ -15,20 +14,7 @@ import dash_bootstrap_components as dbc
 load_dotenv()
 logger.debug(f"ENV LOG_LEVEL= {os.getenv('LOG_LEVEL')}")
 
-external_stylesheets = [
-    dbc.themes.BOOTSTRAP,
-    dbc.icons.FONT_AWESOME,
-]
-
-app = Dash(
-    __name__,
-    external_stylesheets=external_stylesheets,
-)
-
-app.layout = html.Div(
-    children=make_layout(),
-    id="dash-root",
-)
 
 if __name__ == "__main__":
+    app = create_dashapp()
     app.run(debug=True)

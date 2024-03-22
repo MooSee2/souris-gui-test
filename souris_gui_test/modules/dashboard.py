@@ -1,16 +1,23 @@
-import sqlalchemy as sa
-import plotly.graph_objects as go
 
-from .server import db
-from .models import gapminder
-from dash import Dash, html, dcc, Input, Output
+from dash import Dash, html
+import components.callbacks
+from components.layout import make_layout
+import dash_bootstrap_components as dbc
 
+def create_dashapp() -> Dash:
 
-def create_dashapp(server):
-    # Initialize the app
-    app = Dash(__name__, server=server)
+    external_stylesheets = [
+        dbc.themes.BOOTSTRAP,
+        dbc.icons.FONT_AWESOME,
+    ]
 
-    # App layout
-    app.layout = html.Div()
+    app = Dash(
+        name="__main__",
+        external_stylesheets=external_stylesheets,
+    )
 
+    app.layout = html.Div(
+        children=make_layout(),
+        id="dash-root",
+    )
     return app

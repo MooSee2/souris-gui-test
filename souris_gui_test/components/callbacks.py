@@ -1,16 +1,40 @@
-import base64
-import datetime
-import io
-import sqlite3
 from datetime import datetime as dt
+from time import sleep
 from typing import Optional, Union
 
 import modules.data_layer as dl
-import modules.server as serv
+# import modules.server as serv
 import pandas as pd
 import plotly.express as px
 from dash import Input, Output, State, callback, dash_table, html
 from dash.exceptions import PreventUpdate
+
+# from dataclasses import dataclass
+from typing import Optional
+
+
+class AppData:
+    discharge: Optional[dict]
+    met: Optional[dict]
+    reservoir: Optional[dict]
+
+
+app_data = AppData()
+
+
+# the download function
+def _download_data() -> None:
+    local_data = dl.load_data()
+    # dict of table name to dataframe
+    # return dict(zip({"discharge", "met", "reservoir"}, local_data))
+    app_data.discharge, app_data.met, app_data.reservoir = local_data
+    return None
+
+
+# cache this one
+def get_data(input) -> None:
+    sleep(3)
+    return _download_data()
 
 
 @callback(
@@ -52,12 +76,9 @@ def download_data(n_clicks):
     if n_clicks is None:
         raise PreventUpdate
 
+    _download_data()
     # Read from actual load_data() that reads from servers
-    local_data = dl.load_data()
-    # dict of table name to dataframe
-    data_dict = dict(zip({"discharge", "met", "reservoir"}, local_data))
 
-    serv.commit_df_to_db(data_dict)  #, con=serv.conn
     return "Data loaded!", 1
 
 
@@ -81,28 +102,21 @@ def update_evap_years(selected_year, start_date, end_date):
 @callback(
     Output("timeseries-plot", "figure"),
     Input("timeseries-dropdown", "value"),
-    prevent_initial_call = True,
+    # State("timeseries-plot", "figure"),
+    prevent_initial_call=True,
 )
-def timeseries_graph(staid):
-    tables = {
-        "05NA006": "reservoir",
-        "05NB020": "reservoir",
-        "05NB016": "reservoir",
-        "05NC002": "reservoir",
-        "05ND012": "reservoir",
-    }
-
-    table = tables.get(staid[0])
-    if table is None:
+def timeseries_graph(staids):
+    if not staids:
         raise PreventUpdate
-        #    'SELECT int_column, date_column FROM test_data', conn
-    sql = f"SELECT * FROM {table} WHERE dataset IN ({str(staid[0])})"
-    df = serv.from_db(sql=sql)  #, con=serv.conn
 
-    if df.empty:
-        return px.line(x=[1, 2], y=[1, 2])
+    df = pd.concat([app_data.reservoir, app_data.met, app_data.discharge])
 
-    return px.line(data_frame=df, x=df.index, y=df[str(staid[0])])
+    fig = px.scatter()
+
+    for staid in staids:
+        fig.add_scatter(x=df.index.values, y=df[staid])
+
+    return fig
 
 
 # @callback(
