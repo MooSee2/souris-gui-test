@@ -19,7 +19,7 @@ def make_dropdown_options(data: set[tuple]) -> list[dict]:
     return sorted(dropdowns, key=lambda x: x["group"])
 
 
-def load_data() -> tuple[pd.DataFrame]:
+def load_data(start_date, end_date) -> tuple[pd.DataFrame]:
     import data.test_data as td
 
     return td.discharge_data, td.met_data, td.reservoir_data

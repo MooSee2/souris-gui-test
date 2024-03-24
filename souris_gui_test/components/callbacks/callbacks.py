@@ -3,11 +3,13 @@ from time import sleep
 from typing import Optional, Union
 
 import modules.data_layer as dl
+
 # import modules.server as serv
 import pandas as pd
 import plotly.express as px
 from dash import Input, Output, State, callback, dash_table, html
 from dash.exceptions import PreventUpdate
+from dash_app import cache
 
 # from dataclasses import dataclass
 from typing import Optional
@@ -22,19 +24,20 @@ class AppData:
 app_data = AppData()
 
 
-# the download function
-def _download_data() -> None:
-    local_data = dl.load_data()
+def _download_data(start_date, end_date) -> None:
+    sleep(4)
+    local_data = dl.load_data(start_date, end_date)
     # dict of table name to dataframe
     # return dict(zip({"discharge", "met", "reservoir"}, local_data))
     app_data.discharge, app_data.met, app_data.reservoir = local_data
-    return None
+    return local_data
 
 
 # cache this one
-def get_data(input) -> None:
-    sleep(3)
-    return _download_data()
+@cache.memoize()
+def get_data(start_date, end_date) -> None:
+    sleep(1)
+    return _download_data(start_date, end_date)
 
 
 @callback(
@@ -72,11 +75,13 @@ def toggle_modal(n1: Optional[int], is_open: bool) -> bool:
     Output("data-downloaded-signal", "n_clicks"),
     Input("query-data-button", "n_clicks"),
 )
+# @cache.memoize()
 def download_data(n_clicks):
     if n_clicks is None:
         raise PreventUpdate
 
-    _download_data()
+    n_clicks = 0
+    local_data = get_data(n_clicks, "end_date")
     # Read from actual load_data() that reads from servers
 
     return "Data loaded!", 1

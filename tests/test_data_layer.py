@@ -1,4 +1,4 @@
-from souris_gui_test.modules import data_layer as dl
+from souris_gui_test.components import data_layer as dl
 
 
 def test_make_dropdown_options():
