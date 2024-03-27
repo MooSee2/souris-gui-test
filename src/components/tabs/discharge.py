@@ -1,8 +1,8 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table, html
-import data.stations as const
+import app_data.stations as const
 import pandas as pd
-from data import test_data as td
+from app_data import test_data as td
 
 stations = [
     "datetime",

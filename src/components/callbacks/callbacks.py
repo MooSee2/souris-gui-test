@@ -4,7 +4,7 @@ from time import sleep
 # from dataclasses import dataclass
 from typing import Optional, Union
 
-import data.test_data as td
+import app_data.test_data as td
 import modules.data_layer as dl
 
 # import modules.server as serv
@@ -12,7 +12,7 @@ import pandas as pd
 import plotly.express as px
 from dash import Input, Output, State, callback, dash_table, html
 from dash.exceptions import PreventUpdate
-from data import stations as const
+from app_data import stations as const
 
 # # cache this one
 # # @cache.memoize()
