@@ -1,6 +1,6 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
-from components.inputs_controls import evap_start, evap_end, met_station, wateryear
+from components.inputs_controls import evap_start, evap_end, met_station, wateryear, appor_start, appor_end
 
 load_modal = dbc.Modal(
     [
@@ -32,40 +32,44 @@ load_modal = dbc.Modal(
     is_open=False,
 )
 
-aside = html.Div(
-    className="asideaside",
-    children=[
-        load_modal,
-        html.Div(
-            className="config-card",
-            children=[
-                html.H4("Settings"),
-                wateryear.wateryear,
-                evap_start.evap_start,
-                evap_end.evap_end,
-            ],
-        ),
-        html.Div(
-            className="config-card",
-            children=[
-                dbc.Button(
-                    "Load Data",
-                    color="secondary",
-                    id="load-data-button",
-                    n_clicks=0,
-                ),
-            ],
-        ),
-        html.Div(
-            className="config-card",
-            children=[
-                dbc.Button(
-                    "Begin Apportionment",
-                    color="secondary",
-                    id="apportion-button",
-                    disabled=True,
-                ),
-            ],
-        ),
-    ],
-)
+
+def aside():
+    return html.Div(
+        className="asideaside",
+        children=[
+            load_modal,
+            html.Div(
+                className="config-card",
+                children=[
+                    html.H4("Settings"),
+                    wateryear.wateryear(),
+                    appor_start.appor_start(),
+                    appor_end.appor_end(),
+                    evap_start.evap_start(),
+                    evap_end.evap_end(),
+                ],
+            ),
+            html.Div(
+                className="config-card",
+                children=[
+                    dbc.Button(
+                        "Load Data",
+                        color="secondary",
+                        id="load-data-button",
+                        n_clicks=0,
+                    ),
+                ],
+            ),
+            html.Div(
+                className="config-card",
+                children=[
+                    dbc.Button(
+                        "Begin Apportionment",
+                        color="secondary",
+                        id="apportion-button",
+                        disabled=True,
+                    ),
+                ],
+            ),
+        ],
+    )

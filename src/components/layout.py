@@ -28,7 +28,7 @@ def make_layout():
         html.Div(
             id="interior-container",
             children=[
-                aside,
+                aside(),
                 make_main(),
             ],
         ),
