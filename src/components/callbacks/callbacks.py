@@ -5,7 +5,6 @@ from time import sleep
 from typing import Optional, Union
 
 import app_data.test_data as td
-import modules.data_layer as dl
 
 # import modules.server as serv
 import pandas as pd
@@ -19,6 +18,11 @@ from app_data import stations as const
 # def get_data(start_date, end_date) -> None:
 #     sleep(1)
 #     return _download_data(start_date, end_date)
+
+
+def make_dropdown_options(data: set[tuple]) -> list[dict]:
+    dropdowns = [{"label": staid, "value": name, "group": group} for staid, name, group in data]
+    return sorted(dropdowns, key=lambda x: (x["group"], x["label"]))
 
 
 @callback(
@@ -66,10 +70,6 @@ def download_data(n_clicks):
         raise PreventUpdate
 
     # TODO Put downlaod function in here.
-
-    # n_clicks = 0
-    # local_data = get_data(n_clicks, "end_date")
-    # Read from actual load_data() that reads from servers
 
     return (
         "Data loaded!",
@@ -131,12 +131,12 @@ def timeseries_graph(staids, reservoir_data, met_data, discharge_data):
 )
 def timeseries_graph(clicks):
     # if clicks is None:
-    return dl.make_dropdown_options(const.stations)
-    
+    return make_dropdown_options(const.stations)
+
     # raise PreventUpdate
 
 
-#TODO finish this function
+# TODO finish this function
 # @callback(
 #     Output("data-downloaded-div", "children"),
 #     Input("query-data-button", "n_clicks"),

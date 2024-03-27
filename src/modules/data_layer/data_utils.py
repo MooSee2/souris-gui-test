@@ -1,11 +1,11 @@
 import pandas as pd
 
 
-def process_return_data(data: dict) -> pd.DataFrame:
+def process_return_aq_data(data: dict) -> pd.DataFrame:
     df = pd.DataFrame(data["Points"])
-    
+
     df["value"] = df["Value"].apply(pd.Series)
-    
+
     df.drop(
         "Value",
         axis=1,
