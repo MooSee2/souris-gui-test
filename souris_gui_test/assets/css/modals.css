@@ -1,0 +1,15 @@
+#load-modal-body {
+    display: flex;
+}
+
+#query-data-button {
+    flex-grow: 1;
+}
+
+#load-from-csv-button {
+    flex-grow: 1;
+}
+
+#loading-wrapper {
+    flex-grow: 1;
+}

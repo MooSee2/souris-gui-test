@@ -1,6 +1,6 @@
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
-import data.constants as const
+import data.stations as const
 import data.test_data as td
 import modules.data_layer as dl
 from dash import dash_table, dcc, html
@@ -19,7 +19,6 @@ graphs = dbc.Tab(
                                     label="Select category",
                                     placeholder="Select Station",
                                     searchable=True,
-                                    data=dl.make_dropdown_options(const.stations),
                                     id="timeseries-dropdown",
                                 ),
                             ]

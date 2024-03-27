@@ -16,11 +16,17 @@ load_modal = dbc.Modal(
                     id="load-from-csv-button",
                     children=["From CSV"],
                 ),
-                dcc.Loading(
-                    html.Div(
-                        id="loading-data-div",
-                        children=["Load data from either web or local sources."],
-                    ),
+                html.Div(
+                    id="loading-wrapper",
+                    style={"flex-grow": "1"},
+                    children=[
+                        dcc.Loading(
+                            children=html.Div(
+                                id="loading-data-div",
+                                children=["Load data from either web or local sources."],
+                            ),
+                        ),
+                    ]
                 ),
             ],
         ),

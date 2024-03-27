@@ -1,7 +1,28 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table
-import data.constants as const
+import data.stations as const
 import data.test_data as td
+import pandas as pd
+
+stations = [
+    "datetime",
+    "05NA006",
+    "05NB020",
+    "05NB016",
+    "05NC002",
+    "05ND012",
+]
+
+dummy_data = pd.DataFrame(
+    {
+        "datetime": "2000-01-01",
+        "05NA006": [9999],
+        "05NB020": [9999],
+        "05NB016": [9999],
+        "05NC002": [9999],
+        "05ND012": [9999],
+    },
+)
 
 reservoirs = dbc.Tab(
     label="Reservoir Data",
@@ -10,8 +31,9 @@ reservoirs = dbc.Tab(
         children=dbc.CardBody(
             [
                 dash_table.DataTable(
-                    td.reservoir_data.to_dict("records"),
-                    const.reservoir_station_names,
+                    id="reservoir-data",
+                    data=dummy_data.to_dict("records"),
+                    columns=const.reservoir_station_names,
                     style_cell={"textAlign": "center"},  # "whiteSpace": "normal", "overflow": "hidden", "textOverflow": "ellipsis"
                     style_data={
                         "whiteSpace": "normal",
@@ -29,14 +51,14 @@ reservoirs = dbc.Tab(
                     ],
                     merge_duplicate_headers=True,
                     editable=True,
-                    fixed_rows={"headers": True},
+                    # fixed_rows={"headers": True},
                     style_cell_conditional=[
-                        {"if": {"column_id": "datetime"}, "width": "10%"},
-                        {"if": {"column_id": "05NA006"}, "width": "10%"},
-                        {"if": {"column_id": "05NB020"}, "width": "10%"},
-                        {"if": {"column_id": "05NB016"}, "width": "10%"},
-                        {"if": {"column_id": "05NC002"}, "width": "10%"},
-                        {"if": {"column_id": "05ND012"}, "width": "10%"},
+                        {"if": {"column_id": station}, "width": "10%"} for station in stations
+                    #     # {"if": {"column_id": "05NA006"}, "width": "10%"},
+                    #     # {"if": {"column_id": "05NB020"}, "width": "10%"},
+                    #     # {"if": {"column_id": "05NB016"}, "width": "10%"},
+                    #     # {"if": {"column_id": "05NC002"}, "width": "10%"},
+                    #     # {"if": {"column_id": "05ND012"}, "width": "10%"},
                     ],
                 ),
             ]

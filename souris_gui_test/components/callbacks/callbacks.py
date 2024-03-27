@@ -1,7 +1,10 @@
 from datetime import datetime as dt
 from time import sleep
+
+# from dataclasses import dataclass
 from typing import Optional, Union
 
+import data.test_data as td
 import modules.data_layer as dl
 
 # import modules.server as serv
@@ -9,35 +12,13 @@ import pandas as pd
 import plotly.express as px
 from dash import Input, Output, State, callback, dash_table, html
 from dash.exceptions import PreventUpdate
-from dash_app import cache
+from data import stations as const
 
-# from dataclasses import dataclass
-from typing import Optional
-
-
-class AppData:
-    discharge: Optional[dict]
-    met: Optional[dict]
-    reservoir: Optional[dict]
-
-
-app_data = AppData()
-
-
-def _download_data(start_date, end_date) -> None:
-    sleep(4)
-    local_data = dl.load_data(start_date, end_date)
-    # dict of table name to dataframe
-    # return dict(zip({"discharge", "met", "reservoir"}, local_data))
-    app_data.discharge, app_data.met, app_data.reservoir = local_data
-    return local_data
-
-
-# cache this one
-@cache.memoize()
-def get_data(start_date, end_date) -> None:
-    sleep(1)
-    return _download_data(start_date, end_date)
+# # cache this one
+# # @cache.memoize()
+# def get_data(start_date, end_date) -> None:
+#     sleep(1)
+#     return _download_data(start_date, end_date)
 
 
 @callback(
@@ -72,19 +53,31 @@ def toggle_modal(n1: Optional[int], is_open: bool) -> bool:
 
 @callback(
     Output("loading-data-div", "children"),
-    Output("data-downloaded-signal", "n_clicks"),
+    Output("reservoir-data", "data"),
+    Output("discharge-data", "data"),
+    Output("met-data", "data"),
+    Output("apportion-button", "disabled"),
     Input("query-data-button", "n_clicks"),
+    prevent_initial_callback=True,
 )
 # @cache.memoize()
 def download_data(n_clicks):
-    if n_clicks is None:
+    if n_clicks == 0 or n_clicks is None:
         raise PreventUpdate
 
-    n_clicks = 0
-    local_data = get_data(n_clicks, "end_date")
+    # TODO Put downlaod function in here.
+
+    # n_clicks = 0
+    # local_data = get_data(n_clicks, "end_date")
     # Read from actual load_data() that reads from servers
 
-    return "Data loaded!", 1
+    return (
+        "Data loaded!",
+        td.reservoir_data.to_dict("records"),
+        td.discharge_data.to_dict("records"),
+        td.met_data.to_dict("records"),
+        False,
+    )
 
 
 @callback(
@@ -107,14 +100,21 @@ def update_evap_years(selected_year, start_date, end_date):
 @callback(
     Output("timeseries-plot", "figure"),
     Input("timeseries-dropdown", "value"),
-    # State("timeseries-plot", "figure"),
+    Input("reservoir-data", "data"),
+    Input("met-data", "data"),
+    Input("discharge-data", "data"),
     prevent_initial_call=True,
 )
-def timeseries_graph(staids):
+def timeseries_graph(staids, reservoir_data, met_data, discharge_data):
     if not staids:
         raise PreventUpdate
 
-    df = pd.concat([app_data.reservoir, app_data.met, app_data.discharge])
+    reservoir_data = pd.DataFrame(reservoir_data)
+    met_data = pd.DataFrame(met_data)
+    discharge_data = pd.DataFrame(discharge_data)
+
+    df = pd.concat([reservoir_data, met_data, discharge_data])
+    df.index = pd.DatetimeIndex(pd.to_datetime(df["datetime"]))
 
     fig = px.scatter()
 
@@ -122,6 +122,18 @@ def timeseries_graph(staids):
         fig.add_scatter(x=df.index.values, y=df[staid])
 
     return fig
+
+
+@callback(
+    Output("timeseries-dropdown", "data"),
+    Input("query-data-button", "n_clicks"),
+    prevent_initial_call=True,
+)
+def timeseries_graph(clicks):
+    # if clicks is None:
+    return dl.make_dropdown_options(const.stations)
+    
+    # raise PreventUpdate
 
 
 # @callback(

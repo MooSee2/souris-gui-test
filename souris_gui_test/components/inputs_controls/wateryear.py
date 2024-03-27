@@ -1,6 +1,6 @@
 from dash import html, dcc
 import dash_bootstrap_components as dbc
-from data import constants as const
+from data import stations as const
 
 wateryear = html.Div(
     className="input-container",
