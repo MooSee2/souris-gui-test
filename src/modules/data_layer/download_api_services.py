@@ -1,16 +1,12 @@
 import asyncio
 import copy
 import json
-import os
 from io import StringIO
 from typing import Union
 
 import aiohttp
 import pandas as pd
 import requests
-
-import modules.data_layer.data_utils as du
-from modules.data_layer import timeseries_client as aqts
 
 
 def is_iterable(obj):
@@ -337,25 +333,3 @@ class MESOnet:
         ]
         results = await asyncio.gather(*tasks)
         return self._process_gilford_dataframes(results, params)
-
-
-# Returns list of dicts: {unique_id: DataFrame}
-def get_caaq_data(start_date: str, end_date: str, stations: list) -> dict[str, pd.DataFrame]:
-    aq_user = os.getenv("AQ_USERNAME")
-    aq_password = os.getenv("AQ_PASSWORD")
-    server = os.getenv("AQTS_SERVER")
-
-    payloads = [
-        {
-            "TimeSeriesUniqueId": unique_id,
-            "QueryFrom": start_date,
-            "QueryTo": end_date,
-            "ApplyRounding": "false",
-        }
-        for *_, unique_id in stations
-    ]
-
-    with aqts.timeseries_client(server, aq_user, aq_password) as session:
-        return_data = [session.publish.get("/GetTimeSeriesCorrectedData", params=payload) for payload in payloads]
-
-        return [du.process_return_aq_data(data) for data in return_data]

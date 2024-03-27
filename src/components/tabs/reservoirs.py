@@ -13,17 +13,6 @@ stations = [
     "05ND012",
 ]
 
-dummy_data = pd.DataFrame(
-    {
-        "datetime": "2000-01-01",
-        "05NA006": [9999],
-        "05NB020": [9999],
-        "05NB016": [9999],
-        "05NC002": [9999],
-        "05ND012": [9999],
-    },
-)
-
 reservoirs = dbc.Tab(
     label="Reservoir Data",
     children=dbc.Card(
@@ -32,10 +21,9 @@ reservoirs = dbc.Tab(
             [
                 dash_table.DataTable(
                     id="reservoir-data",
-                    # data=dummy_data.to_dict("records"),
                     columns=const.reservoir_station_names,
-                    style_table={'overflowY': 'auto'},
-                    style_cell={"textAlign": "center"},  # "whiteSpace": "normal", "overflow": "hidden", "textOverflow": "ellipsis"
+                    style_table={"overflowY": "auto"},
+                    style_cell={"textAlign": "center"},
                     style_data={
                         "whiteSpace": "normal",
                     },
@@ -53,14 +41,7 @@ reservoirs = dbc.Tab(
                     merge_duplicate_headers=True,
                     editable=True,
                     # fixed_rows={"headers": True},
-                    style_cell_conditional=[
-                        {"if": {"column_id": station}, "width": "10%"} for station in stations
-                    #     # {"if": {"column_id": "05NA006"}, "width": "10%"},
-                    #     # {"if": {"column_id": "05NB020"}, "width": "10%"},
-                    #     # {"if": {"column_id": "05NB016"}, "width": "10%"},
-                    #     # {"if": {"column_id": "05NC002"}, "width": "10%"},
-                    #     # {"if": {"column_id": "05ND012"}, "width": "10%"},
-                    ],
+                    style_cell_conditional=[{"if": {"column_id": station}, "width": "10%"} for station in stations],
                 ),
             ]
         ),

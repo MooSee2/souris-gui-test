@@ -20,6 +20,7 @@ pymysql = "^1.1.0"
 flask-caching = "^2.1.0"
 aiohttp = "^3.9.3"
 pyrfc3339 = "^1.1"
+rsconnect-python = "^1.22.0"
 
 
 [tool.poetry.group.dev.dependencies]

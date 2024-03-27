@@ -10,12 +10,12 @@ body,
 }
 
 
-
 .asideaside {
     padding: 0 6px 6px 6px;
     display: flex;
     flex-direction: column;
     /* height: calc(100vh - 40px); */
+
     width: 14rem;
     overflow-y: auto;
     overflow-x: visible;
@@ -172,7 +172,7 @@ td.CalendarDay {
     flex-wrap: wrap;
 }
 
-/* 
-.dash-spreadsheet.dash-freeze-left {
-    max-width: none !important;
-} */
+#query-data-button {
+    margin-left: 10px;
+    margin-right: 10px;
+}

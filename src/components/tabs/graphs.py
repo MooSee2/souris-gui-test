@@ -1,9 +1,6 @@
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
-import app_data.stations as const
-import app_data.test_data as td
-import modules.data_layer as dl
-from dash import dash_table, dcc, html
+from dash import dcc, html
 
 timeseries_dropdown_stations = {
     ("Long Creek near Estevan", "05NB001", "Rivers"),

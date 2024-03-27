@@ -12,7 +12,8 @@ from dash.exceptions import PreventUpdate
 
 import app_data.test_data as td
 import modules.data_layer.download_api_services as dl
-from app_data import stations as const
+
+# from app_data import stations as const
 
 # # cache this one
 # # @cache.memoize()
@@ -40,6 +41,8 @@ stations_dict = [
     {"id": "05NB033", "type": "discharge", "name": "Moseley Creek near Halbrite", "unique_id": "d124778abe524653ac32e82212cfe41b"},
     {"id": "05NB039", "type": "discharge", "name": "Tributary near Outram", "unique_id": "098e25d30c7244b4a158927efb324d4d"},
 ]
+
+unique_id_to_staid = {station["unique_id"]: station["id"] for station in stations_dict}
 
 stations = [
     ("05NA006", "reservoir", "Larsen Reservoir", "013d9d474541460aa3b1de4381276c38"),
@@ -104,25 +107,23 @@ def toggle_modal(n1: Optional[int], is_open: bool) -> bool:
     Output("apportion-button", "disabled"),
     Output("timeseries-dropdown", "disabled"),
     Input("query-data-button", "n_clicks"),
+    State("apportionment-year", "value"),
     prevent_initial_callback=True,
 )
 # @cache.memoize()
-def download_data(n_clicks):
+def download_data(n_clicks, apportionment_year: int):
     if n_clicks == 0 or n_clicks is None:
         raise PreventUpdate
 
     # TODO fix start-end dates before deployment
-    data = dl.get_caaq_data(
-        start_date=f"{now.year}-01-01",
-        end_date=f"{now.year}-10-31",
-        stations=stations,
-    )
+    # data = dl.get_caaq_data(
+    #     start_date=f"{apportionment_year}-01-01",
+    #     end_date=f"{apportionment_year}-10-31",
+    #     stations=stations,
+    # )
 
-    reservoirs = [d for d in data for f in stations_dict if (d.get("unique_id") == f.get("unique_id") and f.get("type") == "reservoir")]
-    # reservoirs = [station["data"].rename({"value": station['unique_id']}, axis=1, inplace=True) for station in reservoirs]
-
-    discharge = [d for d in data for f in stations_dict if (d.get("unique_id") == f.get("unique_id") and f.get("type") == "discharge")]
-    # met = [d for d in data for f in stations_dict if (d.get("unique_id") == f.get("unique_id") and f.get("type") == "met")]
+    # reservoirs = du.post_process_aq_dfs(data, type="reservoir")
+    # discharge = du.post_process_aq_dfs(data, type="discharge")
 
     return (
         "Data loaded!",
@@ -162,7 +163,24 @@ def update_evap_years(selected_year, start_date, end_date):
 )
 def timeseries_graph(staids, reservoir_data, met_data, discharge_data):
     if not staids:
-        raise PreventUpdate
+        return (
+            {
+                "layout": {
+                    "xaxis": {"visible": False},
+                    "yaxis": {"visible": False},
+                    "annotations": [
+                        {
+                            "text": "No Data Selected.",
+                            "xref": "paper",
+                            "yref": "paper",
+                            "showarrow": False,
+                            "font": {"size": 28},
+                        }
+                    ],
+                }
+            },
+            {"display": "none"},
+        )
 
     reservoir_data = pd.DataFrame(reservoir_data)
     met_data = pd.DataFrame(met_data)
@@ -181,6 +199,14 @@ def timeseries_graph(staids, reservoir_data, met_data, discharge_data):
         {"display": "none"},
     )
 
+
+dfs = [
+    {"id": "123", "df1": pd.DataFrame({"A": [1, 2]})},
+    {"id": "456", "980": pd.DataFrame({"C": [5, 6]})},
+    {"id": "789", "1113": pd.DataFrame({"D": [5, 6]})},
+    {"id": "147", "984": pd.DataFrame({"E": [5, 6]})},
+    {"id": "258", "45": pd.DataFrame({"F": [5, 6]})},
+]
 
 # @callback(
 #     Output("timeseries-plot", "figure"),
