@@ -10,12 +10,12 @@ def make_main():
         children=[
             dbc.Tabs(
                 [
-                    reported_flows,
-                    discharge,
-                    reservoirs,
-                    met_data,
-                    report,
-                    graphs,
+                    reported_flows(),
+                    discharge(),
+                    reservoirs(),
+                    met_data(),
+                    report(),
+                    graphs(),
                 ],
             ),
         ],

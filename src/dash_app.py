@@ -36,6 +36,7 @@ app = Dash(
     name=__name__,
     title="Souris Apportionment App",
     external_stylesheets=external_stylesheets,
+    # prevent_initial_callbacks="initial_duplicate"
 )
 
 app._favicon = "assets/images/favicon.ico"

@@ -1,5 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table
+import pandas as pd
+from datetime import datetime as dt
 
 import app_data.stations as const
 
@@ -19,32 +21,39 @@ stations = [
     "05NB039",
 ]
 
-discharge = dbc.Tab(
-    label="Discharge data",
-    children=dbc.Card(
-        className="mt-3",
-        children=dbc.CardBody(
-            children=[
-                dash_table.DataTable(
-                    columns=const.discharge_station_names,
-                    id="discharge-data",
-                    style_cell={
-                        "textAlign": "center",
-                        "whiteSpace": "normal",
-                        "overflow": "hidden",
-                        "textOverflow": "ellipsis",
-                    },
-                    style_data={
-                        "whiteSpace": "normal",
-                        "height": "auto",
-                    },
-                    style_table={"overflowY": "auto"},
-                    merge_duplicate_headers=True,
-                    editable=True,
-                    # fixed_rows={"headers": True},
-                    style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
-                ),
-            ]
+now = dt.now().year
+datetime = pd.date_range(f"{now}-01-01", f"{now}-12-31", freq="d").strftime("%Y-%m-%d")
+dummy_data = pd.DataFrame({"datetime": datetime})
+
+
+def discharge():
+    return dbc.Tab(
+        label="Discharge data",
+        children=dbc.Card(
+            className="mt-3",
+            children=dbc.CardBody(
+                children=[
+                    dash_table.DataTable(
+                        data=dummy_data.to_dict("records"),
+                        columns=const.discharge_station_names,
+                        id="discharge-data",
+                        style_cell={
+                            "textAlign": "center",
+                            "whiteSpace": "normal",
+                            "overflow": "hidden",
+                            "textOverflow": "ellipsis",
+                        },
+                        style_data={
+                            "whiteSpace": "normal",
+                            "height": "auto",
+                        },
+                        style_table={"overflowY": "auto"},
+                        merge_duplicate_headers=True,
+                        editable=True,
+                        # fixed_rows={"headers": True},
+                        style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
+                    ),
+                ]
+            ),
         ),
-    ),
-)
+    )

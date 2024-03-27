@@ -97,6 +97,21 @@ def toggle_modal(n1: Optional[int], is_open: bool) -> bool:
 
 
 # return not is_open if n1 else is_open
+@callback(
+    Output("discharge-data", "data", allow_duplicate=True),
+    Output("reservoir-data", "data", allow_duplicate=True),
+    Output("met-data", "data", allow_duplicate=True),
+    Input("apportionment-year", "value"),
+    prevent_initial_call="initial_duplicate",
+)
+def update_dummy_datetime(year):
+    datetime = pd.date_range(f"{year}-01-01", f"{year}-12-31", freq="d").strftime("%Y-%m-%d")
+    dummy_data = pd.DataFrame({"datetime": datetime})
+    return (
+        dummy_data.to_dict("records"),
+        dummy_data.to_dict("records"),
+        dummy_data.to_dict("records"),
+    )
 
 
 @callback(
@@ -108,7 +123,7 @@ def toggle_modal(n1: Optional[int], is_open: bool) -> bool:
     Output("timeseries-dropdown", "disabled"),
     Input("query-data-button", "n_clicks"),
     State("apportionment-year", "value"),
-    prevent_initial_callback=True,
+    prevent_initial_call=True,
 )
 # @cache.memoize()
 def download_data(n_clicks, apportionment_year: int):
@@ -199,14 +214,6 @@ def timeseries_graph(staids, reservoir_data, met_data, discharge_data):
         {"display": "none"},
     )
 
-
-dfs = [
-    {"id": "123", "df1": pd.DataFrame({"A": [1, 2]})},
-    {"id": "456", "980": pd.DataFrame({"C": [5, 6]})},
-    {"id": "789", "1113": pd.DataFrame({"D": [5, 6]})},
-    {"id": "147", "984": pd.DataFrame({"E": [5, 6]})},
-    {"id": "258", "45": pd.DataFrame({"F": [5, 6]})},
-]
 
 # @callback(
 #     Output("timeseries-plot", "figure"),

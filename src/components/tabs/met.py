@@ -16,37 +16,39 @@ stations = [
     "4321_precip",
 ]
 
-met_data = dbc.Tab(
-    label="Met Data",
-    children=dbc.Card(
-        className="mt-3",
-        children=dbc.CardBody(
-            [
-                dash_table.DataTable(
-                    id="met-data",
-                    columns=const.met_station_names,
-                    style_table={"minWidth": "100%", "overflowY": "auto"},
-                    style_header={
-                        "textAlign": "center",
-                        "whiteSpace": "normal",
-                        "overflow": "hidden",
-                        "textOverflow": "ellipsis",
-                    },
-                    style_cell={
-                        "textAlign": "center",
-                        "whiteSpace": "normal",
-                        "overflow": "hidden",
-                        "textOverflow": "ellipsis",
-                    },
-                    style_data={
-                        "whiteSpace": "normal",
-                        "height": "auto",
-                    },
-                    merge_duplicate_headers=True,
-                    editable=True,
-                    style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
-                ),
-            ]
+
+def met_data():
+    return dbc.Tab(
+        label="Met Data",
+        children=dbc.Card(
+            className="mt-3",
+            children=dbc.CardBody(
+                [
+                    dash_table.DataTable(
+                        id="met-data",
+                        columns=const.met_station_names,
+                        style_table={"minWidth": "100%", "overflowY": "auto"},
+                        style_header={
+                            "textAlign": "center",
+                            "whiteSpace": "normal",
+                            "overflow": "hidden",
+                            "textOverflow": "ellipsis",
+                        },
+                        style_cell={
+                            "textAlign": "center",
+                            "whiteSpace": "normal",
+                            "overflow": "hidden",
+                            "textOverflow": "ellipsis",
+                        },
+                        style_data={
+                            "whiteSpace": "normal",
+                            "height": "auto",
+                        },
+                        merge_duplicate_headers=True,
+                        editable=True,
+                        style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
+                    ),
+                ]
+            ),
         ),
-    ),
-)
+    )

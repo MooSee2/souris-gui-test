@@ -38,54 +38,55 @@ def make_dropdown_options(data: set[tuple]) -> list[dict]:
     return sorted(dropdowns, key=lambda x: (x["group"], x["label"]))
 
 
-graphs = dbc.Tab(
-    label="Graphs",
-    children=[
-        dbc.Card(
-            className="mt-3",
-            children=[
-                dbc.CardBody(
-                    children=[
-                        html.Div(
-                            [
-                                dmc.MultiSelect(
-                                    data=make_dropdown_options(timeseries_dropdown_stations),
-                                    label="Select Station",
-                                    placeholder="Stations",
-                                    searchable=True,
-                                    id="timeseries-dropdown",
-                                    maxDropdownHeight="350px",
-                                    disabled=True,
-                                ),
-                            ]
-                        ),
-                        html.Div(
-                            className="loading-graph-wrapper",
-                            children=[
-                                dcc.Graph(
-                                    id="timeseries-plot",
-                                    figure={
-                                        "layout": {
-                                            "xaxis": {"visible": False},
-                                            "yaxis": {"visible": False},
-                                            "annotations": [
-                                                {
-                                                    "text": "No Data Selected.",
-                                                    "xref": "paper",
-                                                    "yref": "paper",
-                                                    "showarrow": False,
-                                                    "font": {"size": 28},
-                                                }
-                                            ],
-                                        }
-                                    },
-                                ),
-                                dcc.Loading(id="time-series-loader"),
-                            ],
-                        ),
-                    ],
-                ),
-            ],
-        ),
-    ],
-)
+def graphs():
+    return dbc.Tab(
+        label="Graphs",
+        children=[
+            dbc.Card(
+                className="mt-3",
+                children=[
+                    dbc.CardBody(
+                        children=[
+                            html.Div(
+                                [
+                                    dmc.MultiSelect(
+                                        data=make_dropdown_options(timeseries_dropdown_stations),
+                                        label="Select Station",
+                                        placeholder="Stations",
+                                        searchable=True,
+                                        id="timeseries-dropdown",
+                                        maxDropdownHeight="350px",
+                                        disabled=True,
+                                    ),
+                                ]
+                            ),
+                            html.Div(
+                                className="loading-graph-wrapper",
+                                children=[
+                                    dcc.Graph(
+                                        id="timeseries-plot",
+                                        figure={
+                                            "layout": {
+                                                "xaxis": {"visible": False},
+                                                "yaxis": {"visible": False},
+                                                "annotations": [
+                                                    {
+                                                        "text": "No Data Selected.",
+                                                        "xref": "paper",
+                                                        "yref": "paper",
+                                                        "showarrow": False,
+                                                        "font": {"size": 28},
+                                                    }
+                                                ],
+                                            }
+                                        },
+                                    ),
+                                    dcc.Loading(id="time-series-loader"),
+                                ],
+                            ),
+                        ],
+                    ),
+                ],
+            ),
+        ],
+    )
