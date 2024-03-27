@@ -62,7 +62,8 @@ graphs = dbc.Tab(
                                 ),
                             ]
                         ),
-                        dcc.Loading(
+                        html.Div(
+                            className="loading-graph-wrapper",
                             children=[
                                 dcc.Graph(
                                     id="timeseries-plot",
@@ -82,9 +83,10 @@ graphs = dbc.Tab(
                                         }
                                     },
                                 ),
+                                dcc.Loading(id="time-series-loader"),
                             ],
                         ),
-                    ]
+                    ],
                 ),
             ],
         ),

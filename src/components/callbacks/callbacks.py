@@ -153,6 +153,7 @@ def update_evap_years(selected_year, start_date, end_date):
 
 @callback(
     Output("timeseries-plot", "figure"),
+    Output("time-series-loader", "parent_style"),
     Input("timeseries-dropdown", "value"),
     Input("reservoir-data", "data"),
     Input("met-data", "data"),
@@ -175,7 +176,10 @@ def timeseries_graph(staids, reservoir_data, met_data, discharge_data):
     for staid in staids:
         fig.add_scatter(x=df.index.values, y=df[staid])
 
-    return fig
+    return (
+        fig,
+        {"display": "none"},
+    )
 
 
 # @callback(
