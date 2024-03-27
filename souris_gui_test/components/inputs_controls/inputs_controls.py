@@ -47,7 +47,7 @@ aside = html.Div(
                 wateryear.wateryear,
                 evap_start.evap_start,
                 evap_end.evap_end,
-                met_station.met_station,
+                # met_station.met_station,
             ],
         ),
         html.Div(
