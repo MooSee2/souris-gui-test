@@ -18,7 +18,7 @@ evap_start = html.Div(
             ],
         ),
         dbc.Tooltip(
-            "This is a bunch, " "of test text to explain what this field is for.",
+            "The start date for evaporation. Used to determine when to start evaporative loss calculations.  By default, April-15th.",
             target="evap-start-tip",
         ),
         # style={"width": "100%"},

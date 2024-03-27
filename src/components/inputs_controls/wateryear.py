@@ -10,14 +10,14 @@ wateryear = html.Div(
             children=[
                 html.Div(
                     className="HH6",
-                    children=["Water year"],
+                    children=["Apportionment Year"],
                 ),
-                html.Div(id="water-year-tip", className="info-container", children=html.Div(className="fa-solid fa-info")),
+                html.Div(id="apport-year-tip", className="info-container", children=html.Div(className="fa-solid fa-info")),
             ],
         ),
         dbc.Tooltip(
-            "This is a bunch, " "of test text to explain what this field is for.",
-            target="water-year-tip",
+            "The year to apportion.  By default, the current year.",
+            target="apport-year-tip",
         ),
         dcc.Dropdown(
             id="apportionment-year",
