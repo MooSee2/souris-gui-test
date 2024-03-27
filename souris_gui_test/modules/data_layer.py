@@ -12,3 +12,5 @@ def load_data(start_date, end_date) -> tuple[pd.DataFrame]:
     import data.test_data as td
 
     return td.discharge_data, td.met_data, td.reservoir_data
+
+#TODO data access layer better

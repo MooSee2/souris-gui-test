@@ -40,7 +40,11 @@ graphs = dbc.Tab(
                         #     ],
                         #     label="Stations",
                         # ),
-                        dcc.Graph(id="timeseries-plot"),
+                        dcc.Loading(
+                            children=[
+                                dcc.Graph(id="timeseries-plot"),
+                            ],
+                        ),
                     ]
                 ),
             ],
