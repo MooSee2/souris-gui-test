@@ -1,0 +1,15 @@
+.navbar-container {
+    display: flex;
+    flex: 1;
+    height: 40px;
+    background: #086BC7;
+    padding-left: 10px;
+    padding-right: 10px;
+
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

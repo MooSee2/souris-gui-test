@@ -4,13 +4,14 @@ from time import sleep
 # from dataclasses import dataclass
 from typing import Optional, Union
 
-import app_data.test_data as td
-
 # import modules.server as serv
 import pandas as pd
 import plotly.express as px
 from dash import Input, Output, State, callback, dash_table, html
 from dash.exceptions import PreventUpdate
+
+import app_data.test_data as td
+import modules.data_layer.download_api_services as dl
 from app_data import stations as const
 
 # # cache this one
@@ -18,11 +19,51 @@ from app_data import stations as const
 # def get_data(start_date, end_date) -> None:
 #     sleep(1)
 #     return _download_data(start_date, end_date)
+now = dt.now()
 
+stations_dict = [
+    {"id": "05NA006", "type": "reservoir", "name": "Larsen Reservoir", "unique_id": "013d9d474541460aa3b1de4381276c38"},
+    {"id": "05NB020", "type": "reservoir", "name": "Nickle Lake", "unique_id": "988537b8321f47a5a421bfa23c19263a"},
+    {"id": "05NB016", "type": "reservoir", "name": "Roughbark Reservoir", "unique_id": "cd827ce017344fd7b2764dceab9d6989"},
+    {"id": "05NC002", "type": "reservoir", "name": "Moose Mountain Lake", "unique_id": "21a5a52a1f8447ffa6c872429ef94a39"},
+    {"id": "05ND012", "type": "reservoir", "name": "Grant Devine Reservoir", "unique_id": "fda763c4468b47bc9d693a14a6b77ba2"},
+    {"id": "05NB001", "type": "discharge", "name": "Long Creek near Estevan", "unique_id": "ec83a47a06d4410e84ba94d384fb0523"},
+    {"id": "05NB036", "type": "discharge", "name": "Souris River below Rafferty Reservoir", "unique_id": "8f6f1b90e5f34a0cb08ed1c7a81f11c2"},
+    {"id": "05NB011", "type": "discharge", "name": "Yellograss Ditch", "unique_id": "d8cadb5a4c524fd1a8b172a04d00382b"},
+    {"id": "05NB018", "type": "discharge", "name": "Tatagwa Lake Drain", "unique_id": "8572ab68835341a09f093ef947d167b2"},
+    {"id": "05NA003", "type": "discharge", "name": "Long Creek at Western Crossing", "unique_id": "2e2cb41a826c4743ac2e12ce08c96310"},
+    {"id": "05NB040", "type": "discharge", "name": "Souris River near Ralph", "unique_id": "83d5168d48194b2ab0520a0510c51d80"},
+    {"id": "05NB041", "type": "discharge", "name": "Roughbark Creek above Rafferty Res.", "unique_id": "2e7f3f3b51bd4605b240a21fb0e17009"},
+    {"id": "05NB038", "type": "discharge", "name": "Boundary Reservoir Diversion Canal", "unique_id": "62744ab8cf244767ae9d78307db39668"},
+    {"id": "05NB014", "type": "discharge", "name": "Jewel Creek near Goodwater", "unique_id": "2cb7747424bc49b3ae2e7acf16dfb7d9"},
+    {"id": "05NB035", "type": "discharge", "name": "Cooke Creek near Goodwater", "unique_id": "4f97b149655e4ec8bfa16b35b9933d7a"},
+    {"id": "05NB033", "type": "discharge", "name": "Moseley Creek near Halbrite", "unique_id": "d124778abe524653ac32e82212cfe41b"},
+    {"id": "05NB039", "type": "discharge", "name": "Tributary near Outram", "unique_id": "098e25d30c7244b4a158927efb324d4d"},
+]
 
-def make_dropdown_options(data: set[tuple]) -> list[dict]:
-    dropdowns = [{"label": staid, "value": name, "group": group} for staid, name, group in data]
-    return sorted(dropdowns, key=lambda x: (x["group"], x["label"]))
+stations = [
+    ("05NA006", "reservoir", "Larsen Reservoir", "013d9d474541460aa3b1de4381276c38"),
+    ("05NB020", "reservoir", "Nickle Lake", "988537b8321f47a5a421bfa23c19263a"),
+    ("05NB016", "reservoir", "Roughbark Reservoir", "cd827ce017344fd7b2764dceab9d6989"),
+    ("05NC002", "reservoir", "Moose Mountain Lake", "21a5a52a1f8447ffa6c872429ef94a39"),
+    ("05ND012", "reservoir", "Grant Devine Reservoir", "fda763c4468b47bc9d693a14a6b77ba2"),
+    ("05NB001", "discharge", "Long Creek near Estevan", "ec83a47a06d4410e84ba94d384fb0523"),
+    ("05NB036", "discharge", "Souris River below Rafferty Reservoir", "8f6f1b90e5f34a0cb08ed1c7a81f11c2"),
+    ("05NB011", "discharge", "Yellograss Ditch", "d8cadb5a4c524fd1a8b172a04d00382b"),
+    ("05NB018", "discharge", "Tatagwa Lake Drain", "8572ab68835341a09f093ef947d167b2"),
+    ("05NA003", "discharge", "Long Creek at Western Crossing", "2e2cb41a826c4743ac2e12ce08c96310"),
+    ("05NB040", "discharge", "Souris River near Ralph", "83d5168d48194b2ab0520a0510c51d80"),
+    ("05NB041", "discharge", "Roughbark Creek above Rafferty Res.", "2e7f3f3b51bd4605b240a21fb0e17009"),
+    ("05NB038", "discharge", "Boundary Reservoir Diversion Canal", "62744ab8cf244767ae9d78307db39668"),
+    ("05NB014", "discharge", "Jewel Creek near Goodwater", "2cb7747424bc49b3ae2e7acf16dfb7d9"),
+    ("05NB035", "discharge", "Cooke Creek near Goodwater", "4f97b149655e4ec8bfa16b35b9933d7a"),
+    ("05NB033", "discharge", "Moseley Creek near Halbrite", "d124778abe524653ac32e82212cfe41b"),
+    ("05NB039", "discharge", "Tributary near Outram", "098e25d30c7244b4a158927efb324d4d"),
+]
+
+# def make_dropdown_options(data: set[tuple]) -> list[dict]:
+#     dropdowns = [{"label": staid, "value": name, "group": group} for staid, name, group in data]
+#     return sorted(dropdowns, key=lambda x: (x["group"], x["label"]))
 
 
 @callback(
@@ -61,6 +102,7 @@ def toggle_modal(n1: Optional[int], is_open: bool) -> bool:
     Output("discharge-data", "data"),
     Output("met-data", "data"),
     Output("apportion-button", "disabled"),
+    Output("timeseries-dropdown", "disabled"),
     Input("query-data-button", "n_clicks"),
     prevent_initial_callback=True,
 )
@@ -69,13 +111,25 @@ def download_data(n_clicks):
     if n_clicks == 0 or n_clicks is None:
         raise PreventUpdate
 
-    # TODO Put downlaod function in here.
+    # TODO fix start-end dates before deployment
+    data = dl.get_caaq_data(
+        start_date=f"{now.year}-01-01",
+        end_date=f"{now.year}-10-31",
+        stations=stations,
+    )
+
+    reservoirs = [d for d in data for f in stations_dict if (d.get("unique_id") == f.get("unique_id") and f.get("type") == "reservoir")]
+    # reservoirs = [station["data"].rename({"value": station['unique_id']}, axis=1, inplace=True) for station in reservoirs]
+
+    discharge = [d for d in data for f in stations_dict if (d.get("unique_id") == f.get("unique_id") and f.get("type") == "discharge")]
+    # met = [d for d in data for f in stations_dict if (d.get("unique_id") == f.get("unique_id") and f.get("type") == "met")]
 
     return (
         "Data loaded!",
         td.reservoir_data.to_dict("records"),
         td.discharge_data.to_dict("records"),
         td.met_data.to_dict("records"),
+        False,
         False,
     )
 
@@ -90,7 +144,7 @@ def download_data(n_clicks):
 )
 def update_evap_years(selected_year, start_date, end_date):
     if not selected_year:
-        selected_year = dt.now().year
+        selected_year = now.year
 
     start_date = dt.strptime(f"{selected_year}-{start_date[5:]}", "%Y-%m-%d").date()
     end_date = dt.strptime(f"{selected_year}-{end_date[5:]}", "%Y-%m-%d").date()
@@ -124,16 +178,30 @@ def timeseries_graph(staids, reservoir_data, met_data, discharge_data):
     return fig
 
 
-@callback(
-    Output("timeseries-dropdown", "data"),
-    Input("query-data-button", "n_clicks"),
-    prevent_initial_call=True,
-)
-def timeseries_graph(clicks):
-    # if clicks is None:
-    return make_dropdown_options(const.stations)
+# @callback(
+#     Output("timeseries-plot", "figure"),
+#     Input("query-data-button", "n_clicks"),
+#     prevent_initial_call=True,
+# )
+# def timeseries_graph_message(clicks):
+#     if clicks > 0:
+#         return {
+#             "layout": {
+#                 "xaxis": {"visible": False},
+#                 "yaxis": {"visible": False},
+#                 "annotations": [
+#                     {
+#                         "text": "Select station to view time-series data.",
+#                         "xref": "paper",
+#                         "yref": "paper",
+#                         "showarrow": False,
+#                         "font": {"size": 28},
+#                     }
+#                 ],
+#             }
+#         }
 
-    # raise PreventUpdate
+#     raise PreventUpdate
 
 
 # TODO finish this function

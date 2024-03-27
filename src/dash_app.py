@@ -34,8 +34,11 @@ external_stylesheets = [
 
 app = Dash(
     name=__name__,
+    title="Souris Apportionment App",
     external_stylesheets=external_stylesheets,
 )
+
+app._favicon = "assets/images/favicon.ico"
 
 app.layout = html.Div(
     children=make_layout(),
@@ -46,7 +49,7 @@ cache = Cache(
     app.server,
     config={
         "CACHE_TYPE": "filesystem",
-        "CACHE_DIR": "data_cache",
+        "CACHE_DIR": ".cache",
     },
 )
 

@@ -339,27 +339,6 @@ class MESOnet:
         return self._process_gilford_dataframes(results, params)
 
 
-stations = [
-    ("05NA006", "reservoir", "Larsen Reservoir", "013d9d474541460aa3b1de4381276c38"),
-    ("05NB020", "reservoir", "Nickle Lake", "988537b8321f47a5a421bfa23c19263a"),
-    ("05NB016", "reservoir", "Roughbark Reservoir", "cd827ce017344fd7b2764dceab9d6989"),
-    ("05NC002", "reservoir", "Moose Mountain Lake", "21a5a52a1f8447ffa6c872429ef94a39"),
-    ("05ND012", "reservoir", "Grant Devine Reservoir", "fda763c4468b47bc9d693a14a6b77ba2"),
-    ("05NB001", "discharge", "Long Creek near Estevan", "ec83a47a06d4410e84ba94d384fb0523"),
-    ("05NB036", "discharge", "Souris River below Rafferty Reservoir", "8f6f1b90e5f34a0cb08ed1c7a81f11c2"),
-    ("05NB011", "discharge", "Yellograss Ditch", "d8cadb5a4c524fd1a8b172a04d00382b"),
-    ("05NB018", "discharge", "Tatagwa Lake Drain", "8572ab68835341a09f093ef947d167b2"),
-    ("05NA003", "discharge", "Long Creek at Western Crossing", "2e2cb41a826c4743ac2e12ce08c96310"),
-    ("05NB040", "discharge", "Souris River near Ralph", "83d5168d48194b2ab0520a0510c51d80"),
-    ("05NB041", "discharge", "Roughbark Creek above Rafferty Res.", "2e7f3f3b51bd4605b240a21fb0e17009"),
-    ("05NB038", "discharge", "Boundary Reservoir Diversion Canal", "62744ab8cf244767ae9d78307db39668"),
-    ("05NB014", "discharge", "Jewel Creek near Goodwater", "2cb7747424bc49b3ae2e7acf16dfb7d9"),
-    ("05NB035", "discharge", "Cooke Creek near Goodwater", "4f97b149655e4ec8bfa16b35b9933d7a"),
-    ("05NB033", "discharge", "Moseley Creek near Halbrite", "d124778abe524653ac32e82212cfe41b"),
-    ("05NB039", "discharge", "Tributary near Outram", "098e25d30c7244b4a158927efb324d4d"),
-]
-
-
 # Returns list of dicts: {unique_id: DataFrame}
 def get_caaq_data(start_date: str, end_date: str, stations: list) -> dict[str, pd.DataFrame]:
     aq_user = os.getenv("AQ_USERNAME")

@@ -9,12 +9,7 @@ body,
     overflow: hidden;
 }
 
-.navbar-container {
-    display: flex;
-    flex: 1;
-    height: 40px;
-    background: #086BC7;
-}
+
 
 .asideaside {
     padding: 0 6px 6px 6px;
