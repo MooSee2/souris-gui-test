@@ -28,14 +28,6 @@ body,
     background-color: rgb(235, 235, 235);
 }
 
-/* 
-aside > :last-child {
-    order: 1;
-}
-
-aside > :not(:last-child) {
-    order: 0;
-} */
 
 main {
     display: flex;
@@ -44,7 +36,6 @@ main {
     height: calc(100vh - 40px);
     padding-top: 6px;
     padding: 6px 8px 6px 8px;
-    /* overflow-y: auto; */
 }
 
 .nav-tabs {
@@ -59,18 +50,16 @@ main {
 }
 
 
-
-
-.tab-content, .tab-pane, .tab-pane>*, .mt-3, .card-body, .dash-table-container, .dash-spreadsheet-container {
+.tab-content,
+.tab-pane,
+.tab-pane>*,
+.mt-3,
+.card-body,
+.dash-table-container,
+.dash-spreadsheet-container {
     height: 100%;
 }
-/* .dash-table-container {
-    height: 100% !important;
-} */
 
-.mt-3 {
-    /* height: 100%; */
-}
 
 .tab2-thing {
     height: 100px;
@@ -79,6 +68,7 @@ main {
     background-color: cadetblue;
 }
 
+
 #interior-container {
     display: flex;
     flex-direction: row;
@@ -86,6 +76,7 @@ main {
     height: calc(100vh - 40px);
     width: 100%;
 }
+
 
 #upload-data {
     width: 20rem;
@@ -98,11 +89,13 @@ main {
     margin: 10px;
 }
 
+
 .reported-flows {
     width: 100%;
     height: 30px;
     margin: 5px;
 }
+
 
 .reported-flows-input {
     font-size: 0.85rem;
@@ -114,14 +107,6 @@ main {
     justify-content: space-between;
 }
 
-/* .DateInput,
-.DateInput_1,
-.DateInput_input {
-    font-size: 1rem;
-    width: 100%;
-    padding: 2px;
-
-} */
 
 td.CalendarDay {
     padding: 0;
@@ -141,10 +126,6 @@ td.CalendarDay {
     margin-bottom: 2px;
 }
 
-/* 
-.dash-spreadsheet.dash-freeze-left {
-    max-width: none !important;
-} */
 
 .DateInput_input__focused {
     border-bottom: 0px;
@@ -192,7 +173,7 @@ td.CalendarDay {
     display: flex;
     justify-content: center;
     height: 1.2rem;
-    width: 1rem;
+    width: 1.5rem;
     flex-wrap: wrap;
 }
 
