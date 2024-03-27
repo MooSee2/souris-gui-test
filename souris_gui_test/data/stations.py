@@ -35,6 +35,7 @@ stations = {
 }
 
 discharge_station_names = [
+    {"name": ["Discharge", " ", " ", "Datetime"], "id": "datetime"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Estevan", "05NB001"], "id": "05NB001"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Souris River below Rafterty", "05NB036"], "id": "05NB036"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Yellowgrass Ditch", "05NB011"], "id": "05NB011"},
@@ -50,25 +51,24 @@ discharge_station_names = [
 ]
 
 reservoir_station_names = [
-    {"name": ["Reservoir Elevation", "Elevation: meters", "Station ID", "Datetime"], "id": "datetime"},
-    {"name": ["Reservoir Elevation", "Elevation: meters", "05NA006", "Larson"], "id": "05NA006"},
-    {"name": ["Reservoir Elevation", "Elevation: meters", "05NB020", "Nickle Lake"], "id": "05NB020"},
-    {"name": ["Reservoir Elevation", "Elevation: meters", "05NB016", "Roughbark"], "id": "05NB016"},
-    {"name": ["Reservoir Elevation", "Elevation: meters", "05NC002", "Moose Mountain Lake"], "id": "05NC002"},
-    {"name": ["Reservoir Elevation", "Elevation: meters", "05ND012", "Grant Devine"], "id": "05ND012"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", " ", "Datetime"], "id": "datetime"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", "Larson", "05NA006"], "id": "05NA006"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", "Nickle Lake", "05NB020"], "id": "05NB020"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", "Roughbark", "05NB016"], "id": "05NB016"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", "Moose Mountain Lake", "05NC002"], "id": "05NC002"},
+    {"name": ["Reservoir Elevation", "Elevation: meters", "Grant Devine", "05ND012"], "id": "05ND012"},
 ]
 
-# {"name": "", "id": ""},
 met_station_names = [
-    # {"name": ["Datetime", "Units", "l"], "id": "index"},
-    {"name": ["Roughbark", "Units: m/s", "Wind Speed"], "id": "1234_wind_speed"},
-    {"name": ["Roughbark", "Units: C", "Air Temperature"], "id": "1234_air_temp"},
-    {"name": ["Roughbark", "Units: w/m\u00b2", "Solar Radiation"], "id": "1234_sol_rad"},
-    {"name": ["Roughbark", "Units: %", "Relative Humidity"], "id": "1234_rel_humidity"},
-    {"name": ["Roughbark", "Units: mm", "Precipitation"], "id": "1234_precip"},
-    {"name": ["Handsworth", "Units: m/s", "Wind Speed"], "id": "4321_wind_speed"},
-    {"name": ["Handsworth", "Units: C", "Air Temperature"], "id": "4321_air_temp"},
-    {"name": ["Handsworth", "Units: w/m\u00b2", "Solar Radiation"], "id": "4321_sol_rad"},
-    {"name": ["Handsworth", "Units: %", "Relative Humidity"], "id": "4321_rel_humidity"},
-    {"name": ["Handsworth", "Units: mm", "Precipitation"], "id": "4321_precip"},
+    {"name": ["Roughbark", " ", "Datetime"], "id": "datetime"},
+    {"name": ["Roughbark", "Wind Speed", "m/s"], "id": "1234_wind_speed"},
+    {"name": ["Roughbark", "Air Temperature", "C"], "id": "1234_air_temp"},
+    {"name": ["Roughbark", "Solar Radiation", "w/m\u00b2"], "id": "1234_sol_rad"},
+    {"name": ["Roughbark", "Relative Humidity", "%"], "id": "1234_rel_humidity"},
+    {"name": ["Roughbark", "Precipitation", "mm"], "id": "1234_precip"},
+    {"name": ["Handsworth", "Wind Speed", "m/s"], "id": "4321_wind_speed"},
+    {"name": ["Handsworth", "Air Temperature", "C"], "id": "4321_air_temp"},
+    {"name": ["Handsworth", "Solar Radiation", "w/m\u00b2"], "id": "4321_sol_rad"},
+    {"name": ["Handsworth", "Relative Humidity", "%"], "id": "4321_rel_humidity"},
+    {"name": ["Handsworth", "Precipitation", "mm"], "id": "4321_precip"},
 ]
