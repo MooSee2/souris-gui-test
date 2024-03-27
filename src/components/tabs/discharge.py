@@ -45,7 +45,7 @@ discharge = dbc.Tab(
         children=dbc.CardBody(
             children=[
                 dash_table.DataTable(
-                    data=dummy_data.to_dict("records"),
+                    # data=dummy_data.to_dict("records"),
                     columns=const.discharge_station_names,
                     id="discharge-data",
                     # style_table={"minWidth": "100%"},

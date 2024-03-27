@@ -29,7 +29,7 @@ met_data = dbc.Tab(
         children=dbc.CardBody(
             [
                 dash_table.DataTable(
-                    data=dummy_data.to_dict("records"),
+                    # data=dummy_data.to_dict("records"),
                     id="met-data",
                     columns=const.met_station_names,
                     style_table={"minWidth": "100%", 'overflowY': 'auto'},

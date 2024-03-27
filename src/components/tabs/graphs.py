@@ -16,10 +16,11 @@ graphs = dbc.Tab(
                         html.Div(
                             [
                                 dmc.MultiSelect(
-                                    label="Select category",
-                                    placeholder="Select Station",
+                                    label="Select Station",
+                                    placeholder="Stations",
                                     searchable=True,
                                     id="timeseries-dropdown",
+                                    maxDropdownHeight="350px"
                                 ),
                             ]
                         ),

@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import html
 
+#TODO add info icons to headings
 reported_flows = dbc.Tab(
     label="Reported Flows",
     children=dbc.Card(

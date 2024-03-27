@@ -9,14 +9,6 @@ report = dbc.Tab(
             [
                 html.P("This is tab 2!", className="card-text"),
                 html.Div(className="tab2-thing"),
-                html.Div(className="tab2-thing"),
-                html.Div(className="tab2-thing"),
-                html.Div(className="tab2-thing"),
-                html.Div(className="tab2-thing"),
-                html.Div(className="tab2-thing"),
-                html.Div(className="tab2-thing"),
-                html.Div(className="tab2-thing"),
-                html.Div(className="tab2-thing"),
             ]
         ),
     ),

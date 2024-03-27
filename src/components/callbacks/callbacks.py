@@ -136,6 +136,15 @@ def timeseries_graph(clicks):
     # raise PreventUpdate
 
 
+#TODO finish this function
+# @callback(
+#     Output("data-downloaded-div", "children"),
+#     Input("query-data-button", "n_clicks"),
+# )
+# def get_box_data(_):
+#     return None
+
+
 # @callback(
 #     Output("data-downloaded-div", "children"),
 #     Input("query-data-button", "n_clicks"),

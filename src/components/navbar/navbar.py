@@ -1,14 +1,26 @@
+from dash import html
 import dash_bootstrap_components as dbc
 
-navbar = dbc.NavbarSimple(
-    id="navbar",
+navbar = html.Div(
+    className="navbar-container",
     children=[
-        dbc.NavItem(
-            dbc.NavLink("Page 1", href="#"),
+        html.Div(
+            children=[
+                html.Img(src="assets/logo.svg", height="30px"),
+            ],
         ),
     ],
-    brand="IJC",
-    brand_href="#",
-    color="primary",
-    dark=True,
 )
+
+# dbc.NavbarSimple(
+#     id="navbar",
+#     children=[
+#         dbc.NavItem(
+#             dbc.NavLink("Page 1", href="#"),
+#         ),
+#     ],
+#     brand="IJC",
+#     brand_href="#",
+#     color="primary",
+#     dark=True,
+# )
