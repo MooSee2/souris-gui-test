@@ -43,7 +43,7 @@ discharge = dbc.Tab(
     children=dbc.Card(
         className="mt-3",
         children=dbc.CardBody(
-            [
+            children=[
                 dash_table.DataTable(
                     data=dummy_data.to_dict("records"),
                     columns=const.discharge_station_names,
@@ -57,9 +57,9 @@ discharge = dbc.Tab(
                     },
                     style_data={
                         "whiteSpace": "normal",
-                        # "height": "auto",
+                        "height": "auto",
                     },
-                    style_table={"minWidth": "100%"},
+                    style_table={'overflowY': 'auto'},
                     merge_duplicate_headers=True,
                     editable=True,
                     # fixed_rows={"headers": True},

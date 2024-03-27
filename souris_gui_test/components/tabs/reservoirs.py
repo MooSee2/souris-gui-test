@@ -34,6 +34,7 @@ reservoirs = dbc.Tab(
                     id="reservoir-data",
                     data=dummy_data.to_dict("records"),
                     columns=const.reservoir_station_names,
+                    style_table={'overflowY': 'auto'},
                     style_cell={"textAlign": "center"},  # "whiteSpace": "normal", "overflow": "hidden", "textOverflow": "ellipsis"
                     style_data={
                         "whiteSpace": "normal",

@@ -32,7 +32,7 @@ met_data = dbc.Tab(
                     data=dummy_data.to_dict("records"),
                     id="met-data",
                     columns=const.met_station_names,
-                    style_table={"minWidth": "100%"},
+                    style_table={"minWidth": "100%", 'overflowY': 'auto'},
                     style_header={
                         "textAlign": "center",
                         "whiteSpace": "normal",

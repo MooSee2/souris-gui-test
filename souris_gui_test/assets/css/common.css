@@ -51,7 +51,22 @@ main {
 .tab-content {
     /* flex: 1; */
     margin: 4px;
-    overflow-y: auto;
+    /* overflow-y: auto; */
+    /* max-height: 100%; */
+}
+
+
+
+
+.tab-content, .tab-pane, .tab-pane>*, .mt-3, .card-body, .dash-table-container, .dash-spreadsheet-container {
+    height: 100%;
+}
+/* .dash-table-container {
+    height: 100% !important;
+} */
+
+.mt-3 {
+    /* height: 100%; */
 }
 
 .tab2-thing {
@@ -178,3 +193,7 @@ td.CalendarDay {
     flex-wrap: wrap;
 }
 
+/* 
+.dash-spreadsheet.dash-freeze-left {
+    max-width: none !important;
+} */
