@@ -26,6 +26,6 @@ def appor_start():
                 target="appor-start-tip",
             ),
             # style={"width": "100%"},
-            dcc.DatePickerSingle(id="appor-start-picker", className="appor-date-picker", date=date(const.current_year, 1, 1)),
+            dcc.DatePickerSingle(id="appor-start-picker", className="evap-date-picker", date=date(const.current_year, 1, 1)),
         ],
     )

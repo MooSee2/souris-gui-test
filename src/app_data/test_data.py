@@ -9,6 +9,7 @@ reservoir_data = pd.DataFrame(
             "datetime": date_range,
             "05NA006": i,
             "05NB020": i * 10,
+            "05NB020": i * 10,
             "05NB016": i * 100,
             "05NC002": i * -1,
             "05ND012": i * -10,

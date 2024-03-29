@@ -13,13 +13,21 @@ def appor_end():
                 className="header-info-container",
                 children=[
                     html.Div(className="HH6", children="Apportionment End"),
-                    html.Div(id="appor-end-tip", className="info-container", children=html.Div(className="fa-solid fa-info")),
+                    html.Div(
+                        id="appor-end-tip",
+                        className="info-container",
+                        children=html.Div(className="fa-solid fa-info"),
+                    ),
                 ],
             ),
             dbc.Tooltip(
                 "The end date for apportionment. By default, December-31th.",
                 target="appor-end-tip",
             ),
-            dcc.DatePickerSingle(id="appor-end-picker", className="appor-date-picker", date=date(int(dt.now().year), 12, 31)),
+            dcc.DatePickerSingle(
+                id="appor-end-picker",
+                className="evap-date-picker",
+                date=date(int(dt.now().year), 12, 31),
+            ),
         ],
     )

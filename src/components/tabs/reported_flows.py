@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import html
 
-
+# Add new reported flows here.
 reported_flows = [
     (
         "Boundary Reservoir Pipeline",
@@ -55,6 +55,39 @@ reported_flows = [
     ),
 ]
 
+# This builds all the reported flows inputs and containers.
+reported_flows_container = [
+    html.Div(
+        className="input-container",
+        children=[
+            html.Div(
+                className="reported-flows-info-container",
+                children=[
+                    html.H6(name),
+                    html.Div(
+                        id="appor-end-tip",
+                        className="info-container",
+                        children=html.Div(className="fa-solid fa-info"),
+                    ),
+                ],
+            ),
+            dbc.Tooltip(
+                "The end date for apportionment. By default, December-31th.",
+                target="appor-end-tip",
+            ),
+            dbc.Input(
+                id=id,
+                class_name="reported-flows-input",
+                placeholder=box,
+                type="number",
+            ),
+        ],
+    )
+    for name, id, box in reported_flows
+]
+
+# children = []
+
 
 # TODO add info icons to headings
 def reported_flows():
@@ -66,128 +99,7 @@ def reported_flows():
                 [
                     html.Div(
                         className="config-card",
-                        children=[
-                            html.Div(
-                                className="input-container",
-                                children=[
-                                    html.H6("Boundary Reservoir Pipeline"),
-                                    dbc.Input(
-                                        id="pipeline-input",
-                                        class_name="reported-flows-input",
-                                        placeholder="Box 5b: DAM3",
-                                        type="number",
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                className="input-container",
-                                children=[
-                                    html.H6("Long Creek Minor Project Diversion"),
-                                    dbc.Input(
-                                        id="long-creek-minor-project-diversion-input",
-                                        class_name="reported-flows-input",
-                                        placeholder="Box 11: DAM3",
-                                        type="number",
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                className="input-container",
-                                children=[
-                                    html.H6("US Diversion"),
-                                    dbc.Input(
-                                        id="us-diversion-input",
-                                        class_name="reported-flows-input",
-                                        placeholder="Box 12: DAM3",
-                                        type="number",
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                className="input-container",
-                                children=[
-                                    html.H6("City of Weyburn Pumpage"),
-                                    dbc.Input(
-                                        id="weyburn-pumpage-input",
-                                        class_name="reported-flows-input",
-                                        placeholder="Box 16: DAM3",
-                                        type="number",
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                className="input-container",
-                                children=[
-                                    html.H6("City of Weyburn Return Flow"),
-                                    dbc.Input(
-                                        id="weyburn-return-flow-input",
-                                        placeholder="Box 18: DAM3",
-                                        class_name="reported-flows-input",
-                                        type="number",
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                className="input-container",
-                                children=[
-                                    html.H6("Upper Souris Minor Project Diversion"),
-                                    dbc.Input(
-                                        id="upper-souris-minor-diversion-input",
-                                        class_name="reported-flows-input",
-                                        placeholder="Box 25: DAM3",
-                                        type="number",
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                className="input-container",
-                                children=[
-                                    html.H6("City of Estavan Net Pumpage"),
-                                    dbc.Input(
-                                        id="estevan-net-pumpage-input",
-                                        class_name="reported-flows-input",
-                                        placeholder="Box 27: DAM3",
-                                        type="number",
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                className="input-container",
-                                children=[
-                                    html.H6("Short Creek Diversions"),
-                                    dbc.Input(
-                                        id="short-creek-diversions-input",
-                                        class_name="reported-flows-input",
-                                        placeholder="Box 28: DAM3",
-                                        type="number",
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                className="input-container",
-                                children=[
-                                    html.H6("Lower Souris Minor Project Diversion"),
-                                    dbc.Input(
-                                        id="lower-souris-minor-diversion-input",
-                                        class_name="reported-flows-input",
-                                        placeholder="Box 29: DAM3",
-                                        type="number",
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                className="input-container",
-                                children=[
-                                    html.H6("Moose Mountain Minor Project Diversion"),
-                                    dbc.Input(
-                                        id="moose-mountain-minor-diversion-input",
-                                        class_name="reported-flows-input",
-                                        placeholder="Box 37: DAM3",
-                                        type="number",
-                                    ),
-                                ],
-                            ),
-                        ],
+                        children=reported_flows_container,
                     ),
                 ],
             ),

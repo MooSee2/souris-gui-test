@@ -3,7 +3,7 @@ from typing import Union
 
 import pandas as pd
 
-import src.modules.data_layer.CAAQ_download as du
+# import src.modules.data_layer.CAAQ_download as du
 from modules.data_layer import timeseries_client as aqts
 
 stations_dict = [
