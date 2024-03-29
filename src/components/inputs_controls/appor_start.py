@@ -18,7 +18,11 @@ def appor_start():
                         className="HH6",
                         children="Apportionment Start",
                     ),
-                    html.Div(id="appor-start-tip", className="info-container", children=html.Div(className="fa-solid fa-info")),
+                    html.Div(
+                        id="appor-start-tip",
+                        className="info-container",
+                        children=html.Div(className="fa-solid fa-info"),
+                    ),
                 ],
             ),
             dbc.Tooltip(
@@ -26,6 +30,11 @@ def appor_start():
                 target="appor-start-tip",
             ),
             # style={"width": "100%"},
-            dcc.DatePickerSingle(id="appor-start-picker", className="evap-date-picker", date=date(const.current_year, 1, 1)),
+            dcc.DatePickerSingle(
+                id="appor-start-picker",
+                className="evap-date-picker",
+                date=date(const.current_year, 1, 1),
+                with_portal=True,
+            ),
         ],
     )

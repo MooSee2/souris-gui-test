@@ -16,7 +16,11 @@ def evap_start():
                         className="HH6",
                         children="Evaporation Start",
                     ),
-                    html.Div(id="evap-start-tip", className="info-container", children=html.Div(className="fa-solid fa-info")),
+                    html.Div(
+                        id="evap-start-tip",
+                        className="info-container",
+                        children=html.Div(className="fa-solid fa-info"),
+                    ),
                 ],
             ),
             dbc.Tooltip(
@@ -24,6 +28,10 @@ def evap_start():
                 target="evap-start-tip",
             ),
             # style={"width": "100%"},
-            dcc.DatePickerSingle(id="evap-start-picker", className="evap-date-picker", date=date(const.current_year, 4, 15)),
+            dcc.DatePickerSingle(
+                id="evap-start-picker",
+                className="evap-date-picker",
+                date=date(const.current_year, 4, 15),
+            ),
         ],
     )

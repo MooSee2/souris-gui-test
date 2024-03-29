@@ -181,3 +181,9 @@ td.CalendarDay {
     display: flex;
     gap: 10px;
 }
+
+.DayPicker_portal__horizontal {
+    box-shadow: none;
+    left: 36%;
+    top: 29%;
+}
