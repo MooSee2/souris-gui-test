@@ -187,3 +187,7 @@ td.CalendarDay {
     left: 36%;
     top: 29%;
 }
+
+.dash-spreadsheet-menu-item .show-hide{
+    display: none;
+}

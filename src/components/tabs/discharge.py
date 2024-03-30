@@ -26,6 +26,39 @@ datetime = pd.date_range(f"{now}-01-01", f"{now}-12-31", freq="d").strftime("%Y-
 dummy_data = pd.DataFrame({"datetime": datetime})
 
 
+def make_discharge_conditionals(stations):
+    return [
+        {
+            "if": {
+                "filter_query": '{station_approval} eq "approved"',
+                "column_id": "Humidity",
+            },
+            "backgroundColor": "#008000",
+            "color": "white",
+        }
+    ]
+
+
+# discharge_conditionals = [
+#     {
+#         "if": {
+#             "filter_query": '{Humidity_approval} eq "approved"',
+#             "column_id": "Humidity",
+#         },
+#         "backgroundColor": "#008000",
+#         "color": "white",
+#     },
+#     {
+#         "if": {
+#             "filter_query": '{Humidity_approval} eq "unapproved"',
+#             "column_id": "Humidity",
+#         },
+#         "backgroundColor": "#FF1515",
+#         "color": "white",
+#     },
+# ]
+
+
 def discharge():
     return dbc.Tab(
         label="Discharge data",
@@ -48,6 +81,26 @@ def discharge():
                             "height": "auto",
                         },
                         style_table={"overflowY": "auto"},
+                        # style_data_conditional=[
+                        #     [
+                        #         {
+                        #             "if": {
+                        #                 "filter_query": '{Humidity_approval} eq "approved"',
+                        #                 "column_id": "Humidity",
+                        #             },
+                        #             "backgroundColor": "#008000",
+                        #             "color": "white",
+                        #         },
+                        #         {
+                        #             "if": {
+                        #                 "filter_query": '{Humidity_approval} eq "unapproved"',
+                        #                 "column_id": "Humidity",
+                        #             },
+                        #             "backgroundColor": "#FF1515",
+                        #             "color": "white",
+                        #         },
+                        #     ]
+                        # ],
                         merge_duplicate_headers=True,
                         editable=True,
                         # fixed_rows={"headers": True},

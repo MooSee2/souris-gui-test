@@ -3,24 +3,53 @@ import pandas as pd
 date_range = pd.date_range("2024-01-01", periods=100, freq="d")
 date_range = [date.strftime("%Y-%m-%d") for date in date_range]
 
-reservoir_data = pd.DataFrame(
-    [
-        {
-            "datetime": date_range,
-            "05NA006": i,
-            "05NB020": i * 10,
-            "05NB020": i * 10,
-            "05NB016": i * 100,
-            "05NC002": i * -1,
-            "05ND012": i * -10,
-        }
-        for i in range(100)
-    ],
-)
-reservoir_data["datetime"] = pd.date_range("2024-01-01", periods=100, freq="d")
-reservoir_data["datetime"] = reservoir_data["datetime"].dt.strftime("%Y-%m-%d")
 
-reservoir_data.index.name = "datetime"
+# pd.DataFrame(
+#     [
+#         {
+#             "datetime": date_range,
+#             "05NA006": i,
+#             "05NB020": i * 10,
+#             "05NB020": i * 10,
+#             "05NB016": i * 100,
+#             "05NC002": i * -1,
+#             "05ND012": i * -10,
+#         }
+#         for i in range(100)
+#     ],
+def make_df_copies(stations):
+    data = pd.read_csv("app_data/real_time_data.csv")
+    data = data[["Date", "Value", "Approval"]]
+
+    df_copies = []
+    for station in stations:
+        new_df = data.copy()
+        new_df.rename(
+            {
+                "Date": "datetime",
+                "Value": f"{station}",
+                "Approval": f"{station}_approval",
+            },
+            axis=1,
+            inplace=True,
+        )
+        df_copies.append(new_df)
+
+    return df_copies
+
+
+def make_reservoirs(
+    reservoirs={
+        "05NA006",
+        "05NB020",
+        "05NB016",
+        "05NC002",
+        "05ND012",
+    },
+):
+    unique_dfs = make_df_copies(stations=reservoirs)
+    return pd.concat(unique_dfs, axis=1)
+
 
 discharge_data = pd.DataFrame(
     [
@@ -63,7 +92,8 @@ met_data = pd.DataFrame(
             "4321_precip": i * -10,
         }
         for i in range(100)
-    ],)
+    ],
+)
 met_data["datetime"] = pd.date_range("2024-01-01", periods=100, freq="d")
 met_data["datetime"] = met_data["datetime"].dt.strftime("%Y-%m-%d")
 met_data.index.name = "datetime"

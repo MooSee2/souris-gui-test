@@ -130,19 +130,9 @@ def download_data(n_clicks, apportionment_year: int):
     if n_clicks == 0 or n_clicks is None:
         raise PreventUpdate
 
-    # TODO fix start-end dates before deployment
-    # data = dl.get_caaq_data(
-    #     start_date=f"{apportionment_year}-01-01",
-    #     end_date=f"{apportionment_year}-10-31",
-    #     stations=stations,
-    # )
-
-    # reservoirs = du.post_process_aq_dfs(data, type="reservoir")
-    # discharge = du.post_process_aq_dfs(data, type="discharge")
-
     return (
         "Data loaded!",
-        td.reservoir_data.to_dict("records"),
+        td.make_reservoirs().to_dict("records"),
         td.discharge_data.to_dict("records"),
         td.met_data.to_dict("records"),
         False,
