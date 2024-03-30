@@ -3,7 +3,7 @@ from dash import dash_table
 import pandas as pd
 from datetime import datetime as dt
 
-import app_data.stations as const
+import src.app_data.stations as const
 
 stations = [
     "datetime",

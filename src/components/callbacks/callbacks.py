@@ -10,8 +10,8 @@ import plotly.express as px
 from dash import Input, Output, State, callback, dash_table, html
 from dash.exceptions import PreventUpdate
 
-import app_data.test_data as td
-import modules.data_layer.download_api_services as dl
+import src.app_data.test_data as td
+import src.modules.data_layer.download_api_services as dl
 
 # from app_data import stations as const
 

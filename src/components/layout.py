@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
-from components.inputs_controls.inputs_controls import aside
-from components.navbar.navbar import navbar
-from components.tabs import discharge, graphs, met_data, report, reported_flows, reservoirs
+from src.components.inputs_controls.inputs_controls import aside
+from src.components.navbar.navbar import navbar
+from src.components.tabs import discharge, graphs, met_data, report, reported_flows, reservoirs
 from dash import html
 
 

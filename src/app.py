@@ -12,12 +12,12 @@ from dotenv import load_dotenv
 from flask_caching import Cache
 from loguru import logger
 
-import components.callbacks.callbacks
-from components.layout import make_layout
+import src.components.callbacks.callbacks
+from src.components.layout import make_layout
+
 
 load_dotenv(".env")
-
-LOG_PATH = Path("logs/app_log.log")
+LOG_PATH = Path("src/logs/app_log.log")
 
 logger.remove(0)
 logger.add(LOG_PATH, backtrace=True, rotation=time(hour=23), retention=5, level="TRACE")
@@ -26,6 +26,7 @@ logger.debug(f"ENV LOG_LEVEL= {os.getenv('LOG_LEVEL')}")
 
 now = dt.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 logger.info(f"Program starting at {now}")
+
 
 external_stylesheets = [
     dbc.themes.BOOTSTRAP,
@@ -36,7 +37,6 @@ app = Dash(
     name=__name__,
     title="Souris Apportionment App",
     external_stylesheets=external_stylesheets,
-    # prevent_initial_callbacks="initial_duplicate"
 )
 
 app._favicon = "assets/images/favicon.ico"
@@ -54,5 +54,11 @@ cache = Cache(
     },
 )
 
+app = app.server
+
+# Important line to expose server.
+# Otherwise no valid app will be found.
+# app = app.server
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

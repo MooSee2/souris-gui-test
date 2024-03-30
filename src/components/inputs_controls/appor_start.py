@@ -4,7 +4,7 @@ from datetime import datetime as dt
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-import app_data.stations as const
+import src.app_data.stations as const
 
 
 def appor_start():

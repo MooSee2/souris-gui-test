@@ -1,4 +1,4 @@
-# from src.components.tabs.reservoirs import _conditional_helper
+from src.components.tabs.reservoirs import make_reservoir_approved_conditionals
 
 
 def test__conditional_helper():
@@ -11,7 +11,7 @@ def test__conditional_helper():
     ...
 
 
-def test_make_reservoir_approvedl_conditionals():
+def test_make_reservoir_approved_conditionals():
     stations = {
         "05NA006",
         "05NB020",

@@ -1,0 +1,12 @@
+{
+    "https://rconnect.chs.usgs.gov/": {
+        "server_url": "https://rconnect.chs.usgs.gov/",
+        "filename": "C:\\Users\\joconnel\\source\\repos\\souris-gui-test\\src",
+        "app_url": "https://rconnect.chs.usgs.gov/content/bdd648d4-6dcd-4230-b246-42f9d63df99f/",
+        "app_id": 1478,
+        "app_guid": "bdd648d4-6dcd-4230-b246-42f9d63df99f",
+        "title": "Souris Apportionment App",
+        "app_mode": "python-dash",
+        "app_store_version": 1
+    }
+}

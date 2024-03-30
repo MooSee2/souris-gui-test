@@ -1,6 +1,6 @@
 from dash import html, dcc
 import dash_bootstrap_components as dbc
-from app_data import stations as const
+from src.app_data import stations as const
 
 
 def wateryear():

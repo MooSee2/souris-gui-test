@@ -34,6 +34,12 @@ stations = {
     ("Handsworth Precipitation, Units: mm", "4321_precip", "Met Stations"),
 }
 
+
+################################################################
+# These lists of dicts are used for making table column headers.
+# Each item is a column and each 'name' is a row in the header and the id is the reference to access that column header.
+
+
 discharge_station_names = [
     {"name": ["Discharge", " ", " ", "Datetime"], "id": "datetime"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Estevan", "05NB001"], "id": "05NB001"},
@@ -49,6 +55,7 @@ discharge_station_names = [
     {"name": ["Discharge", "Units: m\u00b3/s", "Moseley Creek near Halbrite", "05NB033"], "id": "05NB033"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Tributary near Outram", "05NB039"], "id": "05NB039"},
 ]
+
 
 reservoir_station_names = [
     {"name": ["Reservoir Elevation", "Elevation: meters", " ", "Datetime"], "id": "datetime"},

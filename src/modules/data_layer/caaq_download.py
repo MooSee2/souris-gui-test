@@ -4,7 +4,7 @@ from typing import Union
 import pandas as pd
 
 # import src.modules.data_layer.CAAQ_download as du
-from modules.data_layer import timeseries_client as aqts
+from src.modules.data_layer import timeseries_client as aqts
 
 stations_dict = [
     {"id": "05NA006", "type": "reservoir", "name": "Larsen Reservoir", "unique_id": "013d9d474541460aa3b1de4381276c38"},

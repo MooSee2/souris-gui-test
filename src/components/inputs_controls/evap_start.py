@@ -1,7 +1,7 @@
 from datetime import date
 
 import dash_bootstrap_components as dbc
-import app_data.stations as const
+import src.app_data.stations as const
 from dash import dcc, html
 
 
