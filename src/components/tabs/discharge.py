@@ -2,6 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import dash_table
 import pandas as pd
 from datetime import datetime as dt
+import src.modules.utils as utils
 
 import src.app_data.stations as const
 
@@ -25,38 +26,18 @@ now = dt.now().year
 datetime = pd.date_range(f"{now}-01-01", f"{now}-12-31", freq="d").strftime("%Y-%m-%d")
 dummy_data = pd.DataFrame({"datetime": datetime})
 
-
-def make_discharge_conditionals(stations):
-    return [
-        {
-            "if": {
-                "filter_query": '{station_approval} eq "approved"',
-                "column_id": "Humidity",
-            },
-            "backgroundColor": "#008000",
-            "color": "white",
-        }
-    ]
-
-
-# discharge_conditionals = [
-#     {
-#         "if": {
-#             "filter_query": '{Humidity_approval} eq "approved"',
-#             "column_id": "Humidity",
-#         },
-#         "backgroundColor": "#008000",
-#         "color": "white",
-#     },
-#     {
-#         "if": {
-#             "filter_query": '{Humidity_approval} eq "unapproved"',
-#             "column_id": "Humidity",
-#         },
-#         "backgroundColor": "#FF1515",
-#         "color": "white",
-#     },
-# ]
+columns = const.reservoir_station_names
+hidden_columns = [f"{station}_approval" for station in stations]
+datetime_conditional = [
+    {
+        "if": {
+            "column_id": "datetime",
+        },
+        "backgroundColor": "#fafafa",
+        "verticalAlign": "middle",
+    },
+]
+conditionals = utils.make_reservoir_approved_conditionals(stations=stations) + utils.make_reservoir_unapproved_conditionals(stations=stations) + datetime_conditional
 
 
 def discharge():
@@ -81,29 +62,9 @@ def discharge():
                             "height": "auto",
                         },
                         style_table={"overflowY": "auto"},
-                        # style_data_conditional=[
-                        #     [
-                        #         {
-                        #             "if": {
-                        #                 "filter_query": '{Humidity_approval} eq "approved"',
-                        #                 "column_id": "Humidity",
-                        #             },
-                        #             "backgroundColor": "#008000",
-                        #             "color": "white",
-                        #         },
-                        #         {
-                        #             "if": {
-                        #                 "filter_query": '{Humidity_approval} eq "unapproved"',
-                        #                 "column_id": "Humidity",
-                        #             },
-                        #             "backgroundColor": "#FF1515",
-                        #             "color": "white",
-                        #         },
-                        #     ]
-                        # ],
+                        style_data_conditional=conditionals,
                         merge_duplicate_headers=True,
                         editable=True,
-                        # fixed_rows={"headers": True},
                         style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
                     ),
                 ]
