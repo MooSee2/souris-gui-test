@@ -1,9 +1,9 @@
 import dash_bootstrap_components as dbc
-from dash import dash_table
+import pandas as pd
 import src.app_data.stations as const
 import src.app_data.test_data as td
-import pandas as pd
-
+import src.modules.utils as utils
+from dash import dash_table
 
 stations = {
     "05NA006",
@@ -13,58 +13,18 @@ stations = {
     "05ND012",
 }
 
+columns = const.reservoir_station_names
 hidden_columns = [f"{station}_approval" for station in stations]
-
-
-def make_reservoir_approved_conditionals(stations=None):
-    if stations is None:
-        stations = {
-            "05NA006",
-            "05NB020",
-            "05NB016",
-            "05NC002",
-            "05ND012",
-        }
-    return [
-        {
-            "if": {
-                "filter_query": f'{{{station}_approved}} eq "approved"',
-                "column_id": f"{station}",
-            },
-            "backgroundColor": "#008000",
-            "color": "white",
-        }
-        for station in stations
-    ]
-
-
-def make_reservoir_unapproved_conditionals(stations=None):
-    if stations is None:
-        stations = {
-            "05NA006",
-            "05NB020",
-            "05NB016",
-            "05NC002",
-            "05ND012",
-        }
-    return [
-        {
-            "if": {
-                "filter_query": f'{{{station}_approved}} eq "unapproved"',
-                "column_id": f"{station}",
-            },
-            "backgroundColor": "#008000",
-            "color": "white",
-        }
-        for station in stations
-    ]
-
-
-def _combine_approval_conditionals(stations) -> list:
-    approved_conds = make_reservoir_approved_conditionals(stations=stations)
-    unapproved_conds = make_reservoir_unapproved_conditionals(stations=stations)
-    approved_conds.append(unapproved_conds)
-    return None
+datetime_conditional = [
+    {
+        "if": {
+            "column_id": "datetime",
+        },
+        "backgroundColor": "#fafafa",
+        "verticalAlign": "middle",
+    },
+]
+conditionals = utils.make_reservoir_approved_conditionals(stations=stations) + utils.make_reservoir_unapproved_conditionals(stations=stations) + datetime_conditional
 
 
 def reservoirs():
@@ -76,10 +36,9 @@ def reservoirs():
                 [
                     dash_table.DataTable(
                         id="reservoir-data",
-                        columns=const.reservoir_station_names,
-                        # fill_width = False,
+                        columns=columns,
                         style_table={"overflowY": "auto"},
-                        style_cell={"textAlign": "center"},
+                        style_cell={"textAlign": "center", "verticalAlign": "middle"},
                         style_data={
                             "whiteSpace": "normal",
                         },
@@ -96,7 +55,7 @@ def reservoirs():
                         ],
                         merge_duplicate_headers=True,
                         editable=True,
-                        style_data_conditional=_combine_approval_conditionals(stations=stations),
+                        style_data_conditional=conditionals,
                         hidden_columns=hidden_columns,
                         # fixed_rows={"headers": True},
                         # style_cell_conditional=[{"if": {"column_id": station}, "width": "10%"} for station in stations],
