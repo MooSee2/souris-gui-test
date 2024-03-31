@@ -17,7 +17,7 @@ from src.components.layout import make_layout
 
 
 load_dotenv(".env")
-LOG_PATH = Path("src/logs/app_log.log")
+LOG_PATH = Path("logs/app_log.log")
 
 logger.remove(0)
 logger.add(LOG_PATH, backtrace=True, rotation=time(hour=23), retention=5, level="TRACE")
