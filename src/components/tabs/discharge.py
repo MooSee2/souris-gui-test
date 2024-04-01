@@ -1,10 +1,11 @@
-import dash_bootstrap_components as dbc
-from dash import dash_table
-import pandas as pd
 from datetime import datetime as dt
-import src.modules.utils as utils
+
+import dash_bootstrap_components as dbc
+import pandas as pd
+from dash import dash_table
 
 import src.app_data.stations as const
+import src.modules.utils as utils
 
 stations = [
     "datetime",
@@ -48,24 +49,26 @@ def discharge():
             children=dbc.CardBody(
                 children=[
                     dash_table.DataTable(
-                        data=dummy_data.to_dict("records"),
-                        columns=const.discharge_station_names,
                         id="discharge-data",
+                        columns=const.discharge_station_names,
+                        hidden_columns=hidden_columns,
+                        style_table={
+                            "overflowY": "auto",
+                        },
+                        style_data={
+                            "whiteSpace": "normal",
+                            "height": "auto",
+                        },
+                        style_data_conditional=conditionals,
                         style_cell={
                             "textAlign": "center",
                             "whiteSpace": "normal",
                             "overflow": "hidden",
                             "textOverflow": "ellipsis",
                         },
-                        style_data={
-                            "whiteSpace": "normal",
-                            "height": "auto",
-                        },
-                        style_table={"overflowY": "auto"},
-                        style_data_conditional=conditionals,
+                        style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
                         merge_duplicate_headers=True,
                         editable=True,
-                        style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
                     ),
                 ]
             ),

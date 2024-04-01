@@ -10,8 +10,9 @@ import plotly.express as px
 from dash import Input, Output, State, callback, dash_table, html
 from dash.exceptions import PreventUpdate
 
-import src.app_data.test_data as td
-import src.modules.data_layer.download_api_services as dl
+import src.modules.data_layer.data_layer as dl
+
+# import src.modules.data_layer.download_api_services as dl
 
 # from app_data import stations as const
 
@@ -96,7 +97,6 @@ def toggle_modal(n1: Optional[int], is_open: bool) -> bool:
     return False
 
 
-# return not is_open if n1 else is_open
 @callback(
     Output("discharge-data", "data", allow_duplicate=True),
     Output("reservoir-data", "data", allow_duplicate=True),
@@ -130,11 +130,13 @@ def download_data(n_clicks, apportionment_year: int):
     if n_clicks == 0 or n_clicks is None:
         raise PreventUpdate
 
+    reservoirs, discharge, met = dl.get_app_data(apportionment_year)
+
     return (
         "Data loaded!",
-        td.make_reservoirs().to_dict("records"),
-        td.discharge_data.to_dict("records"),
-        td.met_data.to_dict("records"),
+        reservoirs,
+        discharge,
+        met,
         False,
         False,
     )

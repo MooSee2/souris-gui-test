@@ -1,6 +1,8 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table
+
 import src.app_data.stations as const
+import src.modules.utils as utils
 
 stations = [
     "datetime",
@@ -17,6 +19,22 @@ stations = [
 ]
 
 
+columns = const.reservoir_station_names
+hidden_columns = [f"{station}_approval" for station in stations]
+datetime_conditional = [
+    {
+        "if": {
+            "column_id": "datetime",
+        },
+        "backgroundColor": "#fafafa",
+        "verticalAlign": "middle",
+    },
+]
+conditionals = utils.make_reservoir_approved_conditionals(stations=stations) + utils.make_reservoir_unapproved_conditionals(stations=stations) + datetime_conditional
+
+50
+
+
 def met_data():
     return dbc.Tab(
         label="Met Data",
@@ -27,7 +45,15 @@ def met_data():
                     dash_table.DataTable(
                         id="met-data",
                         columns=const.met_station_names,
-                        style_table={"minWidth": "100%", "overflowY": "auto"},
+                        hidden_columns=hidden_columns,
+                        style_table={
+                            "minWidth": "100%",
+                            "overflowY": "auto",
+                        },
+                        style_data={
+                            "whiteSpace": "normal",
+                            "height": "auto",
+                        },
                         style_header={
                             "textAlign": "center",
                             "whiteSpace": "normal",
@@ -40,13 +66,9 @@ def met_data():
                             "overflow": "hidden",
                             "textOverflow": "ellipsis",
                         },
-                        style_data={
-                            "whiteSpace": "normal",
-                            "height": "auto",
-                        },
+                        style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
                         merge_duplicate_headers=True,
                         editable=True,
-                        style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
                     ),
                 ]
             ),
