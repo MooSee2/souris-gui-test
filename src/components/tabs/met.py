@@ -1,8 +1,8 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table
 
-import src.app_data.stations as const
-import src.modules.utils as utils
+import app_data.stations as const
+import modules.utils as utils
 
 stations = [
     "datetime",

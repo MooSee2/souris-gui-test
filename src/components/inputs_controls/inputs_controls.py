@@ -1,6 +1,13 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
-from src.components.inputs_controls import evap_start, evap_end, met_station, wateryear, appor_start, appor_end
+
+from components.inputs_controls import (
+    appor_end,
+    appor_start,
+    evap_end,
+    evap_start,
+    wateryear,
+)
 
 load_modal = dbc.Modal(
     [

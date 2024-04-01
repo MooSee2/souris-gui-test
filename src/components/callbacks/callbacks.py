@@ -10,7 +10,7 @@ import plotly.express as px
 from dash import Input, Output, State, callback, dash_table, html
 from dash.exceptions import PreventUpdate
 
-import src.modules.data_layer.data_layer as dl
+import modules.data_layer.data_layer as dl
 
 # import src.modules.data_layer.download_api_services as dl
 

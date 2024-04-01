@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 from flask_caching import Cache
 from loguru import logger
 
-import src.components.callbacks.callbacks
-from src.components.layout import make_layout
+import components.callbacks.callbacks
+from components.layout import make_layout
 
 
 load_dotenv(".env")

@@ -1,9 +1,8 @@
 import dash_bootstrap_components as dbc
-import pandas as pd
-import src.app_data.stations as const
-import src.app_data.test_data as td
-import src.modules.utils as utils
 from dash import dash_table
+
+import app_data.stations as const
+import modules.utils as utils
 
 stations = {
     "05NA006",

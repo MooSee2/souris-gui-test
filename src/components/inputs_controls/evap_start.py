@@ -1,8 +1,9 @@
 from datetime import date
 
 import dash_bootstrap_components as dbc
-import src.app_data.stations as const
 from dash import dcc, html
+
+import app_data.stations as const
 
 
 def evap_start():
