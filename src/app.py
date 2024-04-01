@@ -54,7 +54,7 @@ cache = Cache(
     },
 )
 
-app = app.server
+# app = app
 
 # Important line to expose server.
 # Otherwise no valid app will be found.
