@@ -39,11 +39,13 @@ stations = {
 # These lists of dicts are used for making table column headers.
 # Each item is a column and each 'name' is a row in the header and the id is the reference to access that column header.
 
-
+# TODO finish approvals for all stations
 discharge_station_names = [
     {"name": ["Discharge", " ", " ", "Datetime"], "id": "datetime"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Estevan", "05NB001"], "id": "05NB001"},
+    {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Estevan", "05NB001 Approval"], "id": "05NB001_approval"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Souris River below Rafterty", "05NB036"], "id": "05NB036"},
+    {"name": ["Discharge", "Units: m\u00b3/s", "Souris River below Rafterty", "05NB036 Approval"], "id": "05NB036_approval"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Yellowgrass Ditch", "05NB011"], "id": "05NB011"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Tatagra Lake Drain", "05NB018"], "id": "05NB018"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek at Western Crossing", "05NA003"], "id": "05NA003"},

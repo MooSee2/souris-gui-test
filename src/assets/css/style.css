@@ -6,7 +6,9 @@ H1 {
 
 h6 {
     font-size: 1rem;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0;
+    padding-top: 7px;
+    padding-bottom: 1px;
 }
 
 .HH6 {
@@ -23,9 +25,9 @@ h4 {
     margin-bottom: 8px;
 }
 
-/* .fa-solid {
-    height: 0.8rem;
-} */
+.fa-solid, .fa-info{
+    line-height: revert;
+}
 
 .dash-table-container .dash-spreadsheet-container table {
     font-size: 0.85rem;

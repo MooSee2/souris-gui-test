@@ -9,7 +9,7 @@ def report():
             className="mt-3",
             children=dbc.CardBody(
                 [
-                    html.P("This is tab 2!", className="card-text"),
+                    html.P("Report goes here", className="card-text"),
                     html.Div(className="tab2-thing"),
                 ]
             ),
