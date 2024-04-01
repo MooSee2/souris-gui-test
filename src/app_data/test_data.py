@@ -4,19 +4,6 @@ date_range = pd.date_range("2024-01-01", periods=100, freq="d")
 date_range = [date.strftime("%Y-%m-%d") for date in date_range]
 
 
-# pd.DataFrame(
-#     [
-#         {
-#             "datetime": date_range,
-#             "05NA006": i,
-#             "05NB020": i * 10,
-#             "05NB020": i * 10,
-#             "05NB016": i * 100,
-#             "05NC002": i * -1,
-#             "05ND012": i * -10,
-#         }
-#         for i in range(100)
-#     ],
 def make_df_copies(stations):
     data = pd.read_csv("app_data/real_time_data.csv")
     data = data[["Date", "Value", "Approval"]]
@@ -73,7 +60,6 @@ discharge_data = pd.DataFrame(
 )
 discharge_data["datetime"] = pd.date_range("2024-01-01", periods=100, freq="d")
 discharge_data["datetime"] = discharge_data["datetime"].dt.strftime("%Y-%m-%d")
-
 discharge_data.index.name = "datetime"
 
 met_data = pd.DataFrame(
