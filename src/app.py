@@ -3,7 +3,6 @@ import sys
 sys.dont_write_bytecode = True
 import os
 from datetime import datetime as dt
-from datetime import time
 from pathlib import Path
 
 import dash_bootstrap_components as dbc
@@ -13,6 +12,7 @@ from flask_caching import Cache
 from loguru import logger
 
 import components.callbacks.callbacks
+from components.custom_index import index_string
 from components.layout import make_layout
 
 
@@ -20,7 +20,7 @@ load_dotenv(".env")
 LOG_PATH = Path("logs/app_log.log")
 
 logger.remove(0)
-logger.add(LOG_PATH, backtrace=True, rotation=time(hour=23), retention=5, level="TRACE")
+logger.add(LOG_PATH, backtrace=True, level="TRACE", rotation="5 MB")
 logger.add(sys.stderr, level=os.getenv("LOGGING_LEVEL", "INFO"))
 logger.debug(f"ENV LOG_LEVEL= {os.getenv('LOG_LEVEL')}")
 
@@ -35,8 +35,10 @@ external_stylesheets = [
 
 app = Dash(
     name=__name__,
+    assets_folder="assets",
     title="Souris Apportionment App",
-    external_stylesheets=external_stylesheets,
+    # external_stylesheets=external_stylesheets,
+    index_string=index_string,
 )
 
 app._favicon = "assets/images/favicon.ico"
@@ -61,4 +63,4 @@ cache = Cache(
 # app = app.server
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=os.getenv("DASH_DEBUG", False))

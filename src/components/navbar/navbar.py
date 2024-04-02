@@ -23,11 +23,11 @@ def navbar():
                 href=ISRB_web_link,
                 style={"textDecoration": "none"},
                 children=[
-                    html.Img(
-                        className="logo-container",
-                        src=dash.get_asset_url("images/usgs_logo.png"),
-                        height="30px",
-                    ),
+                    # html.Img(
+                    #     className="logo-container",
+                    #     src=dash.get_asset_url("images/usgs_logo.png"),
+                    #     height="30px",
+                    # ),
                     html.Img(
                         className="logo-container",
                         src=dash.get_asset_url("images/ijc_logo.svg"),
