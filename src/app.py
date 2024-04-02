@@ -29,7 +29,7 @@ logger.info(f"Program starting at {now}")
 
 
 external_stylesheets = [
-    dbc.themes.BOOTSTRAP,
+    # dbc.themes.BOOTSTRAP,
     dbc.icons.FONT_AWESOME,
 ]
 
@@ -37,7 +37,7 @@ app = Dash(
     name=__name__,
     assets_folder="assets",
     title="Souris Apportionment App",
-    # external_stylesheets=external_stylesheets,
+    external_stylesheets=external_stylesheets,
     index_string=index_string,
 )
 

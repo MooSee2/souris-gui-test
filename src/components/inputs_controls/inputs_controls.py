@@ -45,37 +45,6 @@ def aside():
         className="asideaside",
         children=[
             load_modal,
-            # dbc.Modal(
-            #     [
-            #         dbc.ModalHeader(
-            #             dbc.ModalTitle("Load Application Data"),
-            #         ),
-            #         dbc.ModalBody(
-            #             id="load-modal-body",
-            #             children=[
-            #                 dbc.Button(
-            #                     id="query-data-button",
-            #                     children=["Query data from web"],
-            #                 ),
-            #                 html.Div(
-            #                     id="loading-wrapper",
-            #                     style={"flex-grow": "1"},
-            #                     children=[
-            #                         dcc.Loading(
-            #                             children=html.Div(
-            #                                 id="loading-data-div",
-            #                                 children=["Load data from the web."],
-            #                             ),
-            #                         ),
-            #                     ],
-            #                 ),
-            #             ],
-            #         ),
-            #         dbc.ModalFooter(),
-            #     ],
-            #     id="load-data-modal",
-            #     is_open=False,
-            # ),
             html.Div(
                 className="config-card",
                 children=[
@@ -95,6 +64,7 @@ def aside():
                         color="secondary",
                         id="load-data-button",
                         n_clicks=0,
+                        className="usa-menu-btn",
                     ),
                 ],
             ),
@@ -106,6 +76,7 @@ def aside():
                         color="secondary",
                         id="apportion-button",
                         disabled=True,
+                        className="usa-menu-btn",
                     ),
                 ],
             ),

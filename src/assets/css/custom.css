@@ -75,10 +75,10 @@ For simplification, search bar is visible on larger screens but is hidden on sma
 */
 header,
 footer {
-    flex: none;
-    flex-basis: 0;
+	flex: none;
+	flex-basis: 0;
 }
-
+/* 
 .navbar-container {
 	display: flex;
 	justify-content: center;
@@ -87,4 +87,11 @@ footer {
 	background-color: #00548a;
 	height: 3rem;
 	flex-shrink: 0;
+} */
+
+#tab-container {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	overflow: hidden;
 }

@@ -7,18 +7,21 @@ from dash import html
 
 def make_main():
     return html.Main(
-        children=[
-            dbc.Tabs(
-                [
-                    reported_flows(),
-                    discharge(),
-                    reservoirs(),
-                    met_data(),
-                    report(),
-                    graphs(),
-                ],
-            ),
-        ],
+        children=html.Div(
+            id="tab-container",
+            children=[
+                dbc.Tabs(
+                    [
+                        reported_flows(),
+                        discharge(),
+                        reservoirs(),
+                        met_data(),
+                        report(),
+                        graphs(),
+                    ],
+                ),
+            ],
+        )
     )
 
 
