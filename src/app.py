@@ -16,7 +16,7 @@ from components.custom_index import index_string
 from components.layout import make_layout
 
 
-load_dotenv(".env")
+load_dotenv()
 LOG_PATH = Path("logs/app_log.log")
 
 logger.remove(0)
@@ -61,6 +61,11 @@ cache = Cache(
 # Important line to expose server.
 # Otherwise no valid app will be found.
 # app = app.server
+# debug=os.getenv("DASH_DEBUG", False).lower() in ('true', '1', 't')
 
 if __name__ == "__main__":
-    app.run(debug=os.getenv("DASH_DEBUG", False))
+    app.run(
+        debug=False,
+        port=os.getenv("PORT", "5000"),
+        host=os.getenv("ADDRESS", "127.0.0.1"),
+    )
