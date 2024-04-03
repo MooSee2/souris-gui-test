@@ -70,31 +70,31 @@ stations = [
 #     return sorted(dropdowns, key=lambda x: (x["group"], x["label"]))
 
 
-@callback(
-    Output("load-data-modal", "is_open"),
-    Input("load-data-button", "n_clicks"),
-    State("load-data-modal", "is_open"),
-)
-def toggle_modal(n1: Optional[int], is_open: bool) -> bool:
-    """Toggle load-data-modal open or closed.
+# @callback(
+#     Output("load-data-modal", "is_open"),
+#     Input("load-data-button", "n_clicks"),
+#     State("load-data-modal", "is_open"),
+# )
+# def toggle_modal(n1: Optional[int], is_open: bool) -> bool:
+#     """Toggle load-data-modal open or closed.
 
-    Parameters
-    ----------
-    n1 : Optional[int] by default, None
-        Number of clicks from load-data-button.
-    is_open : bool
-        State of load-data-module display.
-        True if open and False if closed.
+#     Parameters
+#     ----------
+#     n1 : Optional[int] by default, None
+#         Number of clicks from load-data-button.
+#     is_open : bool
+#         State of load-data-module display.
+#         True if open and False if closed.
 
 
-    Returns
-    -------
-    Bool
-        What state to set the load-data-modal display.
-    """
-    if n1 and not is_open:
-        return True
-    return False
+#     Returns
+#     -------
+#     Bool
+#         What state to set the load-data-modal display.
+#     """
+#     if n1 and not is_open:
+#         return True
+#     return False
 
 
 @callback(
@@ -115,13 +115,14 @@ def update_dummy_datetime(year):
 
 
 @callback(
-    Output("loading-data-div", "children"),
+    # Output("loading-data-div", "children"),
     Output("reservoir-data", "data"),
     Output("discharge-data", "data"),
     Output("met-data", "data"),
     Output("apportion-button", "disabled"),
     Output("timeseries-dropdown", "disabled"),
-    Input("query-data-button", "n_clicks"),
+    Output("load-data-button", "n_clicks"),
+    Input("load-data-button", "n_clicks"),
     State("apportionment-year", "value"),
     prevent_initial_call=True,
 )
@@ -131,14 +132,16 @@ def download_data(n_clicks, apportionment_year: int):
         raise PreventUpdate
 
     reservoirs, discharge, met = dl.get_app_data(apportionment_year)
+    sleep(2)
 
     return (
-        "Data loaded!",
+        # "Data loaded!",
         reservoirs,
         discharge,
         met,
         False,
         False,
+        n_clicks,
     )
 
 
