@@ -78,20 +78,23 @@ footer {
 	flex: none;
 	flex-basis: 0;
 }
-/* 
-.navbar-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: #EEE;
-	background-color: #00548a;
-	height: 3rem;
-	flex-shrink: 0;
-} */
 
 #tab-container {
 	display: flex;
 	flex-direction: column;
 	flex: 1;
 	overflow: hidden;
+}
+
+.mt-3 {
+	margin-top: 0;
+}
+
+.config-card {
+	margin-top: 0;
+}
+
+#load-data-button, #apportion-button {
+	margin-top: 8px;
+	width: 100%;
 }
