@@ -13,7 +13,7 @@ stations = {
 }
 
 columns = const.reservoir_station_names
-hidden_columns = [f"{station}_approval" for station in stations]
+# hidden_columns = [f"{station}_approval" for station in stations]
 datetime_conditional = [
     {
         "if": {
@@ -36,6 +36,8 @@ def reservoirs():
                     dash_table.DataTable(
                         id="reservoir-data",
                         columns=columns,
+                        # page_size=367,
+                        page_action="none",
                         style_table={"overflowY": "auto"},
                         style_cell={"textAlign": "center", "verticalAlign": "middle"},
                         style_data={
@@ -55,9 +57,9 @@ def reservoirs():
                         merge_duplicate_headers=True,
                         editable=True,
                         style_data_conditional=conditionals,
-                        hidden_columns=hidden_columns,
+                        # hidden_columns=hidden_columns,
                         # fixed_rows={"headers": True},
-                        # style_cell_conditional=[{"if": {"column_id": station}, "width": "10%"} for station in stations],
+                        style_cell_conditional=[{"if": {"column_id": station}, "width": "10%"} for station in stations],
                     ),
                 ]
             ),

@@ -82,19 +82,19 @@ footer {
 #tab-container {
 	display: flex;
 	flex-direction: column;
-	flex: 1;
-	overflow: hidden;
+	height: 100%;
 }
 
 .mt-3 {
-	margin-top: 0;
+	margin-top: 0 !important;
 }
 
 .config-card {
 	margin-top: 0;
 }
 
-#load-data-button, #apportion-button {
+#load-data-button,
+#apportion-button {
 	margin-top: 8px;
 	width: 100%;
 }

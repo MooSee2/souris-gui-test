@@ -22,7 +22,7 @@ def make_reservoir_approved_conditionals(stations=None):
         {
             "if": {
                 "filter_query": f'{{{station}_approval}} eq "approved"',
-                "column_id": f"{station}",
+                "column_id": f"{station}_approval",
             },
             "backgroundColor": "#337538",
             "color": "white",
@@ -44,7 +44,7 @@ def make_reservoir_unapproved_conditionals(stations=None):
         {
             "if": {
                 "filter_query": f'{{{station}_approval}} eq "Provisional"',
-                "column_id": f"{station}",
+                "column_id": f"{station}_approval",
             },
             "backgroundColor": "#0072B2",
             "color": "white",

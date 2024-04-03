@@ -1,8 +1,9 @@
 import dash_bootstrap_components as dbc
-from src.components.inputs_controls.inputs_controls import aside
-from src.components.navbar.navbar import navbar
-from src.components.tabs import discharge, graphs, met_data, report, reported_flows, reservoirs
 from dash import html
+
+from components.inputs_controls.inputs_controls import aside
+from components.navbar.navbar import navbar
+from components.tabs.tabs import tabs
 
 
 def make_main():
@@ -10,16 +11,7 @@ def make_main():
         children=html.Div(
             id="tab-container",
             children=[
-                dbc.Tabs(
-                    [
-                        reported_flows(),
-                        discharge(),
-                        reservoirs(),
-                        met_data(),
-                        report(),
-                        graphs(),
-                    ],
-                ),
+                tabs(),
             ],
         )
     )

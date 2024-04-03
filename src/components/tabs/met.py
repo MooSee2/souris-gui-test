@@ -46,6 +46,7 @@ def met_data():
                         id="met-data",
                         columns=const.met_station_names,
                         hidden_columns=hidden_columns,
+                        page_size=367,
                         style_table={
                             "minWidth": "100%",
                             "overflowY": "auto",

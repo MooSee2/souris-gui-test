@@ -52,6 +52,7 @@ def discharge():
                         id="discharge-data",
                         columns=const.discharge_station_names,
                         hidden_columns=hidden_columns,
+                        page_size=367,
                         style_table={
                             "overflowY": "auto",
                         },

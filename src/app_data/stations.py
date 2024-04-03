@@ -72,15 +72,15 @@ discharge_station_names = [
 reservoir_station_names = [
     {"editable": False, "name": ["Reservoir Elevation", "Elevation: meters", " ", "Datetime"], "id": "datetime"},
     {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Larson", "05NA006"], "id": "05NA006"},
-    {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Larson", "05NA006 Approval"], "id": "05NA006_approval"},
+    {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Larson", "05NA006"], "id": "05NA006_approval"},
     {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Nickle Lake", "05NB020"], "id": "05NB020"},
-    {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Nickle Lake", "05NB020_Approval"], "id": "05NB020_approval"},
+    {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Nickle Lake", "05NB020"], "id": "05NB020_approval"},
     {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Roughbark", "05NB016"], "id": "05NB016"},
-    {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Roughbark", "05NB016_Approval"], "id": "05NB016_approval"},
+    {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Roughbark", "05NB016"], "id": "05NB016_approval"},
     {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Moose Mountain Lake", "05NC002"], "id": "05NC002"},
-    {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Moose Mountain Lake", "05NC002_Approval"], "id": "05NC002_approval"},
+    {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Moose Mountain Lake", "05NC002"], "id": "05NC002_approval"},
     {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Grant Devine", "05ND012"], "id": "05ND012"},
-    {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Grant Devine", "05ND012_Approval"], "id": "05ND012_approval"},
+    {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Grant Devine", "05ND012"], "id": "05ND012_approval"},
 ]
 
 met_station_names = [
