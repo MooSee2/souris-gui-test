@@ -12,6 +12,7 @@ from dash import html
 #         ),
 #     )
 ISRB_web_link = "https://ijc.org/en/srb"
+ijc_logo = "images/ijc_logo.svg"
 
 
 def navbar():
@@ -23,14 +24,9 @@ def navbar():
                 href=ISRB_web_link,
                 style={"textDecoration": "none"},
                 children=[
-                    # html.Img(
-                    #     className="logo-container",
-                    #     src=dash.get_asset_url("images/usgs_logo.png"),
-                    #     height="30px",
-                    # ),
                     html.Img(
                         className="logo-container",
-                        src=dash.get_asset_url("images/ijc_logo.svg"),
+                        src=dash.get_asset_url(ijc_logo),
                         height="30px",
                     ),
                     html.H1(children=["International Souris River Board"]),
