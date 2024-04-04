@@ -107,10 +107,7 @@ reported_flows_container = [
     for box_name, container_id, box_label, *_ in reported_flows
 ]
 
-# children = []
 
-
-# TODO add info icons to headings
 def reported_flows():
     return dbc.Tab(
         label="Reported Flows",

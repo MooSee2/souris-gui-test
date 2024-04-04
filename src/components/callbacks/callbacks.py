@@ -236,7 +236,6 @@ def timeseries_graph(staids, reservoir_data, met_data, discharge_data):
 #     raise PreventUpdate
 
 
-# TODO finish this function
 # @callback(
 #     Output("data-downloaded-div", "children"),
 #     Input("query-data-button", "n_clicks"),
