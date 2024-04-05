@@ -27,6 +27,7 @@ datetime_conditional = [
 # conditionals = utils.make_approved_conditionals(stations=stations) + utils.make_unapproved_conditionals(stations=stations) + datetime_conditional
 conditionals = utils.make_conditionals(stations=stations)
 
+
 def reservoirs():
     return dbc.Tab(
         label="Reservoir Data",
@@ -41,24 +42,24 @@ def reservoirs():
                         style_table={
                             "overflowY": "auto",
                         },
+                        style_data={"whiteSpace": "normal", "height": "auto", "lineHeight": "15px"},
                         style_cell={
                             "textAlign": "center",
-                            "verticalAlign": "middle",
-                        },
-                        style_data={
                             "whiteSpace": "normal",
+                            "overflow": "hidden",
+                            "textOverflow": "ellipsis",
                         },
-                        css=[
-                            {
-                                "selector": ".dash-spreadsheet td div",
-                                "rule": """
-                                            line-height: 15px;
-                                            max-height: 30px; min-height: 30px; height: 30px;
-                                            display: block;
-                                            overflow-y: hidden;
-                                        """,
-                            }
-                        ],
+                        # css=[
+                        #     {
+                        #         "selector": ".dash-spreadsheet td div",
+                        #         "rule": """
+                        #                     line-height: 15px;
+                        #                     max-height: 30px; min-height: 30px; height: 30px;
+                        #                     display: block;
+                        #                     overflow-y: hidden;
+                        #                 """,
+                        #     }
+                        # ],
                         merge_duplicate_headers=True,
                         editable=True,
                         style_data_conditional=conditionals,

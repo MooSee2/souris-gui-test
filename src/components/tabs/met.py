@@ -35,6 +35,7 @@ datetime_conditional = [
 # conditionals = utils.make_approved_conditionals(stations=stations) + utils.make_unapproved_conditionals(stations=stations) + datetime_conditional
 conditionals = utils.make_conditionals(stations=stations)
 
+
 def met_data():
     return dbc.Tab(
         label="Met Data",
@@ -48,19 +49,9 @@ def met_data():
                         page_action="none",
                         # hidden_columns=hidden_columns,
                         style_table={
-                            "minWidth": "100%",
                             "overflowY": "auto",
                         },
-                        style_data={
-                            "whiteSpace": "normal",
-                            "height": "auto",
-                        },
-                        style_header={
-                            "textAlign": "center",
-                            "whiteSpace": "normal",
-                            "overflow": "hidden",
-                            "textOverflow": "ellipsis",
-                        },
+                        style_data={"whiteSpace": "normal", "height": "auto", "lineHeight": "15px"},
                         style_cell={
                             "textAlign": "center",
                             "whiteSpace": "normal",
