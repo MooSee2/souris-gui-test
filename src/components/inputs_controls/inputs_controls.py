@@ -9,42 +9,52 @@ from components.inputs_controls import (
     wateryear,
 )
 
-# load_modal = dbc.Modal(
-#     [
-#         dbc.ModalHeader(dbc.ModalTitle("Load Application Data")),
-#         dbc.ModalBody(
-#             id="load-modal-body",
-#             children=[
-#                 dbc.Button(
-#                     id="query-data-button",
-#                     children=["Query data from web"],
-#                 ),
-#                 html.Div(
-#                     id="loading-wrapper",
-#                     style={"flex-grow": "1"},
-#                     children=[
-#                         dcc.Loading(
-#                             children=html.Div(
-#                                 id="loading-data-div",
-#                                 children=["Load data from the web."],
-#                             ),
-#                         ),
-#                     ],
-#                 ),
-#             ],
-#         ),
-#         dbc.ModalFooter(),
-#     ],
-#     id="load-data-modal",
-#     is_open=False,
-# )
+calculation_modal = dbc.Modal(
+    [
+        dbc.ModalHeader(
+            dbc.ModalTitle(
+                children=[
+                    "Missing Reported Flows Detected",
+                ],
+                id="calc-modal-title",
+            ),
+            id="calc-modal-header",
+        ),
+        dbc.ModalBody(
+            children=[
+                html.P(
+                    children=[
+                        "Missing data will be filled in with '0' values.",
+                    ],
+                ),
+                html.Div(
+                    id="calc-modal-body",
+                    children=[
+                        dbc.Button(
+                            id="calc-continue-button",
+                            children=[
+                                "Continue with apportionment",
+                            ],
+                        ),
+                        dbc.Button(
+                            id="calc-cancel-button",
+                            children=["Cancel"],
+                        ),
+                    ],
+                ),
+            ],
+        ),
+        dbc.ModalFooter(),
+    ],
+    id="calculation-modal",
+    is_open=False,
+)
 
 
 def aside():
     return html.Div(
         className="asideaside",
         children=[
-            # load_modal,
             html.Div(
                 className="config-card",
                 children=[
@@ -72,6 +82,7 @@ def aside():
                     ),
                 ],
             ),
+            calculation_modal,
             html.Div(
                 className="config-card",
                 children=[

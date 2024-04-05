@@ -98,3 +98,14 @@ footer {
 	margin-top: 8px;
 	width: 100%;
 }
+
+#calc-modal-body {
+	display: flex;
+	justify-content: space-between;
+	gap: 30px;
+}
+
+#calc-modal-title {
+	margin-left: auto;
+	margin-right: auto;
+}

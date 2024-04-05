@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import dash_table
 
 import app_data.stations as const
-import modules.utils as utils
+import modules.utils.make_conditionals as make_conditionals
 
 stations = {
     "05NA006",
@@ -25,7 +25,7 @@ datetime_conditional = [
 ]
 
 # conditionals = utils.make_approved_conditionals(stations=stations) + utils.make_unapproved_conditionals(stations=stations) + datetime_conditional
-conditionals = utils.make_conditionals(stations=stations)
+conditionals = make_conditionals.make_conditionals(stations=stations)
 
 
 def reservoirs():

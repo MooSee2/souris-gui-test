@@ -211,15 +211,84 @@ def timeseries_graph(staids, reservoir_data, met_data, discharge_data):
 
 
 @callback(
-    Output("report-container", "children"),
-    Input("apportion-button", "n_clicks"),
+    Output("calculation-modal", "is_open", allow_duplicate=True),
+    Input("calc-cancel-button", "n_clicks"),
     prevent_initial_call=True,
 )
-def calculate_apportionment(n_clicks):
+def toggle_calculation_modal(_) -> bool:
+    """Toggle calculation-modal open or closed.
+
+    Parameters
+    ----------
+    n1 : Optional[int] by default, None
+        Number of clicks from apportion-button.
+    is_open : bool
+        State of modal display.
+        True if open and False if closed.
+
+
+    Returns
+    -------
+    Bool
+        What state to set the modal display.
+    """
+    return False
+
+
+@callback(
+    Output("report-container", "children", allow_duplicate=True),
+    Output("calculation-modal", "is_open", allow_duplicate=True),
+    Input("calc-continue-button", "n_clicks"),
+    prevent_initial_call=True,
+)
+def toggle_calculation_modal(_) -> bool:
+    """Toggle calculation-modal open or closed.
+
+    Parameters
+    ----------
+    n1 : Optional[int] by default, None
+        Number of clicks from apportion-button.
+    is_open : bool
+        State of modal display.
+        True if open and False if closed.
+
+
+    Returns
+    -------
+    Bool
+        What state to set the modal display.
+    """
+    return html.P("Blank Report goes here from modal continue button", className="card-text"), False
+
+
+# def detect_missing_reported_flows(reported_flows: tuple) -> dict:
+
+
+@callback(
+    Output("report-container", "children"),
+    Output("calculation-modal", "is_open"),
+    Input("apportion-button", "n_clicks"),
+    State("pipeline-input", "value"),
+    State("long-creek-minor-project-diversion-input", "value"),
+    State("us-diversion-input", "value"),
+    State("weyburn-pumpage-input", "value"),
+    State("weyburn-return-flow-input", "value"),
+    State("upper-souris-minor-diversion-input", "value"),
+    State("estevan-net-pumpage-input", "value"),
+    State("short-creek-diversions-input", "value"),
+    State("lower-souris-minor-diversion-input", "value"),
+    State("moose-mountain-minor-diversion-input", "value"),
+    prevent_initial_call=True,
+)
+def calculate_apportionment(n_clicks, *inputs):
     if n_clicks == 0 or n_clicks is None:
         raise PreventUpdate
 
-    return html.Div(className="tab2-thing")
+    if not all(inputs):
+        # TODO detect which stations are missing reported flows and ask the user if they want to continue
+        return html.P("Blank Report goes here from apportion button", className="card-text"), True
+
+    return html.Div(className="tab2-thing"), False
 
 
 # @callback(
