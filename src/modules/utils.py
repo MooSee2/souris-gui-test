@@ -20,7 +20,7 @@ def make_approved_conditionals(stations):
                 "filter_query": f'{{{station}_approval}} eq "approved"',
                 "column_id": f"{station}_approval",
             },
-            "backgroundColor": "#337538",
+            "backgroundColor": "#D1E5F0",
             "color": "white",
         }
         for station in stations

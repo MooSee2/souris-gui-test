@@ -38,17 +38,25 @@ def reservoirs():
                     dash_table.DataTable(
                         id="reservoir-data",
                         columns=columns,
+                        editable=True,
+                        merge_duplicate_headers=True,
                         page_action="none",
+                        style_data_conditional=conditionals,
                         style_table={
                             "overflowY": "auto",
                         },
-                        style_data={"whiteSpace": "normal", "height": "auto", "lineHeight": "15px"},
+                        style_data={
+                            "whiteSpace": "normal",
+                            "height": "auto",
+                            "lineHeight": "15px",
+                        },
                         style_cell={
                             "textAlign": "center",
                             "whiteSpace": "normal",
                             "overflow": "hidden",
                             "textOverflow": "ellipsis",
                         },
+                        style_cell_conditional=[{"if": {"column_id": station}, "width": "10%"} for station in stations],
                         # css=[
                         #     {
                         #         "selector": ".dash-spreadsheet td div",
@@ -60,12 +68,8 @@ def reservoirs():
                         #                 """,
                         #     }
                         # ],
-                        merge_duplicate_headers=True,
-                        editable=True,
-                        style_data_conditional=conditionals,
                         # hidden_columns=hidden_columns,
                         # fixed_rows={"headers": True},
-                        style_cell_conditional=[{"if": {"column_id": station}, "width": "10%"} for station in stations],
                     ),
                 ]
             ),

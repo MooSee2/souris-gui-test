@@ -54,11 +54,14 @@ def discharge():
                         merge_duplicate_headers=True,
                         page_action="none",
                         style_data_conditional=conditionals,
-                        # hidden_columns=hidden_columns,
                         style_table={
                             "overflowY": "auto",
                         },
-                        style_data={"whiteSpace": "normal", "height": "auto", "lineHeight": "15px"},
+                        style_data={
+                            "whiteSpace": "normal",
+                            "height": "auto",
+                            "lineHeight": "15px",
+                        },
                         style_cell={
                             "textAlign": "center",
                             "whiteSpace": "normal",

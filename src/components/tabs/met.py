@@ -46,12 +46,18 @@ def met_data():
                     dash_table.DataTable(
                         id="met-data",
                         columns=const.met_station_names,
+                        editable=True,
+                        merge_duplicate_headers=True,
                         page_action="none",
-                        # hidden_columns=hidden_columns,
+                        style_data_conditional=conditionals,
                         style_table={
                             "overflowY": "auto",
                         },
-                        style_data={"whiteSpace": "normal", "height": "auto", "lineHeight": "15px"},
+                        style_data={
+                            "whiteSpace": "normal",
+                            "height": "auto",
+                            "lineHeight": "15px",
+                        },
                         style_cell={
                             "textAlign": "center",
                             "whiteSpace": "normal",
@@ -59,8 +65,6 @@ def met_data():
                             "textOverflow": "ellipsis",
                         },
                         style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
-                        merge_duplicate_headers=True,
-                        editable=True,
                     ),
                 ]
             ),
