@@ -11,7 +11,7 @@ def test_make_df_copies():
         "05ND012",
     }
 
-    output = make_df_copies(stations=input_data)
+    output = make_df_copies(stations=input_data, csv_file="src/app_data/real_time_data.csv")
     assert len(output) == 5
 
 
@@ -20,5 +20,3 @@ def test_make_reservoirs():
     assert not combined_dfs.empty
     assert len(combined_dfs) == 1728
     assert len(combined_dfs.columns) == 15
-
-

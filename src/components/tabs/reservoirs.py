@@ -41,15 +41,12 @@ def reservoirs():
                         editable=True,
                         merge_duplicate_headers=True,
                         page_action="none",
+                        sort_action="native",
                         style_data_conditional=conditionals,
                         style_table={
                             "overflowY": "auto",
                         },
-                        style_data={
-                            "whiteSpace": "normal",
-                            "height": "auto",
-                            "lineHeight": "15px",
-                        },
+                        style_data={"whiteSpace": "normal", "height": "auto", "lineHeight": "15px", "padding": "5px"},
                         style_cell={
                             "textAlign": "center",
                             "whiteSpace": "normal",

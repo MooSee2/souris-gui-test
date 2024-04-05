@@ -210,6 +210,18 @@ def timeseries_graph(staids, reservoir_data, met_data, discharge_data):
     )
 
 
+@callback(
+    Output("report-container", "children"),
+    Input("apportion-button", "n_clicks"),
+    prevent_initial_call=True,
+)
+def calculate_apportionment(n_clicks):
+    if n_clicks == 0 or n_clicks is None:
+        raise PreventUpdate
+
+    return html.Div(className="tab2-thing")
+
+
 # @callback(
 #     Output("timeseries-plot", "figure"),
 #     Input("query-data-button", "n_clicks"),

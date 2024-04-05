@@ -8,10 +8,14 @@ def report():
         children=dbc.Card(
             className="mt-3",
             children=dbc.CardBody(
-                [
-                    html.P("Report goes here", className="card-text"),
-                    html.Div(className="tab2-thing"),
-                ]
+                id="report-container",
+                children=[
+                    html.Div(
+                        children=[
+                            html.P("Report goes here", className="card-text"),
+                        ],
+                    ),
+                ],
             ),
         ),
     )

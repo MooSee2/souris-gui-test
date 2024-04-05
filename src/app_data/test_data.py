@@ -4,8 +4,8 @@ date_range = pd.date_range("2024-01-01", periods=100, freq="d")
 date_range = [date.strftime("%Y-%m-%d") for date in date_range]
 
 
-def make_df_copies(stations):
-    data = pd.read_csv("app_data/real_time_data.csv")
+def make_df_copies(stations, csv_file="app_data/real_time_data.csv"):
+    data = pd.read_csv(csv_file)
     data = data[["Date", "Value", "Approval"]]
 
     df_copies = []
@@ -30,7 +30,6 @@ def make_dummy_data(
 ):
     unique_dfs = make_df_copies(stations=stations)
     return pd.concat(unique_dfs, axis=1)
-
 
 
 discharge_data = pd.DataFrame(
