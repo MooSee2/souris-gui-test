@@ -1,4 +1,4 @@
-from src.app_data.test_data import make_df_copies, make_reservoirs
+from src.app_data.test_data import make_df_copies, make_dummy_data
 import pandas as pd
 
 
@@ -16,7 +16,7 @@ def test_make_df_copies():
 
 
 def test_make_reservoirs():
-    combined_dfs = make_reservoirs()
+    combined_dfs = make_dummy_data()
     assert not combined_dfs.empty
     assert len(combined_dfs) == 1728
     assert len(combined_dfs.columns) == 15

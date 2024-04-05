@@ -25,17 +25,12 @@ def make_df_copies(stations):
     return df_copies
 
 
-def make_reservoirs(
-    reservoirs={
-        "05NA006",
-        "05NB020",
-        "05NB016",
-        "05NC002",
-        "05ND012",
-    },
+def make_dummy_data(
+    stations,
 ):
-    unique_dfs = make_df_copies(stations=reservoirs)
+    unique_dfs = make_df_copies(stations=stations)
     return pd.concat(unique_dfs, axis=1)
+
 
 
 discharge_data = pd.DataFrame(

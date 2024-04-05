@@ -65,7 +65,7 @@ cache = Cache(
 
 if __name__ == "__main__":
     app.run(
-        debug=False,
+        debug=True,
         port=os.getenv("PORT", "5000"),
         host=os.getenv("ADDRESS", "127.0.0.1"),
     )

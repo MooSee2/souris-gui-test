@@ -23,8 +23,9 @@ datetime_conditional = [
         "verticalAlign": "middle",
     },
 ]
-conditionals = utils.make_reservoir_approved_conditionals(stations=stations) + utils.make_reservoir_unapproved_conditionals(stations=stations) + datetime_conditional
 
+# conditionals = utils.make_approved_conditionals(stations=stations) + utils.make_unapproved_conditionals(stations=stations) + datetime_conditional
+conditionals = utils.make_conditionals(stations=stations)
 
 def reservoirs():
     return dbc.Tab(
@@ -36,10 +37,14 @@ def reservoirs():
                     dash_table.DataTable(
                         id="reservoir-data",
                         columns=columns,
-                        # page_size=367,
                         page_action="none",
-                        style_table={"overflowY": "auto"},
-                        style_cell={"textAlign": "center", "verticalAlign": "middle"},
+                        style_table={
+                            "overflowY": "auto",
+                        },
+                        style_cell={
+                            "textAlign": "center",
+                            "verticalAlign": "middle",
+                        },
                         style_data={
                             "whiteSpace": "normal",
                         },

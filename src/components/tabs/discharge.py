@@ -23,12 +23,9 @@ stations = [
     "05NB039",
 ]
 
-now = dt.now().year
-datetime = pd.date_range(f"{now}-01-01", f"{now}-12-31", freq="d").strftime("%Y-%m-%d")
-dummy_data = pd.DataFrame({"datetime": datetime})
-
 columns = const.reservoir_station_names
-hidden_columns = [f"{station}_approval" for station in stations]
+# hidden_columns = [f"{station}_approval" for station in stations]
+
 datetime_conditional = [
     {
         "if": {
@@ -38,8 +35,9 @@ datetime_conditional = [
         "verticalAlign": "middle",
     },
 ]
-conditionals = utils.make_reservoir_approved_conditionals(stations=stations) + utils.make_reservoir_unapproved_conditionals(stations=stations) + datetime_conditional
 
+# conditionals = utils.make_approved_conditionals(stations=stations) + utils.make_unapproved_conditionals(stations=stations) + datetime_conditional
+conditionals = utils.make_conditionals(stations=stations)
 
 def discharge():
     return dbc.Tab(
@@ -51,14 +49,17 @@ def discharge():
                     dash_table.DataTable(
                         id="discharge-data",
                         columns=const.discharge_station_names,
-                        hidden_columns=hidden_columns,
-                        page_size=367,
+                        editable=True,
+                        merge_duplicate_headers=True,
+                        page_action="none",
+                        # hidden_columns=hidden_columns,
                         style_table={
                             "overflowY": "auto",
                         },
                         style_data={
-                            "whiteSpace": "normal",
-                            "height": "auto",
+                            'whiteSpace': 'normal',
+                            'height': 'auto',
+                            'lineHeight': '15px'
                         },
                         style_data_conditional=conditionals,
                         style_cell={
@@ -68,8 +69,6 @@ def discharge():
                             "textOverflow": "ellipsis",
                         },
                         style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
-                        merge_duplicate_headers=True,
-                        editable=True,
                     ),
                 ]
             ),

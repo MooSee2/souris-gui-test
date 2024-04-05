@@ -9,15 +9,11 @@ datetime_conditional = [
 ]
 
 
-def make_reservoir_approved_conditionals(stations=None):
-    if stations is None:
-        stations = {
-            "05NA006",
-            "05NB020",
-            "05NB016",
-            "05NC002",
-            "05ND012",
-        }
+def make_conditionals(stations: set):
+    return make_approved_conditionals(stations) + make_unapproved_conditionals(stations)
+
+
+def make_approved_conditionals(stations):
     return [
         {
             "if": {
@@ -31,15 +27,7 @@ def make_reservoir_approved_conditionals(stations=None):
     ]
 
 
-def make_reservoir_unapproved_conditionals(stations=None):
-    if stations is None:
-        stations = {
-            "05NA006",
-            "05NB020",
-            "05NB016",
-            "05NC002",
-            "05ND012",
-        }
+def make_unapproved_conditionals(stations):
     return [
         {
             "if": {

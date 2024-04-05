@@ -20,7 +20,8 @@ stations = [
 
 
 columns = const.reservoir_station_names
-hidden_columns = [f"{station}_approval" for station in stations]
+# hidden_columns = [f"{station}_approval" for station in stations]
+
 datetime_conditional = [
     {
         "if": {
@@ -30,10 +31,9 @@ datetime_conditional = [
         "verticalAlign": "middle",
     },
 ]
-conditionals = utils.make_reservoir_approved_conditionals(stations=stations) + utils.make_reservoir_unapproved_conditionals(stations=stations) + datetime_conditional
 
-50
-
+# conditionals = utils.make_approved_conditionals(stations=stations) + utils.make_unapproved_conditionals(stations=stations) + datetime_conditional
+conditionals = utils.make_conditionals(stations=stations)
 
 def met_data():
     return dbc.Tab(
@@ -45,8 +45,8 @@ def met_data():
                     dash_table.DataTable(
                         id="met-data",
                         columns=const.met_station_names,
-                        hidden_columns=hidden_columns,
-                        page_size=367,
+                        page_action="none",
+                        # hidden_columns=hidden_columns,
                         style_table={
                             "minWidth": "100%",
                             "overflowY": "auto",
