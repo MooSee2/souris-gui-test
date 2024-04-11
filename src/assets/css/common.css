@@ -12,8 +12,8 @@ body {
 
 /* #react-entry-point, */
 #dash-root {
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: calc(100vh - 160px);
 }
 
 .asideaside {
@@ -250,11 +250,10 @@ body {
 }
 
 #react-entry-point {
-    display: flex;
+    display: flex; 
     overflow: hidden;
-    flex: auto;
+    flex: 1;
 }
-
 
 .tmp-container {
     margin-right: auto;
