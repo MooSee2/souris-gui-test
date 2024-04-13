@@ -1,4 +1,5 @@
 import modules.data_layer.download_api_services as serv
+import modules.data_layer.trapz_integration as trapz
 
 
 def get_nwis_data(year):

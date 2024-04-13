@@ -41,7 +41,7 @@ stations = {
 
 # TODO finish approvals for all stations
 discharge_station_names = [
-    {"name": ["Discharge", " ", " ", "Datetime"], "id": "datetime"},
+    {"name": ["Discharge", " ", " ", "Date"], "id": "date"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Estevan", "05NB001"], "id": "05NB001"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Estevan", "05NB001"], "id": "05NB001_approval"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Souris River below Rafterty", "05NB036"], "id": "05NB036"},
@@ -70,7 +70,7 @@ discharge_station_names = [
 
 
 reservoir_station_names = [
-    {"editable": False, "name": ["Reservoir Elevation", "Elevation: meters", " ", "Datetime"], "id": "datetime"},
+    {"editable": False, "name": ["Reservoir Elevation", "Elevation: meters", " ", "Date"], "id": "date"},
     {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Larson", "05NA006"], "id": "05NA006"},
     {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Larson", "05NA006"], "id": "05NA006_approval"},
     {"editable": True, "name": ["Reservoir Elevation", "Elevation: meters", "Nickle Lake", "05NB020"], "id": "05NB020"},
@@ -84,7 +84,7 @@ reservoir_station_names = [
 ]
 
 met_station_names = [
-    {"name": ["Roughbark", " ", "Datetime"], "id": "datetime"},
+    {"name": ["Roughbark", " ", "Date"], "id": "date"},
     {"name": ["Roughbark", "Wind Speed", "m/s"], "id": "1234_wind_speed"},
     {"name": ["Roughbark", "Wind Speed", "m/s"], "id": "1234_wind_speed_approval"},
     {"name": ["Roughbark", "Air Temperature", "C"], "id": "1234_air_temp"},

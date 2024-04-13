@@ -17,7 +17,7 @@ columns = const.reservoir_station_names
 datetime_conditional = [
     {
         "if": {
-            "column_id": "datetime",
+            "column_id": "date",
         },
         "backgroundColor": "#fafafa",
         "verticalAlign": "middle",

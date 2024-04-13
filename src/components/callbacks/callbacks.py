@@ -117,32 +117,37 @@ def update_dummy_datetime(year):
 @callback(
     # Output("loading-data-div", "children"),
     Output("reservoir-data", "data"),
-    Output("discharge-data", "data"),
-    Output("met-data", "data"),
-    Output("apportion-button", "disabled"),
-    Output("timeseries-dropdown", "disabled"),
-    Output("load-data-button", "n_clicks"),
+    # Output("discharge-data", "data"),
+    # Output("met-data", "data"),
+    # Output("apportion-button", "disabled"),
+    # Output("timeseries-dropdown", "disabled"),
+    # Output("load-data-button", "n_clicks"),
     Input("load-data-button", "n_clicks"),
     State("apportionment-year", "value"),
     prevent_initial_call=True,
 )
-# @cache.memoize()
-def download_data(n_clicks, apportionment_year: int):
-    if n_clicks == 0 or n_clicks is None:
+def download_reservoir_data(n_clicks, apportionment_year: int):
+    if n_clicks is None or n_clicks <= 0:
         raise PreventUpdate
 
-    reservoirs, discharge, met = dl.get_app_data(apportionment_year)
-    sleep(2)
+    reservoirs = dl.get_reservoir_data(apportionment_year)
 
-    return (
-        # "Data loaded!",
-        reservoirs,
-        discharge,
-        met,
-        False,
-        False,
-        n_clicks,
-    )
+    return reservoirs.to_dict("records")
+
+
+@callback(
+    Output("discharge-data", "data"),
+    Input("load-data-button", "n_clicks"),
+    State("apportionment-year", "value"),
+    prevent_initial_call=True,
+)
+def download_discharge_data(n_clicks, apportionment_year: int):
+    if n_clicks is None or n_clicks <= 0:
+        raise PreventUpdate
+
+    discharge = dl.get_discharge_data(apportionment_year)
+
+    return discharge.to_dict("records")
 
 
 @callback(
