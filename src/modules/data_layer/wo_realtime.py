@@ -44,13 +44,28 @@ def join_values_and_approvals(values, approvals):
     return pd.concat(list(values.values()) + list(approvals.values()), axis=1)
 
 
-def process_data(data):
+# def set_dtype_float(data: dict[str, pd.DataFrame]):
+#     return {staid: df.astype(float) for staid, df in data.items()}
+
+
+def fill_approvals(data):
+    return_dict = {}
+    for staid, df in data.items():
+        mask = ~df[f"{staid}_approval"].isin(["Approved", "Provisional"])
+        df.loc[mask, f"{staid}_approval"] = "Unverified"
+        return_dict[staid] = df
+    return return_dict
+
+
+def process_data(data: dict[str, pd.DataFrame]):
     processed_data = drop_and_rename_columns(data)
     approval_dvs = resolve_approvals(processed_data)
     value_dvs = calc_trapz_integration(processed_data)
-    joined = join_values_and_approvals(value_dvs, approval_dvs)
-
+    infilled_approvals = fill_approvals(approval_dvs)
+    joined = join_values_and_approvals(value_dvs, infilled_approvals)
     joined["date"] = joined.index.strftime("%Y-%m-%d")
+    # Last row is always garbage because trapz integration cuts it off.
+    joined.drop(joined.index[-1], inplace=True)
 
     return joined
 
