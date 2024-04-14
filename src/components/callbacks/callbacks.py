@@ -106,7 +106,7 @@ stations = [
 )
 def update_dummy_datetime(year):
     datetime = pd.date_range(f"{year}-01-01", f"{year}-12-31", freq="d").strftime("%Y-%m-%d")
-    dummy_data = pd.DataFrame({"datetime": datetime})
+    dummy_data = pd.DataFrame({"date": datetime})
     return (
         dummy_data.to_dict("records"),
         dummy_data.to_dict("records"),
