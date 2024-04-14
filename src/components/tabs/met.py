@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import dash_table
+from dash import dash_table, dcc
 
 import app_data.stations as const
 import modules.utils.make_conditionals as make_conditionals
@@ -43,7 +43,9 @@ def met_data():
             className="mt-3",
             children=dbc.CardBody(
                 [
-                    dbc.Button(id="load-2023-met-btn", children=["Load 2023 Data"]),
+                    dcc.Loading(
+                        dbc.Button(id="load-2023-met-btn", children=["Load 2023 Data"]),
+                    ),
                     dash_table.DataTable(
                         id="met-data",
                         columns=const.met_station_names,
@@ -57,7 +59,7 @@ def met_data():
                         style_data={
                             "whiteSpace": "normal",
                             "height": "auto",
-                            "lineHeight": "15px",
+                            "lineHeight": "10px",
                         },
                         style_cell={
                             "textAlign": "center",
