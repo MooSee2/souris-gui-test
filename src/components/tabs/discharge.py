@@ -37,7 +37,7 @@ datetime_conditional = [
 ]
 
 # conditionals = utils.make_approved_conditionals(stations=stations) + utils.make_unapproved_conditionals(stations=stations) + datetime_conditional
-conditionals = make_conditionals.make_conditionals(stations=stations)
+conditionals = make_conditionals.make_conditionals(stations=stations) + datetime_conditional
 
 
 def discharge():
