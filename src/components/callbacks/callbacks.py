@@ -115,6 +115,23 @@ def update_dummy_datetime(year):
 
 
 @callback(
+    Output("met-data", "data", allow_duplicate=True),
+    Input("load-2023-met-btn", "n_clicks"),
+    prevent_initial_call="initial_duplicate",
+)
+def update_dummy_datetime(n_clicks):
+    if n_clicks is None or n_clicks <= 0:
+        raise PreventUpdate
+
+    df = pd.read_excel("app_data/2023_met_data.xlsx", engine="openpyxl", sheet_name="data")
+    df.drop(df.index[:3], inplace=True)
+    df = df.round(3)
+    df["date"] = df["date"].dt.strftime("%Y-%m-%d")
+    df.dropna(how="all", inplace=True)
+    return df.to_dict("records")
+
+
+@callback(
     # Output("loading-data-div", "children"),
     Output("reservoir-data", "data"),
     # Output("discharge-data", "data"),

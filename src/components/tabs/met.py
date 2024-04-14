@@ -43,6 +43,7 @@ def met_data():
             className="mt-3",
             children=dbc.CardBody(
                 [
+                    dbc.Button(id="load-2023-met-btn", children=["Load 2023 Data"]),
                     dash_table.DataTable(
                         id="met-data",
                         columns=const.met_station_names,
