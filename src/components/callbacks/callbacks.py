@@ -132,13 +132,7 @@ def get_2023_met_data(n_clicks):
 
 
 @callback(
-    # Output("loading-data-div", "children"),
     Output("reservoir-data", "data"),
-    # Output("discharge-data", "data"),
-    # Output("met-data", "data"),
-    # Output("apportion-button", "disabled"),
-    # Output("timeseries-dropdown", "disabled"),
-    # Output("load-data-button", "n_clicks"),
     Input("load-data-button", "n_clicks"),
     State("apportionment-year", "value"),
     prevent_initial_call=True,
@@ -154,6 +148,8 @@ def download_reservoir_data(n_clicks, apportionment_year: int):
 
 @callback(
     Output("discharge-data", "data"),
+    Output("apportion-button", "disabled"),
+    Output("timeseries-dropdown", "disabled"),
     Input("load-data-button", "n_clicks"),
     State("apportionment-year", "value"),
     prevent_initial_call=True,
@@ -164,7 +160,7 @@ def download_discharge_data(n_clicks, apportionment_year: int):
 
     discharge = dl.get_discharge_data(apportionment_year)
 
-    return discharge.to_dict("records")
+    return discharge.to_dict("records"), False, False
 
 
 @callback(
