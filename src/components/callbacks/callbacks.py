@@ -119,7 +119,7 @@ def update_dummy_datetime(year):
     Input("load-2023-met-btn", "n_clicks"),
     prevent_initial_call="initial_duplicate",
 )
-def update_dummy_datetime(n_clicks):
+def get_2023_met_data(n_clicks):
     if n_clicks is None or n_clicks <= 0:
         raise PreventUpdate
 
