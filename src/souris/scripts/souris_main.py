@@ -24,13 +24,11 @@ from datetime import time
 from pathlib import Path
 
 import pandas as pd
-from dotenv import load_dotenv
 from loguru import logger
 
 import souris.core.configs as cfg
 import souris.core.core_meteo as met
 import souris.core.core_reservoirs as res
-import souris.utils.data_download as dl
 import souris.utils.local_data_loader as ld
 import souris.utils.reservoir_capacity as rcap
 import souris.utils.services as serv
@@ -39,8 +37,33 @@ import souris.utils.utilities as util
 
 
 # TODO send script version num to excel
-def main() -> int:
-    pd.options.mode.copy_on_write = True
+def main(
+    #### DATA ####
+    # Reported Flows
+    pipline_input,
+    long_creek,
+    us_diversion,
+    weyburn_pumpage,
+    weyburn_return,
+    upper_souris,
+    estevan_pumpage,
+    short_creek,
+    lower_souris,
+    moose_mountain,
+    # Discharge table
+    discharge_data,
+    # Reservoir table
+    reservoir_date,
+    # Met table
+    met_data,
+    #### CONFIGS ####
+    appor_year,
+    app_start,
+    app_end,
+    evap_start,
+    evap_end,
+) -> int:
+    # pd.options.mode.copy_on_write = True
     # Constants and conversion factors
     # CFS_TO_DAM3 = 2.832e-5  # 1 cfs = 2.832e-5 dam3
     # CMS_TO_DAM3 = 0.001  # 1 cms = 0.001 dam3
@@ -52,16 +75,6 @@ def main() -> int:
     M_TO_DAM = 0.1
     RESERVOIR_SEEPAGE = 0.015
     TEMPLATE_PATH = Path("souris/data/xlsx_template/BLANK_souris_natural_flow_apportionment_report.xlsx")
-    # INI_PATH = Path("input_config.ini")
-    LOG_PATH = Path("souris/logs/souris_log.log")
-    LOG_DIR = Path("souris/logs")
-
-    # Configure logger and load environmental variables before launching program
-    load_dotenv()
-    local_test = os.getenv("LOCAL_TEST", False)
-    logger.remove(0)
-    logger.add(LOG_PATH, backtrace=True, rotation=time(hour=23), retention=5, level="TRACE")
-    logger.add(sys.stderr, level=os.getenv("LOGGING_LEVEL", "INFO"))
 
     with logger.catch():
         dt_dt_now = dt.now()
@@ -79,7 +92,6 @@ def main() -> int:
         roughbark_meteo_daily = None
         handsworth_meteo_daily = None
         roughbark_handsworth_precip = {}
-        # daily_gap_dict = {}
         override_df = None
 
         ca_reservoir_stations = (
@@ -108,6 +120,7 @@ def main() -> int:
             "05114000",
         )
 
+        # TODO Load config will need to be overridden by the incoming configs from the function args
         logger.info("Reading Inputs...")
         user_config = cfg.SourisConfig.load_config(Path("config.toml"))
         souris_dates = cfg.SourisDates.make_dates(user_config.wateryear)
@@ -126,46 +139,6 @@ def main() -> int:
             local_data = ld.LocalExcel.load_excel(filepath=Path("local_data/local_data.xlsx"))
         except FileNotFoundError:
             logger.info("No local excel data found.")
-
-        if local_test == "TRUE":
-            logger.warning("Loading local test data!")
-            local_data = ld.LocalExcel.load_excel(filepath=Path("tests/data/local_data.xlsx"))
-            user_config = cfg.SourisConfig.load_config(Path("tests/data/test_config.toml"))
-            souris_dates = cfg.SourisDates.make_dates(user_config.wateryear)
-            user_config.use_local_data_only = True
-
-        # CA Aquarius is required for meteo data.  No other way around it at the moment.
-        # Eventually should be able to avoid this.
-        aq_user = os.getenv("AQ_USERNAME")
-        aq_password = os.getenv("AQ_PASSWORD")
-        if aq_user and aq_password and not user_config.use_local_data_only:
-            aq_session = dl.caaq_login(user=aq_user, password=aq_password)
-
-            logger.info("Downloading meteo data from CA AQ...")
-            roughbark_meteo_instant = dl.get_meteo(
-                staid="05NB016",
-                start_date=start_date,
-                end_date=end_date,
-                aq_session=aq_session,
-            )
-            handsworth_meteo_instant = dl.get_meteo(
-                staid="05NCM01",
-                start_date=start_date,
-                end_date=end_date,
-                aq_session=aq_session,
-            )
-            # Be responsible and close http connection to AQ.
-            aq_session.close()
-
-            (
-                roughbark_handsworth_precip,
-                roughbark_meteo_daily,
-                handsworth_meteo_daily,
-            ) = met.process_instant_meteo(
-                dates=souris_dates,
-                handsworth_instant=handsworth_meteo_instant,
-                roughbark_instant=roughbark_meteo_instant,
-            )
 
         #  User local data only
         if user_config.use_local_data_only:

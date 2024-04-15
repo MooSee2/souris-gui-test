@@ -2,6 +2,7 @@ import functools
 import glob
 from datetime import datetime as dt
 from pathlib import Path
+from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -62,7 +63,7 @@ def logger_wraps(*, entry=True, exit=True, level="DEBUG"):
     return wrapper
 
 
-def rename_monthly_index(data: pd.Series | pd.DataFrame) -> pd.Series | pd.DataFrame:
+def rename_monthly_index(data: Union[pd.Series, pd.DataFrame]) -> Union[pd.Series, pd.DataFrame]:
     """Calculate monthly values of a datetime indexed pandas Series
 
     Parameters
@@ -203,9 +204,9 @@ def souris_excel_writer(
     monthly_elev_data: pd.DataFrame,
     daily_meteo_data: dict,
     approval_dict: dict,
-    override_data: None | pd.DataFrame,
-    report_template: str | Path,  # BLANK Souris Summary Report Template
-    log_dir: str | Path,
+    override_data: Union[None, pd.DataFrame],
+    report_template: Union[str, Path],  # BLANK Souris Summary Report Template
+    log_dir: Union[str, Path],
 ):
     if isinstance(report_template, str):
         report_template = Path(report_template)

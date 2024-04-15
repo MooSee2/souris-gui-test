@@ -360,7 +360,8 @@ def calculate_apportionment(
     if n_clicks == 0 or n_clicks is None:
         raise PreventUpdate
 
-    dl.run_main(  #### DATA ####
+    dl.run_main(
+        #### DATA ####
         # Reported Flows
         pipline_input,
         long_creek,
