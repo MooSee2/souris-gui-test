@@ -304,6 +304,8 @@ def toggle_calculation_modal(_) -> bool:
     Output("report-container", "children"),
     Output("calculation-modal", "is_open"),
     Input("apportion-button", "n_clicks"),
+    #### DATA ####
+    # Reported Flows
     State("pipeline-input", "value"),
     State("long-creek-minor-project-diversion-input", "value"),
     State("us-diversion-input", "value"),
@@ -314,15 +316,75 @@ def toggle_calculation_modal(_) -> bool:
     State("short-creek-diversions-input", "value"),
     State("lower-souris-minor-diversion-input", "value"),
     State("moose-mountain-minor-diversion-input", "value"),
+    # Discharge table
+    State("discharge-data", "data"),
+    # Reservoir table
+    State("reservoir-data", "data"),
+    # Met table
+    State("met-data", "data"),
+    #### CONFIGS ####
+    State("apportionment-year", "value"),
+    State("appor-start-picker", "date"),
+    State("appor-end-picker", "date"),
+    State("evap-start-picker", "date"),
+    State("evap-end-picker", "date"),
     prevent_initial_call=True,
 )
-def calculate_apportionment(n_clicks, *inputs):
+def calculate_apportionment(
+    n_clicks,
+    #### DATA ####
+    # Reported Flows
+    pipline_input,
+    long_creek,
+    us_diversion,
+    weyburn_pumpage,
+    weyburn_return,
+    upper_souris,
+    estevan_pumpage,
+    short_creek,
+    lower_souris,
+    moose_mountain,
+    # Discharge table
+    discharge_data,
+    # Reservoir table
+    reservoir_date,
+    # Met table
+    met_data,
+    #### CONFIGS ####
+    appor_year,
+    app_start,
+    app_end,
+    evap_start,
+    evap_end,
+):
     if n_clicks == 0 or n_clicks is None:
         raise PreventUpdate
 
-    if not all(inputs):
-        # TODO detect which stations are missing reported flows and ask the user if they want to continue
-        return html.P("Blank Report goes here from apportion button", className="card-text"), True
+    dl.run_main(  #### DATA ####
+        # Reported Flows
+        pipline_input,
+        long_creek,
+        us_diversion,
+        weyburn_pumpage,
+        weyburn_return,
+        upper_souris,
+        estevan_pumpage,
+        short_creek,
+        lower_souris,
+        moose_mountain,
+        # Discharge table
+        discharge_data,
+        # Reservoir table
+        reservoir_date,
+        # Met table
+        met_data,
+        #### CONFIGS ####
+        appor_year,
+        app_start,
+        app_end,
+        evap_start,
+        evap_end,
+    )
 
     return html.Div(className="tab2-thing"), False
 
