@@ -25,7 +25,7 @@ columns = const.reservoir_station_names
 datetime_conditional = [
     {
         "if": {
-            "column_id": "datetime",
+            "column_id": "date",
         },
         "backgroundColor": "#fafafa",
         "verticalAlign": "middle",
@@ -67,7 +67,9 @@ def met_data():
                             "overflow": "hidden",
                             "textOverflow": "ellipsis",
                         },
-                        style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
+                        style_cell_conditional=[
+                            {"if": {"column_id": "date"}, "width": "200px"},
+                        ],
                     ),
                 ],
             ),

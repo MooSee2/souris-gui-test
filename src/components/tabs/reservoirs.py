@@ -41,7 +41,7 @@ def reservoirs():
                         editable=True,
                         merge_duplicate_headers=True,
                         page_action="none",
-                        sort_action="native",
+                        # sort_action="native",
                         style_data_conditional=conditionals,
                         style_table={
                             "overflowY": "auto",
@@ -53,7 +53,9 @@ def reservoirs():
                             "overflow": "hidden",
                             "textOverflow": "ellipsis",
                         },
-                        style_cell_conditional=[{"if": {"column_id": station}, "width": "10%"} for station in stations],
+                        style_cell_conditional=[
+                            {"if": {"column_id": "date"}, "width": "200px"},
+                        ],
                         # css=[
                         #     {
                         #         "selector": ".dash-spreadsheet td div",

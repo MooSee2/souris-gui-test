@@ -41,7 +41,7 @@ stations = {
 
 # TODO finish approvals for all stations
 discharge_station_names = [
-    {"editable": False, "name": ["Discharge", " ", " ", "Date"], "id": "date"},
+    {"name": ["Discharge", "Units: m\u00b3/s", " ", "Date"], "id": "date", "editable": False},
     {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Estevan", "05NB001"], "id": "05NB001", "type": "numeric"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Estevan", "05NB001"], "id": "05NB001_approval"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Souris River below Rafterty", "05NB036"], "id": "05NB036", "type": "numeric"},
