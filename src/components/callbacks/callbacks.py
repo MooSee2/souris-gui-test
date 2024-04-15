@@ -116,6 +116,7 @@ def update_dummy_datetime(year):
 
 @callback(
     Output("met-data", "data", allow_duplicate=True),
+    Output("met-status-btn", "n_clicks"),
     Input("load-2023-met-btn", "n_clicks"),
     prevent_initial_call="initial_duplicate",
 )
@@ -128,11 +129,12 @@ def get_2023_met_data(n_clicks):
     df = df.round(3)
     df["date"] = df["date"].dt.strftime("%Y-%m-%d")
     df.dropna(how="all", inplace=True)
-    return df.to_dict("records")
+    return df.to_dict("records"), 1
 
 
 @callback(
     Output("reservoir-data", "data"),
+    Output("reservoir-status-btn", "n_clicks"),
     Input("load-data-button", "n_clicks"),
     State("apportionment-year", "value"),
     prevent_initial_call=True,
@@ -143,13 +145,28 @@ def download_reservoir_data(n_clicks, apportionment_year: int):
 
     reservoirs = dl.get_reservoir_data(apportionment_year)
 
-    return reservoirs.to_dict("records")
+    return reservoirs.to_dict("records"), 1
+
+
+# @callback(
+#     Output("apportion-button", "disabled"),
+#     Input("discharge-status-btn", "n_clicks"),
+#     Input("reservoir-status-btn", "n_clicks"),
+#     prevent_initial_call=True,
+# )
+# def apportionment_btn_disabled(discharge_n_clicks, reservoir_n_clicks):
+#     # if n_clicks is None or n_clicks <= 0:
+#     #     raise PreventUpdate
+#     if all([discharge_n_clicks, reservoir_n_clicks]):
+#         return False
+#     return True
 
 
 @callback(
     Output("discharge-data", "data"),
-    Output("apportion-button", "disabled"),
-    Output("timeseries-dropdown", "disabled"),
+    # Output("apportion-button", "disabled"),
+    # Output("timeseries-dropdown", "disabled"),
+    Output("discharge-status-btn", "n_clicks"),
     # Output("load-data-button", "n_clicks"),
     Input("load-data-button", "n_clicks"),
     State("apportionment-year", "value"),
@@ -161,7 +178,7 @@ def download_discharge_data(n_clicks, apportionment_year: int):
 
     discharge = dl.get_discharge_data(apportionment_year)
 
-    return discharge.to_dict("records"), False, False
+    return discharge.to_dict("records"), 1
 
 
 @callback(

@@ -90,7 +90,7 @@ def aside():
                         "Begin Apportionment",
                         color="secondary",
                         id="apportion-button",
-                        disabled=True,
+                        # disabled=True,
                         className="usa-menu-btn",
                     ),
                 ],

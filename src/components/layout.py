@@ -28,10 +28,11 @@ def make_layout():
             ],
         ),
         dbc.Button(id="start_button", style={"display": "none"}),
+        dbc.Button(id="discharge-status-btn", style={"display": "none"}),
+        dbc.Button(id="reservoir-status-btn", style={"display": "none"}),
+        dbc.Button(id="met-status-btn", style={"display": "none"}),
         html.Button(
             id="data-downloaded-signal",
-            style={
-                "display": "none",
-            },
+            style={"display": "none"},
         ),
     ]
