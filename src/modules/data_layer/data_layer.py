@@ -3,7 +3,8 @@ from time import sleep
 import app_data.test_data as td
 from modules.data_layer import nwis
 from modules.data_layer import wo_realtime as wo
-from souris.scripts.souris_main import main
+
+# from souris.scripts.souris_main import main
 
 
 def get_reservoir_data(apportionment_year: int):
