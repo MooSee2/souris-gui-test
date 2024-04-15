@@ -37,6 +37,11 @@ def calc_trapz_integration(data):
 
 
 def resolve_approvals(data):
+    # mouse = {}
+    # for staid, df in data.items():
+    #     df = df.resample("D").apply(lambda x: x.mode())
+    #     mouse[staid] = df
+    # return mouse
     return {staid: df.resample("D").apply(lambda x: x.mode())[[f"{staid}_approval"]] for staid, df in data.items()}
 
 
@@ -51,7 +56,7 @@ def join_values_and_approvals(values, approvals):
 def fill_approvals(data):
     return_dict = {}
     for staid, df in data.items():
-        mask = ~df[f"{staid}_approval"].isin(["Approved", "Provisional"])
+        mask = ~df[f"{staid}_approval"].isin(["Approved", "Provisional", "Final"])
         df.loc[mask, f"{staid}_approval"] = "Unverified"
         return_dict[staid] = df
     return return_dict
