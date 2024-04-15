@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 
 current_year = dt.now().year
-available_years = [{"label": year, "value": year} for year in range(2022, current_year + 1)]
+available_years = [{"label": year, "value": year} for year in range(2023, current_year + 1)]
 available_years.reverse()
 
 stations = {
