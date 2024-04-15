@@ -69,7 +69,7 @@ def met_data():
                         },
                         style_cell_conditional=[{"if": {"column_id": station}, "width": "5%"} for station in stations],
                     ),
-                ]
+                ],
             ),
         ),
     )
