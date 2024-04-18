@@ -7,9 +7,8 @@ from typing import Optional, Union
 # import modules.server as serv
 import pandas as pd
 import plotly.express as px
-from dash import Input, Output, State, callback, dash_table, html
+from dash import Input, Output, State, callback, dash_table, html, dcc
 from dash.exceptions import PreventUpdate
-import dash_core_components as dcc
 
 import modules.data_layer.data_layer as dl
 
@@ -168,7 +167,6 @@ def download_discharge_data(n_clicks, apportionment_year: int):
     return discharge.to_dict("records"), 1
 
 
-
 # @callback(
 #     Output("apportion-button", "disabled"),
 #     Input("discharge-status-btn", "n_clicks"),
@@ -183,22 +181,27 @@ def download_discharge_data(n_clicks, apportionment_year: int):
 #     return True
 
 
-
 @callback(
     Output("evap-start-picker", "date"),
     Output("evap-end-picker", "date"),
+    Output("appor-start-picker", "date"),
+    Output("appor-end-picker", "date"),
     Input("apportionment-year", "value"),
     State("evap-start-picker", "date"),
     State("evap-end-picker", "date"),
+    State("appor-start-picker", "date"),
+    State("appor-end-picker", "date"),
     prevent_initial_call=True,
 )
-def update_evap_years(selected_year, start_date, end_date):
-    if not selected_year:
-        selected_year = now.year
+def update_input_years(appor_year, evap_start, evap_end, appor_start, appor_end):
+    if not appor_year:
+        appor_year = now.year
 
-    start_date = dt.strptime(f"{selected_year}-{start_date[5:]}", "%Y-%m-%d").date()
-    end_date = dt.strptime(f"{selected_year}-{end_date[5:]}", "%Y-%m-%d").date()
-    return start_date, end_date
+    evap_start = dt.strptime(f"{appor_year}-{evap_start[5:]}", "%Y-%m-%d").date()
+    evap_end = dt.strptime(f"{appor_year}-{evap_end[5:]}", "%Y-%m-%d").date()
+    appor_start = dt.strptime(f"{appor_year}-{appor_start[5:]}", "%Y-%m-%d").date()
+    appor_end = dt.strptime(f"{appor_year}-{appor_end[5:]}", "%Y-%m-%d").date()
+    return evap_start, evap_end, appor_start, appor_end
 
 
 @callback(
@@ -392,7 +395,7 @@ def calculate_apportionment(
         evap_end,
     )
 
-    return html.Div(className="tab2-thing"), False, dcc.send_file('new_excel_file.xlsx')
+    return html.Div(className="tab2-thing"), False, dcc.send_file("new_excel_file.xlsx")
 
 
 # @callback(
