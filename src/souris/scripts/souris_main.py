@@ -18,9 +18,7 @@ Version 2.0- Jonathan O'Connell, joconnell@usgs.gov (November 2023)
 """
 
 import os
-import sys
 from datetime import datetime as dt
-from datetime import time
 from pathlib import Path
 
 import pandas as pd
@@ -29,17 +27,14 @@ from loguru import logger
 import souris.core.configs as cfg
 import souris.core.core_meteo as met
 import souris.core.core_reservoirs as res
-import souris.utils.local_data_loader as ld
 import souris.utils.reservoir_capacity as rcap
-import souris.utils.services as serv
-import souris.utils.trapz_integration as trapz
 import souris.utils.utilities as util
 
 
 # TODO send script version num to excel
 def main(
     #### DATA ####
-    # Reported Flows
+    # Reported Flows (boxes)
     pipline_input,
     long_creek,
     us_diversion,
@@ -86,12 +81,9 @@ def main(
         precip_daily = {}
         approval_dict = {}
         discharge_daily = None
-        local_data = None
         reservoir_elevation_daily = None
-        precip_daily = {}
         roughbark_meteo_daily = None
         handsworth_meteo_daily = None
-        roughbark_handsworth_precip = {}
         override_df = None
 
         ca_reservoir_stations = (
@@ -120,169 +112,47 @@ def main(
             "05114000",
         )
 
-        # TODO Load config will need to be overridden by the incoming configs from the function args
+        # Inputs from App are in the config and dates classes now.
         logger.info("Reading Inputs...")
-        user_config = cfg.SourisConfig.load_config(Path("config.toml"))
-        souris_dates = cfg.SourisDates.make_dates(user_config.wateryear)
+        reported_flows = cfg.Boxes(
+            box_5b=pipline_input,
+            box_11=long_creek,
+            box_12=us_diversion,
+            box_16=weyburn_pumpage,
+            box_18=weyburn_return,
+            box_25=upper_souris,
+            box_27=estevan_pumpage,
+            box_28=short_creek,
+            box_29=lower_souris,
+            box_37=moose_mountain,
+        )
+        souris_dates = cfg.Dates(
+            wateryear=appor_year,
+            start_apportion=app_start,
+            end_apportion=app_end,
+            evap_start_date=evap_start,
+            evap_end_date=evap_end,
+        )
         logger.info("Inputs Read!")
 
-        start_date = souris_dates.start_pull
-        end_date = souris_dates.end_pull
+        # from openpyxl import load_workbook
+        # from dash_core_components import send_file
 
-        logger.info(
-            f"Start data pull: {start_date} | End data pull: {end_date}",
-        )
+        # writer = pd.ExcelWriter('new_excel_file.xlsx', engine="xlsxwriter")
 
-        # Always try to load the excel file.  Has override data if not all the data.
-        # May not exist or may only have some data for some stations.
-        try:
-            local_data = ld.LocalExcel.load_excel(filepath=Path("local_data/local_data.xlsx"))
-        except FileNotFoundError:
-            logger.info("No local excel data found.")
 
-        #  User local data only
-        if user_config.use_local_data_only:
-            (
-                discharge_daily,
-                reservoir_elevation_daily,
-                precip_daily,
-                roughbark_meteo_daily,
-                handsworth_meteo_daily,
-            ) = local_data.to_dicts()
+        # Looks like the start of things here
+        # Data has been loaded into 3 tables, discharge, reservoirs, and met data.
+        # Dates are in souris_dates and Config settings are in souris_config
 
-        #  If not using local data, go forth and download.
-        else:
-            if not roughbark_meteo_daily or not handsworth_meteo_daily:
-                logger.info("No local Roughbark or Handsworth data available.  Exiting program.")
-                return 1
-
-            if len(roughbark_meteo_daily) < 4 or len(handsworth_meteo_daily) < 4:
-                logger.info("No local Roughbark or Handsworth data available.  Exiting program.")
-                return 1
-
-            logger.info("Downloading USGS NWIS discharge data...")
-            """
-            USGS operated gages.
-            Box5a
-            USGS: 05113600; Long Creek NR Noonan, ND
-            ECCC: 05NB027; Long Creek at Eastern Crossing
-            North Dakota used to supply value, now can be downloaded from NWIS
-            Box43
-            USGS: 05114000; Souris River NR Sherwood, ND
-            ECCC: 05ND007; Souris River near Sherwood
-            North Dakota used to supply value, now can be downloaded from NWIS
-            """
-            nwis_service = serv.NWISWaterService(
-                service="dv",
-                freq="d",
-            )
-            nwis_discharge = nwis_service.get(
-                params=dict(
-                    sites=nwis_discharge_stations,
-                    startDT=start_date,
-                    endDT=end_date,
-                    parameterCd="00060",
-                    format="json",
-                )
-            )
-
-            logger.info("Downloading Oxbow data...")
-            precip_daily["oxbow_precip"] = dl.get_oxbow(
-                start_date=start_date,
-                end_date=end_date,
-            )
-
-            logger.info("Downloading reservoir data...")
-            reservoir_elevations = serv.WaterOfficeRealTime(
-                freq="5min",
-            )
-            reservoir_elevations_instant = reservoir_elevations.get(
-                params={
-                    "stations[]": ca_reservoir_stations,
-                    "start_date": start_date,
-                    "end_date": end_date,
-                    "parameters[]": 46,
-                },
-            )
-
-            logger.info("Downloading WaterOffice discharge data...")
-            ca_discharge = serv.WaterOfficeRealTime(
-                freq="5min",
-            )
-            discharge_instant = ca_discharge.get(
-                params={
-                    "stations[]": ca_discharge_stations,
-                    "start_date": start_date,
-                    "end_date": end_date,
-                    "parameters[]": 47,
-                },
-            )
-
-            reservoir_elevation_daily = {staid: trapz.daily_value_integration(dataframe, column="value", freq="h").round(3) for staid, dataframe in reservoir_elevations_instant.items()}
-
-            discharge_daily = {staid: trapz.daily_value_integration(dataframe, column="value", freq="h").round(3) for staid, dataframe in discharge_instant.items()}
-            discharge_daily["05113600"] = nwis_discharge["05113600"][["value"]] * CFS_TO_CMS
-            discharge_daily["05114000"] = nwis_discharge["05114000"][["value"]] * CFS_TO_CMS
-
-        # At this point all data should be downloaded either from AQ, WaterOffice, NWIS, or local sources.
-        # # -----------------------------------------------------------------------------------------#
-        # #                              Override Data Processing                                    #
-        # # -----------------------------------------------------------------------------------------#
-
-        # Merge roughbark_handsworth_precip if available, otherwise try for override data.
-        if roughbark_handsworth_precip:
-            precip_daily |= roughbark_handsworth_precip
-
-        # If there is no local data, then no need for overriding and can be skipped.
-        # Note that override data in cfs is converted to cms when data is loaded.
-        if bool(local_data) and not user_config.use_local_data_only:
-            logger.info("Override data detected...")
-            (
-                discharge_daily_override,
-                reservoir_elevation_daily_override,
-                precip_daily_override,
-                roughbark_meteo_daily_override,
-                handsworth_meteo_daily_override,
-            ) = local_data.to_override_dicts()
-
-            data_dicts = (
-                discharge_daily_override,
-                reservoir_elevation_daily_override,
-                precip_daily_override,
-                roughbark_meteo_daily_override,
-                handsworth_meteo_daily_override,
-            )
-
-            combined_overrides = [pd.concat(data, axis=1) for data in data_dicts if data]
-            override_df = pd.concat(combined_overrides, axis=1)
-
-            discharge_daily = util.merge_override_data(
-                discharge_daily,
-                discharge_daily_override,
-            )
-
-            reservoir_elevation_daily = util.merge_override_data(reservoir_elevation_daily, reservoir_elevation_daily_override)
-
-            precip_daily = util.merge_override_data(
-                precip_daily,
-                precip_daily_override,
-            )
-
-            roughbark_meteo_daily = util.merge_override_data(roughbark_meteo_daily, roughbark_meteo_daily_override)
-            handsworth_meteo_daily = util.merge_override_data(handsworth_meteo_daily, handsworth_meteo_daily_override)
-
-            logger.info("Override data merged.")
-
-        # All data has been downloaded and overridden if override data available.  Now process data.
-        # Override data may override an entire dataset and that's ok.
         # # -----------------------------------------------------------------------------------------#
         # #                              Further Meteo Processing                                    #
         # # -----------------------------------------------------------------------------------------#
         roughbark_meteo_daily = pd.concat(
             [
                 roughbark_meteo_daily["05NB016_wind_speed"],
-                roughbark_meteo_daily["05NB016_radiation"],
-                roughbark_meteo_daily["05NB016_temperature"],
+                roughbark_meteo_daily["05NB016_sol_rad"],
+                roughbark_meteo_daily["05NB016_air_temp"],
                 roughbark_meteo_daily["05NB016_rel_humidity"],
             ],
             axis=1,
@@ -290,16 +160,20 @@ def main(
         handsworth_meteo_daily = pd.concat(
             [
                 handsworth_meteo_daily["05NCM01_wind_speed"],
-                handsworth_meteo_daily["05NCM01_radiation"],
-                handsworth_meteo_daily["05NCM01_temperature"],
+                handsworth_meteo_daily["05NCM01_sol_rad"],
+                handsworth_meteo_daily["05NCM01_air_temp"],
                 handsworth_meteo_daily["05NCM01_rel_humidity"],
             ],
             axis=1,
         )
 
+
+        # break out precip data here, this will be the daily values and some months need to be set to 0
+        # There is precip data at handsworth and roughbark.
         for dataframe in precip_daily.values():
             dataframe.loc[dataframe.index.month.isin([1, 2, 3, 4, 11, 12]), "value"] = 0
 
+        # new precip dfs of monthly data from the above dailies and convert to mm
         precip_monthly = {staid: util.rename_monthly_index(dataframe.resample("ME").sum()) for staid, dataframe in precip_daily.items()}
 
         precip_monthly = {staid: dataframe * MM_TO_METERS for staid, dataframe in precip_monthly.items()}
@@ -307,6 +181,7 @@ def main(
         # # -----------------------------------------------------------------------------------------#
         # #                              Assign reservoir Stage-Area-Capacities                      #
         # # -----------------------------------------------------------------------------------------#
+        # May need to break up reservoir data into the {staid: df} format to reuse this function.
         reservoir_sacs_daily, reservoir_sacs_monthly = res.process_reservoir_sacs(
             reservoir_elevation_daily,
             wateryear=souris_dates.wateryear,
@@ -367,15 +242,15 @@ def main(
         # * 1.3.5 Boundary Reservoir Total Outflow
         boxes["box9"] = boxes["box6"] + boxes["box8"]
         # * 1.3.6	Boundary Reservoir Diversion
-        boxes["box10"] = (boxes["box5a"] + user_config.box_5b) - boxes["box9"]
+        boxes["box10"] = (boxes["box5a"] + reported_flows.box_5b) - boxes["box9"]
         # * 1.6 Total Diversion Long Creek
-        boxes["box13"] = boxes["box3"] + boxes["box10"] + user_config.box_11 + user_config.box_12
+        boxes["box13"] = boxes["box3"] + boxes["box10"] + reported_flows.box_11 + reported_flows.box_12
         # * 2.1.1 Nickle Lake Reservoir Storage Change
         boxes["box14"] = reservoir_sacs_daily["05NB020"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NB020"]["capacity_dam3"].iloc[0]
         # * 2.1.2 Nickle Lake Reservoir Net Evaporation & Seepage
         boxes["box15"] = (reservoir_sacs_monthly["05NB020"]["area_dam2"] * roughbark_loss).sum()
         # * 2.1.4 Nickle Lake Reservoir Diversion
-        boxes["box17"] = boxes["box14"] + boxes["box15"] + user_config.box_16
+        boxes["box17"] = boxes["box14"] + boxes["box15"] + reported_flows.box_16
         # * 2.3.1 Roughbark Reservoir Storage Change
         boxes["box19"] = reservoir_sacs_daily["05NB016"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NB016"]["capacity_dam3"].iloc[0]
         # * 2.3.2 Roughbark Reservoir Net Evaporation & Seepage
@@ -410,25 +285,25 @@ def main(
         boxes["box22"] *= CMS_TO_DAM3days
 
         # * 2.4.2 Rafferty Reservoir Outflow
-        if user_config.wateryear == 2023:
+        if reported_flows.wateryear == 2023:
             # Special values for 2023 comuputation.  Flush line = 63 DAM3, Rafferty -> Estevan pipeline = 1468 DAM3
             boxes["box23a"] = discharge_daily["05NB036"].sum().sum() * CMS_TO_DAM3days + 63 + 1468
         else:
             boxes["box23a"] = discharge_daily["05NB036"].sum().sum() * CMS_TO_DAM3days
 
         # * 2.4.3 Rafferty Reservoir Diversion
-        boxes["box24"] = boxes["box22"] - (boxes["box23a"] + user_config.box_5b)
+        boxes["box24"] = boxes["box22"] - (boxes["box23a"] + reported_flows.box_5b)
         # * 2.6 Total Diversion Upper Souris River
-        boxes["box26"] = boxes["box17"] - user_config.box_18 + boxes["box21"] + boxes["box24"] + user_config.box_25
+        boxes["box26"] = boxes["box17"] - reported_flows.box_18 + boxes["box21"] + boxes["box24"] + reported_flows.box_25
 
         # * 3.4 Total Diversion Lower Souris River
-        if user_config.wateryear == 2023:
+        if reported_flows.wateryear == 2023:
             # Special values for 2023 comuputation.  Duck pond release = 345 DAM3
-            user_config.box_27 = user_config.box_27 - 345
+            reported_flows.box_27 = reported_flows.box_27 - 345
         else:
-            user_config.box_27 = user_config.box_27
+            reported_flows.box_27 = reported_flows.box_27
 
-        boxes["box30"] = user_config.box_27 + user_config.box_28 + user_config.box_29
+        boxes["box30"] = reported_flows.box_27 + reported_flows.box_28 + reported_flows.box_29
         # * 4.1.1 Moose Mountain Lake Storage Change
         boxes["box31"] = reservoir_sacs_daily["05NC002"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NC002"]["capacity_dam3"].iloc[0]
         # * 4.1.2 Moose Mountain Lake Net Evaporation & Seepage
@@ -442,7 +317,7 @@ def main(
         # * 4.2 Grant Devine Reservoir
         boxes["box36"] = boxes["box34"] + boxes["box35"]
         # * 4.4 Total Diversions Moose Mountain Creek Basin
-        boxes["box38"] = boxes["box33"] + boxes["box36"] + user_config.box_37
+        boxes["box38"] = boxes["box33"] + boxes["box36"] + reported_flows.box_37
         # * 5.1 Yellow Grass Ditch
         boxes["box39"] = discharge_daily["05NB011"].sum().sum() * CMS_TO_DAM3days
         # * 5.2 Tatagwa Lake Drain
@@ -455,11 +330,11 @@ def main(
         boxes["box43"] = discharge_daily["05114000"].sum().sum() * CMS_TO_DAM3days
         # * 6.3 Natural Flow at Sherwood
         boxes["box44"] = boxes["box42"] + boxes["box43"] - boxes["box41"]
-        darling_condition = rcap.lake_darling_condition(start_date=start_date, sherwood=boxes["box44"])
+        darling_condition = rcap.lake_darling_condition(start_date=souris_dates.start_apportion, sherwood=boxes["box44"])
         # * 6.4 U.S. Share at Sherwood – 50% vs 40% Note: True=1, False=0
         boxes["box45a"] = 0.4 * boxes["box44"] if darling_condition else 0
         boxes["box45b"] = 0 if darling_condition else 0.5 * boxes["box44"]
-        boxes["box46"] = user_config.box_12 + user_config.box_28 + boxes["box43"]
+        boxes["box46"] = reported_flows.box_12 + reported_flows.box_28 + boxes["box43"]
         # * 6.6 Surplus or Deficit to U.S.
         boxes["box47a"] = boxes["box46"] - boxes["box45a"] if boxes["box45a"] else 0
         boxes["box47b"] = boxes["box46"] - boxes["box45b"] if boxes["box45b"] else 0
@@ -481,8 +356,9 @@ def main(
         # -----------------------------------------------------------------------------------------#
         #                                  Process data for Report                                 #
         # -----------------------------------------------------------------------------------------#
+        """All this can probably go"""
         # Combine all daily dischage
-        daily_idx = pd.date_range(start_date, end_date, freq="D")
+        daily_idx = pd.date_range(souris_dates.start_apportion, souris_dates.end_apportion, freq="D")
         master_daily_df = pd.DataFrame(index=daily_idx, columns=["temp"])
 
         reservoir_elevation_daily = {staid: dataframe.rename(columns={"value": f"{staid}_elevation"}) for staid, dataframe in reservoir_elevation_daily.items()}
@@ -498,7 +374,7 @@ def main(
             master_daily_df = master_daily_df.join(dataframe)
         del master_daily_df["temp"]
 
-        monthly_idx = pd.date_range(start_date, end_date, freq="ME")
+        monthly_idx = pd.date_range(souris_dates.start_apportion, souris_dates.end_apportion, freq="ME")
         master_monthly_df = pd.DataFrame(index=monthly_idx, columns=["temp"])
         master_monthly_df = master_monthly_df.set_index(monthly_idx.strftime("%Y-%m"))
 
@@ -522,8 +398,8 @@ def main(
         logger.info("Apportionment Calculations Complete")
 
         logger.info("Writing Data to Excel Workbook...")
-        util.souris_excel_writer(
-            config=user_config,
+        report = util.souris_excel_writer(
+            config=reported_flows,
             dates=souris_dates,
             boxes=boxes,
             daily_data=master_daily_df,
@@ -531,21 +407,13 @@ def main(
             daily_meteo_data=master_meteo_dict,
             approval_dict=approval_dict,
             report_template=TEMPLATE_PATH,
-            log_dir=LOG_DIR,
             override_data=override_df,
         )
-
-        if os.getenv("LOGGING_LEVEL", "INFO") == "DEBUG":
-            debug_boxes = util.debug_boxes_df(data=boxes)
-            debug_boxes.to_csv(
-                Path(f"tests/data/csv_data/boxes/{user_config.wateryear}_debug_boxes.csv"),
-                index=False,
-            )
 
         logger.info("Apportionment complete!")
         dt_now = dt.now().strftime("%Y-%m-%d %H:%M:%S.%f")
         logger.info(f"Program completed at {dt_now}")
-        return 0
+        return report
         ############################################################################################
         #                                  End Reporting                                           #
         ############################################################################################

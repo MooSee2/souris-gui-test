@@ -197,8 +197,8 @@ def penman(
 
 
 def souris_excel_writer(
-    config: cfg.SourisConfig,
-    dates: cfg.SourisDates,
+    config: cfg.Boxes,
+    dates: cfg.Dates,
     boxes: dict,
     daily_data: pd.DataFrame,
     monthly_elev_data: pd.DataFrame,
@@ -206,12 +206,9 @@ def souris_excel_writer(
     approval_dict: dict,
     override_data: Union[None, pd.DataFrame],
     report_template: Union[str, Path],  # BLANK Souris Summary Report Template
-    log_dir: Union[str, Path],
 ):
     if isinstance(report_template, str):
         report_template = Path(report_template)
-    if isinstance(log_dir, str):
-        log_dir = Path(log_dir)
     # if month or day number is a single digit, add a zero to the front of the string
     app_range = f"for {dates.start_pull} to {dates.end_pull}"
     dt_now = dt.now().strftime("%Y-%m-%d %H.%M.%S.%f")
@@ -342,7 +339,7 @@ def souris_excel_writer(
         config_sheet.cell(row=idx, column=1, value=setting[0])
         config_sheet.cell(row=idx, column=2, value=setting[1])
 
-    newest_log = get_newest_log(log_dir)
+    newest_log = get_newest_log(Path("logs"))
     with open(newest_log, mode="r") as log_file:
         for idx, line in enumerate(log_file, start=2):
             log_sheet.cell(row=idx, column=1, value=line)

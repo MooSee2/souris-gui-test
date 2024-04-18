@@ -25,7 +25,7 @@ MM_TO_METERS = 0.001
 
 
 def process_instant_meteo(
-    dates: cfg.SourisDates,
+    dates: cfg.Dates,
     roughbark_instant: dict,
     handsworth_instant: dict,
 ) -> tuple:
@@ -72,7 +72,7 @@ def process_instant_meteo(
 
 
 def process_penman(
-    dates: cfg.SourisDates,
+    dates: cfg.Dates,
     roughbark_meteo_daily: pd.DataFrame,
     handsworth_meteo_daily: pd.DataFrame,
 ) -> tuple:

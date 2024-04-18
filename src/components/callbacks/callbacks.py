@@ -9,6 +9,7 @@ import pandas as pd
 import plotly.express as px
 from dash import Input, Output, State, callback, dash_table, html
 from dash.exceptions import PreventUpdate
+import dash_core_components as dcc
 
 import modules.data_layer.data_layer as dl
 
@@ -148,20 +149,6 @@ def download_reservoir_data(n_clicks, apportionment_year: int):
     return reservoirs.to_dict("records"), 1
 
 
-# @callback(
-#     Output("apportion-button", "disabled"),
-#     Input("discharge-status-btn", "n_clicks"),
-#     Input("reservoir-status-btn", "n_clicks"),
-#     prevent_initial_call=True,
-# )
-# def apportionment_btn_disabled(discharge_n_clicks, reservoir_n_clicks):
-#     # if n_clicks is None or n_clicks <= 0:
-#     #     raise PreventUpdate
-#     if all([discharge_n_clicks, reservoir_n_clicks]):
-#         return False
-#     return True
-
-
 @callback(
     Output("discharge-data", "data"),
     # Output("apportion-button", "disabled"),
@@ -179,6 +166,22 @@ def download_discharge_data(n_clicks, apportionment_year: int):
     discharge = dl.get_discharge_data(apportionment_year)
 
     return discharge.to_dict("records"), 1
+
+
+
+# @callback(
+#     Output("apportion-button", "disabled"),
+#     Input("discharge-status-btn", "n_clicks"),
+#     Input("reservoir-status-btn", "n_clicks"),
+#     prevent_initial_call=True,
+# )
+# def apportionment_btn_disabled(discharge_n_clicks, reservoir_n_clicks):
+#     # if n_clicks is None or n_clicks <= 0:
+#     #     raise PreventUpdate
+#     if all([discharge_n_clicks, reservoir_n_clicks]):
+#         return False
+#     return True
+
 
 
 @callback(
@@ -303,6 +306,7 @@ def toggle_calculation_modal(_) -> bool:
 @callback(
     Output("report-container", "children"),
     Output("calculation-modal", "is_open"),
+    Output("report-download", "data"),
     Input("apportion-button", "n_clicks"),
     #### DATA ####
     # Reported Flows
@@ -357,10 +361,11 @@ def calculate_apportionment(
     evap_start,
     evap_end,
 ):
+    """This function collects all the inputs and data for the apportionment calculation"""
     if n_clicks == 0 or n_clicks is None:
         raise PreventUpdate
 
-    dl.run_main(
+    report = dl.run_main(
         #### DATA ####
         # Reported Flows
         pipline_input,
@@ -374,11 +379,11 @@ def calculate_apportionment(
         lower_souris,
         moose_mountain,
         # Discharge table
-        discharge_data,
+        pd.DataFrame(discharge_data),
         # Reservoir table
-        reservoir_date,
+        pd.DataFrame(reservoir_date),
         # Met table
-        met_data,
+        pd.DataFrame(met_data),
         #### CONFIGS ####
         appor_year,
         app_start,
@@ -387,7 +392,7 @@ def calculate_apportionment(
         evap_end,
     )
 
-    return html.Div(className="tab2-thing"), False
+    return html.Div(className="tab2-thing"), False, dcc.send_file('new_excel_file.xlsx')
 
 
 # @callback(

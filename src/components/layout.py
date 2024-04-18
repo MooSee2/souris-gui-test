@@ -1,4 +1,5 @@
 import dash_bootstrap_components as dbc
+import dash_core_components as dcc
 from dash import html
 
 from components.inputs_controls.inputs_controls import aside
@@ -27,6 +28,7 @@ def make_layout():
                 make_main(),
             ],
         ),
+        dcc.Download(id="report-download"),
         dbc.Button(id="start_button", style={"display": "none"}),
         dbc.Button(id="discharge-status-btn", style={"display": "none"}),
         dbc.Button(id="reservoir-status-btn", style={"display": "none"}),
