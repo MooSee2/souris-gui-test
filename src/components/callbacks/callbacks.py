@@ -312,7 +312,9 @@ def toggle_calculation_modal(_) -> bool:
     Output("report-download", "data"),
     Input("apportion-button", "n_clicks"),
     #### DATA ####
-    # Reported Flows
+    # Reported Flows.
+    #  If reported flows change and are added to the GUI, they
+    #  will then need to be referenced here as input values to the model
     State("pipeline-input", "value"),
     State("long-creek-minor-project-diversion-input", "value"),
     State("us-diversion-input", "value"),
@@ -368,7 +370,9 @@ def calculate_apportionment(
     if n_clicks == 0 or n_clicks is None:
         raise PreventUpdate
 
-    report = dl.run_main(
+    # This should return the excel file for the moment.  Later it will need to return all
+    # the data that went into excel as well so it can be used in the html version of the report
+    report_file = dl.run_main(
         #### DATA ####
         # Reported Flows
         pipline_input,
