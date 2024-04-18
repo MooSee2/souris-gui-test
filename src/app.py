@@ -48,21 +48,6 @@ app.layout = html.Div(
     id="dash-root",
 )
 
-cache = Cache(
-    app.server,
-    config={
-        "CACHE_TYPE": "filesystem",
-        "CACHE_DIR": ".cache",
-    },
-)
-
-# app = app
-
-# Important line to expose server.
-# Otherwise no valid app will be found.
-# app = app.server
-# debug=os.getenv("DASH_DEBUG", False).lower() in ('true', '1', 't')
-
 if __name__ == "__main__":
     app.run(
         debug=os.getenv("DASH_DEBUG", False).lower() in ("true", "1", "t"),
