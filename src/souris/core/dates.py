@@ -1,5 +1,6 @@
 import datetime as dt
 from dataclasses import dataclass
+from typing import Optional
 
 ACREFT_TO_CFSDay = 0.504166666666665
 CFSDay_TO_DAM3Day: float = 2.4465755455488
@@ -10,22 +11,6 @@ USGS_PCODE_CMS: str = "30208"
 USGS_PCODE_ELEV_FT: str = "62614"
 USGS_STAT_CODE_DAILY_MEAN: str = "00003"
 USGS_STAT_CODE_OBS_AT_2400: str = "32400"
-
-
-@dataclass
-class Boxes:
-    """This class houses the reported flows as boxes for calculations."""
-
-    box_5b: int
-    box_11: int
-    box_12: int
-    box_16: int
-    box_18: int
-    box_25: int
-    box_27: int
-    box_28: int
-    box_29: int
-    box_37: int
 
 
 @dataclass(frozen=True)
