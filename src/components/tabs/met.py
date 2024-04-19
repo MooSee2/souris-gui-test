@@ -16,6 +16,7 @@ stations = [
     "4321_sol_rad",
     "4321_rel_humidity",
     "4321_precip",
+    "oxbow",
 ]
 
 
