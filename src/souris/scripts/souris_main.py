@@ -330,7 +330,7 @@ def main(
 
         logger.info("Writing Data to Excel Workbook...")
         report = util.souris_excel_writer(
-            config=reported_flows,
+            reported_flows=reported_flows,
             dates=souris_dates,
             boxes=boxes,
             daily_data=master_daily_df,
