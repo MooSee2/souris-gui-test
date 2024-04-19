@@ -29,43 +29,14 @@ import souris.core.core_meteo as met
 import souris.core.core_reservoirs as res
 import souris.utils.reservoir_capacity as rcap
 import souris.utils.utilities as util
+from modules.data_layer.model_inputs import SourisModelInputs
 
 
 # TODO send script version num to excel
 def main(
-    #### DATA ####
-    # Reported Flows (boxes)
-    pipline_input,
-    long_creek,
-    us_diversion,
-    weyburn_pumpage,
-    weyburn_return,
-    upper_souris,
-    estevan_pumpage,
-    short_creek,
-    lower_souris,
-    moose_mountain,
-    # Discharge table
-    discharge_data,
-    # Reservoir table
-    reservoir_date,
-    # Met table
-    met_data,
-    #### CONFIGS ####
-    appor_year,
-    app_start,
-    app_end,
-    evap_start,
-    evap_end,
+    model_inputs: SourisModelInputs,
 ) -> int:
-    # pd.options.mode.copy_on_write = True
-    # Constants and conversion factors
-    # CFS_TO_DAM3 = 2.832e-5  # 1 cfs = 2.832e-5 dam3
-    # CMS_TO_DAM3 = 0.001  # 1 cms = 0.001 dam3
-    # SECONDS_IN_DAY = 86400
-    # CFS_TO_DAM3days = 2.446848  # 2.832e-5 * 86400
     CMS_TO_DAM3days = 86.4  # 0.001 * 86400
-    CFS_TO_CMS = 0.0283168
     MM_TO_METERS = 0.001
     M_TO_DAM = 0.1
     RESERVOIR_SEEPAGE = 0.015
@@ -77,115 +48,66 @@ def main(
         logger.info(f"Program starting at {dt_now}")
         logger.debug(f"CWD: {os.getcwd()}")
 
-        boxes = {}
-        precip_daily = {}
-        approval_dict = {}
-        discharge_daily = None
-        reservoir_elevation_daily = None
-        roughbark_meteo_daily = None
-        handsworth_meteo_daily = None
-        override_df = None
+        # ca_reservoir_stations = (
+        #     "05NA006",
+        #     "05NB020",
+        #     "05NB016",
+        #     "05NC002",
+        #     "05ND012",
+        # )
+        # ca_discharge_stations = (
+        #     "05NA003",
+        #     "05NB001",
+        #     "05NB011",
+        #     "05NB014",
+        #     "05NB018",
+        #     "05NB033",
+        #     "05NB035",
+        #     "05NB036",
+        #     "05NB038",
+        #     "05NB039",
+        #     "05NB040",
+        #     "05NB041",
+        # )
+        # nwis_discharge_stations = (
+        #     "05113600",
+        #     "05114000",
+        # )
 
-        ca_reservoir_stations = (
-            "05NA006",
-            "05NB020",
-            "05NB016",
-            "05NC002",
-            "05ND012",
-        )
-        ca_discharge_stations = (
-            "05NA003",
-            "05NB001",
-            "05NB011",
-            "05NB014",
-            "05NB018",
-            "05NB033",
-            "05NB035",
-            "05NB036",
-            "05NB038",
-            "05NB039",
-            "05NB040",
-            "05NB041",
-        )
-        nwis_discharge_stations = (
-            "05113600",
-            "05114000",
-        )
-
-        # Inputs from App are in the config and dates classes now.
         logger.info("Reading Inputs...")
+        # These are adapter classes so I don't have to rewrite some of the below code.
+        # If new reported flows are added then then it would be best to add them here
+        # to use them in the code below.
         reported_flows = cfg.Boxes(
-            box_5b=pipline_input,
-            box_11=long_creek,
-            box_12=us_diversion,
-            box_16=weyburn_pumpage,
-            box_18=weyburn_return,
-            box_25=upper_souris,
-            box_27=estevan_pumpage,
-            box_28=short_creek,
-            box_29=lower_souris,
-            box_37=moose_mountain,
+            box_5b=model_inputs.pipeline,
+            box_11=model_inputs.long_creek_minor_project_diversion,
+            box_12=model_inputs.us_diversion,
+            box_16=model_inputs.weyburn_pumpage,
+            box_18=model_inputs.weyburn_return_flow,
+            box_25=model_inputs.upper_souris_minor_diversion,
+            box_27=model_inputs.estevan_net_pumpage,
+            box_28=model_inputs.short_creek_diversions,
+            box_29=model_inputs.lower_souris_minor_diversion,
+            box_37=model_inputs.moose_mountain_minor_diversion,
         )
         souris_dates = cfg.Dates(
-            wateryear=appor_year,
-            start_apportion=app_start,
-            end_apportion=app_end,
-            evap_start_date=evap_start,
-            evap_end_date=evap_end,
+            wateryear=model_inputs.appor_year,
+            start_apportion=model_inputs.appor_start,
+            end_apportion=model_inputs.appor_end,
+            evap_start_date=model_inputs.evap_start,
+            evap_end_date=model_inputs.evap_end,
         )
         logger.info("Inputs Read!")
 
-        # from openpyxl import load_workbook
-        # from dash_core_components import send_file
+        # Met data
+        roughbark_meteo_daily = model_inputs.met[[col for col in model_inputs.met.columns if "05NB016" in col]]
+        handsworth_meteo_daily = model_inputs.met[[col for col in model_inputs.met.columns if "05NCM01" in col]]
 
-        # writer = pd.ExcelWriter('new_excel_file.xlsx', engine="xlsxwriter")
+        # Precip data
+        precip_daily = pd.concat([roughbark_meteo_daily["05NB016_precip"], handsworth_meteo_daily["05NCM01_precip"]], axis=1)
+        precip_daily.loc[precip_daily.index.month.isin([1, 2, 3, 4, 11, 12])] = 0
 
-
-        # Looks like the start of things here
-        # Data has been loaded into 3 tables, discharge, reservoirs, and met data.
-        # Dates are in souris_dates and Config settings are in souris_config
-
-        # # -----------------------------------------------------------------------------------------#
-        # #                              Further Meteo Processing                                    #
-        # # -----------------------------------------------------------------------------------------#
-        roughbark_meteo_daily = pd.concat(
-            [
-                roughbark_meteo_daily["05NB016_wind_speed"],
-                roughbark_meteo_daily["05NB016_sol_rad"],
-                roughbark_meteo_daily["05NB016_air_temp"],
-                roughbark_meteo_daily["05NB016_rel_humidity"],
-            ],
-            axis=1,
-        )
-        handsworth_meteo_daily = pd.concat(
-            [
-                handsworth_meteo_daily["05NCM01_wind_speed"],
-                handsworth_meteo_daily["05NCM01_sol_rad"],
-                handsworth_meteo_daily["05NCM01_air_temp"],
-                handsworth_meteo_daily["05NCM01_rel_humidity"],
-            ],
-            axis=1,
-        )
-
-
-        # break out precip data here, this will be the daily values and some months need to be set to 0
-        # There is precip data at handsworth and roughbark.
-        for dataframe in precip_daily.values():
-            dataframe.loc[dataframe.index.month.isin([1, 2, 3, 4, 11, 12]), "value"] = 0
-
-        # new precip dfs of monthly data from the above dailies and convert to mm
-        precip_monthly = {staid: util.rename_monthly_index(dataframe.resample("ME").sum()) for staid, dataframe in precip_daily.items()}
-
-        precip_monthly = {staid: dataframe * MM_TO_METERS for staid, dataframe in precip_monthly.items()}
-
-        # # -----------------------------------------------------------------------------------------#
-        # #                              Assign reservoir Stage-Area-Capacities                      #
-        # # -----------------------------------------------------------------------------------------#
-        # May need to break up reservoir data into the {staid: df} format to reuse this function.
-        reservoir_sacs_daily, reservoir_sacs_monthly = res.process_reservoir_sacs(
-            reservoir_elevation_daily,
-            wateryear=souris_dates.wateryear,
-        )
+        precip_monthly = util.rename_monthly_index(precip_daily.resample("ME").sum()) * MM_TO_METERS
 
         # -----------------------------------------------------------------------------------------#
         #                                    Penman Calculations                                   #
@@ -210,15 +132,24 @@ def main(
         """A constant monthly seepage value (RESERVOIR_SEEPAGE) of 0.015 m is assumed year-round
         Calculate the net evaporation:
         evap (m) - precip (m) and add seepage (m) then convert m to dam"""
-        roughbark_loss = (roughbark_penman_monthly_sum["penman"] - precip_monthly["05NB016_precip"]["value"] + RESERVOIR_SEEPAGE) * M_TO_DAM
+        roughbark_loss = (roughbark_penman_monthly_sum["penman"] - precip_monthly["05NB016_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
 
-        handsworth_loss = (handsworth_penman_monthly_sum["penman"] - precip_monthly["05NCM01_precip"]["value"] + RESERVOIR_SEEPAGE) * M_TO_DAM
+        handsworth_loss = (handsworth_penman_monthly_sum["penman"] - precip_monthly["05NCM01_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
 
-        oxbow_loss = (handsworth_penman_monthly_sum["penman"] - precip_monthly["oxbow_precip"]["value"] + RESERVOIR_SEEPAGE) * M_TO_DAM
+        # oxbow_loss = (handsworth_penman_monthly_sum["penman"] - precip_monthly["oxbow_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
 
         ############################################################################################
         #                                  End Reservoir Loss Calculations                         #
         ############################################################################################
+
+        # # -----------------------------------------------------------------------------------------#
+        # #                              Assign reservoir Stage-Area-Capacities                      #
+        # # -----------------------------------------------------------------------------------------#
+        # May need to break up reservoir data into the {staid: df} format to reuse this function.
+        reservoir_sacs_daily, reservoir_sacs_monthly = res.process_reservoir_sacs(
+            reservoir_elevation_daily,
+            wateryear=souris_dates.wateryear,
+        )
 
         # -----------------------------------------------------------------------------------------#
         #                                  Box Calculations                                        #
@@ -407,7 +338,6 @@ def main(
             daily_meteo_data=master_meteo_dict,
             approval_dict=approval_dict,
             report_template=TEMPLATE_PATH,
-            override_data=override_df,
         )
 
         logger.info("Apportionment complete!")

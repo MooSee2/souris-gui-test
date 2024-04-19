@@ -83,18 +83,18 @@ def process_penman(
     # Monthly evaporation is determined by summing the daily averages for the associated month
     roughbark_penman_daily = util.penman(
         dataframe=roughbark_meteo_daily,
-        temp="05NB016_temperature",
         wind="05NB016_wind_speed",
+        temp="05NB016_air_temp",
         rel_hum="05NB016_rel_humidity",
-        rad="05NB016_radiation",
+        rad="05NB016_sol_rad",
         ELEV=567,
     )
     handsworth_penman_daily = util.penman(
         dataframe=handsworth_meteo_daily,
-        temp="05NCM01_temperature",
         wind="05NCM01_wind_speed",
+        temp="05NCM01_air_temp",
         rel_hum="05NCM01_rel_humidity",
-        rad="05NCM01_radiation",
+        rad="05NCM01_sol_rad",
         ELEV=682,
     )
     roughbark_meteo_daily = roughbark_meteo_daily.join(roughbark_penman_daily)

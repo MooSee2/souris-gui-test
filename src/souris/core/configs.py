@@ -14,6 +14,8 @@ USGS_STAT_CODE_OBS_AT_2400: str = "32400"
 
 @dataclass
 class Boxes:
+    """This class houses the reported flows as boxes for calculations."""
+
     box_5b: int
     box_11: int
     box_12: int
@@ -28,6 +30,8 @@ class Boxes:
 
 @dataclass(frozen=True)
 class Dates:
+    """This class houses the dates used in the apportionment program."""
+
     wateryear: int
     start_apportion: str
     end_apportion: str

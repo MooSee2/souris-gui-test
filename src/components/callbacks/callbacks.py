@@ -11,6 +11,7 @@ from dash import Input, Output, State, callback, dash_table, html, dcc
 from dash.exceptions import PreventUpdate
 
 import modules.data_layer.data_layer as dl
+import modules.data_layer.model_inputs as mi
 
 # import src.modules.data_layer.download_api_services as dl
 
@@ -356,13 +357,13 @@ def calculate_apportionment(
     # Discharge table
     discharge_data,
     # Reservoir table
-    reservoir_date,
+    reservoir_data,
     # Met table
     met_data,
     #### CONFIGS ####
     appor_year,
-    app_start,
-    app_end,
+    appor_start,
+    appor_end,
     evap_start,
     evap_end,
 ):
@@ -370,36 +371,49 @@ def calculate_apportionment(
     if n_clicks == 0 or n_clicks is None:
         raise PreventUpdate
 
-    # This should return the excel file for the moment.  Later it will need to return all
-    # the data that went into excel as well so it can be used in the html version of the report
-    report_file = dl.run_main(
-        #### DATA ####
-        # Reported Flows
-        pipline_input,
-        long_creek,
-        us_diversion,
-        weyburn_pumpage,
-        weyburn_return,
-        upper_souris,
-        estevan_pumpage,
-        short_creek,
-        lower_souris,
-        moose_mountain,
+    discharge = pd.DataFrame(discharge_data)
+    discharge["date"] = pd.to_datetime(discharge["date"])
+    discharge.set_index("date", inplace=True)
+
+    reservoirs = pd.DataFrame(reservoir_data)
+    reservoirs["date"] = pd.to_datetime(reservoirs["date"])
+    reservoirs.set_index("date", inplace=True)
+
+    met = pd.DataFrame(met_data)
+    met["date"] = pd.to_datetime(met["date"])
+    met.set_index("date", inplace=True)
+
+    model_inputs = mi.SourisModelInputs(
+        # Reported flows
+        pipeline=pipline_input,
+        long_creek_minor_project_diversion=long_creek,
+        us_diversion=us_diversion,
+        weyburn_pumpage=weyburn_pumpage,
+        weyburn_return_flow=weyburn_return,
+        upper_souris_minor_diversion=upper_souris,
+        estevan_net_pumpage=estevan_pumpage,
+        short_creek_diversions=short_creek,
+        lower_souris_minor_diversion=lower_souris,
+        moose_mountain_minor_diversion=moose_mountain,
         # Discharge table
-        pd.DataFrame(discharge_data),
+        discharge=discharge,
         # Reservoir table
-        pd.DataFrame(reservoir_date),
+        reservoirs=reservoirs,
         # Met table
-        pd.DataFrame(met_data),
-        #### CONFIGS ####
-        appor_year,
-        app_start,
-        app_end,
-        evap_start,
-        evap_end,
+        met=met,
+        #### CONFIG
+        appor_year=appor_year,
+        appor_start=appor_start,
+        appor_end=appor_end,
+        evap_start=evap_start,
+        evap_end=evap_end,
     )
 
-    return html.Div(className="tab2-thing"), False, dcc.send_file("new_excel_file.xlsx")
+    # This should return the excel file for the moment.  Later it will need to return all
+    # the data that went into excel as well so it can be used in the html version of the report
+    report_file = dl.run_main(model_inputs)
+
+    return html.Div(className="tab2-thing"), False, dcc.send_file(report_file, "new_excel_file.xlsx")
 
 
 # @callback(

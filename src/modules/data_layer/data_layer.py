@@ -19,58 +19,8 @@ def get_discharge_data(apportionment_year: int):
     return wo_realtime_discharge
 
 
-def run_main(
-    #### DATA ####
-    # Reported Flows
-    pipline_input,
-    long_creek,
-    us_diversion,
-    weyburn_pumpage,
-    weyburn_return,
-    upper_souris,
-    estevan_pumpage,
-    short_creek,
-    lower_souris,
-    moose_mountain,
-    # Discharge table
-    discharge_data,
-    # Reservoir table
-    reservoir_date,
-    # Met table
-    met_data,
-    #### CONFIGS ####
-    appor_year,
-    app_start,
-    app_end,
-    evap_start,
-    evap_end,
-):
-
-    main(
-        #### DATA ####
-        # Reported Flows
-        pipline_input,
-        long_creek,
-        us_diversion,
-        weyburn_pumpage,
-        weyburn_return,
-        upper_souris,
-        estevan_pumpage,
-        short_creek,
-        lower_souris,
-        moose_mountain,
-        # Discharge table
-        discharge_data,
-        # Reservoir table
-        reservoir_date,
-        # Met table
-        met_data,
-        #### CONFIGS ####
-        appor_year,
-        app_start,
-        app_end,
-        evap_start,
-        evap_end,
-        )
+def run_main(model_inputs):
+    # Wrapper function for main app
+    main(model_inputs)
     sleep(5)
     return None
