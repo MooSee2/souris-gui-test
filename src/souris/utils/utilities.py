@@ -197,7 +197,7 @@ def penman(
 
 
 def souris_excel_writer(
-    config: cfg.Boxes,
+    reported_flows: cfg.Boxes,
     dates: cfg.Dates,
     boxes: dict,
     daily_data: pd.DataFrame,
@@ -213,9 +213,9 @@ def souris_excel_writer(
     app_range = f"for {dates.start_pull} to {dates.end_pull}"
     dt_now = dt.now().strftime("%Y-%m-%d %H.%M.%S.%f")
     filename = Path(f"reports/Souris Natural Flow Report {app_range} on {dt_now}.xlsx")
+
     ts_data_sheet_name = "Input TS data"
-    daily_gap_sheet_name = "Missing Daily Data"
-    override_sheet_name = "Override Data"
+    original_ts_sheet_name = "Override Data"
 
     wb = load_workbook(report_template)
     summary_sheet = wb["Souris Natural Flow Summary"]
@@ -223,6 +223,8 @@ def souris_excel_writer(
     reported_flows_sheet = wb["Input Reported Flows"]
     log_sheet = wb["Log"]
     ts_data_sheet = wb[ts_data_sheet_name]
+    original_ts_data_sheet = wb[original_ts_sheet_name]
+    
 
     # Header
     summary_sheet["B5"] = f"For the period of {app_range}"  # type: ignore erroneous pylance subscript error
@@ -250,22 +252,22 @@ def souris_excel_writer(
     summary_sheet["I15"] = boxes["box8"]  # type: ignore erroneous pylance subscript error
     summary_sheet["J15"] = boxes["box9"]  # type: ignore erroneous pylance subscript error
     summary_sheet["K15"] = boxes["box10"]  # type: ignore erroneous pylance subscript error
-    summary_sheet["L15"] = config.box_11  # type: ignore erroneous pylance subscript error
-    reported_flows_sheet["F10"] = config.box_11  # type: ignore erroneous pylance subscript error
-    summary_sheet["M15"] = config.box_12  # type: ignore erroneous pylance subscript error
-    reported_flows_sheet["G10"] = config.box_12  # type: ignore erroneous pylance subscript error
+    summary_sheet["L15"] = reported_flows.box_11  # type: ignore erroneous pylance subscript error
+    reported_flows_sheet["F10"] = reported_flows.box_11  # type: ignore erroneous pylance subscript error
+    summary_sheet["M15"] = reported_flows.box_12  # type: ignore erroneous pylance subscript error
+    reported_flows_sheet["G10"] = reported_flows.box_12  # type: ignore erroneous pylance subscript error
     summary_sheet["N15"] = boxes["box13"]  # type: ignore erroneous pylance subscript error
 
     # Nickle Lake Reservoir
     summary_sheet["B26"] = boxes["box14"]  # type: ignore erroneous pylance subscript error
     summary_sheet["C26"] = boxes["box15"]  # type: ignore erroneous pylance subscript error
-    summary_sheet["D26"] = config.box_16  # type: ignore erroneous pylance subscript error
-    reported_flows_sheet["H10"] = config.box_16  # type: ignore erroneous pylance subscript error
+    summary_sheet["D26"] = reported_flows.box_16  # type: ignore erroneous pylance subscript error
+    reported_flows_sheet["H10"] = reported_flows.box_16  # type: ignore erroneous pylance subscript error
     summary_sheet["E26"] = boxes["box17"]  # type: ignore erroneous pylance subscript error
 
     # City of Wayburn Return Flow
-    summary_sheet["F26"] = config.box_18  # type: ignore erroneous pylance subscript error
-    reported_flows_sheet["I10"] = config.box_18  # type: ignore erroneous pylance subscript error
+    summary_sheet["F26"] = reported_flows.box_18  # type: ignore erroneous pylance subscript error
+    reported_flows_sheet["I10"] = reported_flows.box_18  # type: ignore erroneous pylance subscript error
 
     # Roughbark Reservoir
     summary_sheet["G26"] = boxes["box19"]  # type: ignore erroneous pylance subscript error
@@ -275,23 +277,23 @@ def souris_excel_writer(
     # Rafferty Reservoir
     summary_sheet["J26"] = boxes["box22"]  # type: ignore erroneous pylance subscript error
     summary_sheet["K24"] = boxes["box23a"]  # type: ignore erroneous pylance subscript error
-    summary_sheet["K26"] = config.box_5b  # type: ignore erroneous pylance subscript error # Same as pipeline
+    summary_sheet["K26"] = reported_flows.box_5b  # type: ignore erroneous pylance subscript error # Same as pipeline
     summary_sheet["L26"] = boxes["box24"]  # type: ignore erroneous pylance subscript error
 
     # Minor Project Diversions
-    summary_sheet["M26"] = config.box_25  # type: ignore erroneous pylance subscript error
-    reported_flows_sheet["J10"] = config.box_25  # type: ignore erroneous pylance subscript error
+    summary_sheet["M26"] = reported_flows.box_25  # type: ignore erroneous pylance subscript error
+    reported_flows_sheet["J10"] = reported_flows.box_25  # type: ignore erroneous pylance subscript error
 
     # Total Diversions Upper Souris
     summary_sheet["N26"] = boxes["box26"]  # type: ignore erroneous pylance subscript error
 
     # Lower Souris
-    summary_sheet["B37"] = config.box_27  # type: ignore erroneous pylance subscript error
-    reported_flows_sheet["K10"] = config.box_27  # type: ignore erroneous pylance subscript error
-    summary_sheet["C37"] = config.box_28  # type: ignore erroneous pylance subscript error
-    reported_flows_sheet["L10"] = config.box_28  # type: ignore erroneous pylance subscript error
-    summary_sheet["D37"] = config.box_29  # type: ignore erroneous pylance subscript error
-    reported_flows_sheet["M10"] = config.box_29  # type: ignore erroneous pylance subscript error
+    summary_sheet["B37"] = reported_flows.box_27  # type: ignore erroneous pylance subscript error
+    reported_flows_sheet["K10"] = reported_flows.box_27  # type: ignore erroneous pylance subscript error
+    summary_sheet["C37"] = reported_flows.box_28  # type: ignore erroneous pylance subscript error
+    reported_flows_sheet["L10"] = reported_flows.box_28  # type: ignore erroneous pylance subscript error
+    summary_sheet["D37"] = reported_flows.box_29  # type: ignore erroneous pylance subscript error
+    reported_flows_sheet["M10"] = reported_flows.box_29  # type: ignore erroneous pylance subscript error
     summary_sheet["E37"] = boxes["box30"]  # type: ignore erroneous pylance subscript error
 
     # Moose Mountain
@@ -305,8 +307,8 @@ def souris_excel_writer(
     summary_sheet["L37"] = boxes["box36"]  # type: ignore erroneous pylance subscript error
 
     # Minor Project Diversions and Total Diversions Moose Creek
-    summary_sheet["M37"] = config.box_37  # type: ignore erroneous pylance subscript error
-    reported_flows_sheet["N10"] = config.box_37  # type: ignore erroneous pylance subscript error
+    summary_sheet["M37"] = reported_flows.box_37  # type: ignore erroneous pylance subscript error
+    reported_flows_sheet["N10"] = reported_flows.box_37  # type: ignore erroneous pylance subscript error
     summary_sheet["N37"] = boxes["box38"]  # type: ignore erroneous pylance subscript error
 
     # Non-Contributory Basins
@@ -335,7 +337,7 @@ def souris_excel_writer(
     #                                       INI Data                                                    #
     # --------------------------------------------------------------------------------------------------#
     #  These cells are indexed starting at 1 and not 0.  Weird.
-    for idx, setting in enumerate(config.__dict__.items(), start=2):
+    for idx, setting in enumerate(reported_flows.__dict__.items(), start=2):
         config_sheet.cell(row=idx, column=1, value=setting[0])
         config_sheet.cell(row=idx, column=2, value=setting[1])
 
@@ -388,142 +390,148 @@ def souris_excel_writer(
     # --------------------------------------------------------------------------------------------------#
     #                                       TS Data                                                     #
     # --------------------------------------------------------------------------------------------------#
-    with pd.ExcelWriter(
+    writer = pd.ExcelWriter(
         filename,
         engine="openpyxl",
         mode="a",
         if_sheet_exists="overlay",
         date_format="YYYY-MM-DD",
         datetime_format="YYYY-MM-DD",
-    ) as writer:
-        # Discharge data
-        daily_data[
-            [
-                "05NB001_discharge",
-                "05NB036_discharge",
-                "05NB011_discharge",
-                "05NB018_discharge",
-                "05NA003_discharge",
-                "05NB040_discharge",
-                "05NB041_discharge",
-                "05NB038_discharge",
-                "05NB014_discharge",
-                "05NB035_discharge",
-                "05NB033_discharge",
-                "05NB039_discharge",
-                "05113600_discharge",
-                "05114000_discharge",
-            ]
-        ].to_excel(
+    )
+
+    writer.book = wb
+
+    # Discharge data
+    daily_data[
+        [
+            "05NB001_discharge",
+            "05NB036_discharge",
+            "05NB011_discharge",
+            "05NB018_discharge",
+            "05NA003_discharge",
+            "05NB040_discharge",
+            "05NB041_discharge",
+            "05NB038_discharge",
+            "05NB014_discharge",
+            "05NB035_discharge",
+            "05NB033_discharge",
+            "05NB039_discharge",
+            "05113600_discharge",
+            "05114000_discharge",
+        ]
+    ].to_excel(
+        writer,
+        sheet_name=ts_data_sheet_name,
+        startrow=5,
+        startcol=12,
+        header=False,
+        index=False,
+    )
+
+    # Reservoir data
+    daily_data[
+        [
+            "05NA006_elevation",
+            "05NB020_elevation",
+            "05NB016_elevation",
+            "05NC002_elevation",
+            "05ND012_elevation",
+        ]
+    ].to_excel(
+        writer,
+        sheet_name=ts_data_sheet_name,
+        startrow=5,
+        header=False,
+        index=True,
+    )
+
+    monthly_elev_data["05NA006"].to_excel(
+        writer,
+        sheet_name=ts_data_sheet_name,
+        startrow=6,
+        startcol=9,
+        header=False,
+        index=False,
+    )
+    monthly_elev_data["05NB020"].to_excel(
+        writer,
+        sheet_name=ts_data_sheet_name,
+        startrow=21,
+        startcol=9,
+        header=False,
+        index=False,
+    )
+    monthly_elev_data["05NB016"].to_excel(
+        writer,
+        sheet_name=ts_data_sheet_name,
+        startrow=36,
+        startcol=9,
+        header=False,
+        index=False,
+    )
+    monthly_elev_data["05NC002"].to_excel(
+        writer,
+        sheet_name=ts_data_sheet_name,
+        startrow=51,
+        startcol=9,
+        header=False,
+        index=False,
+    )
+    monthly_elev_data["05ND012"].to_excel(
+        writer,
+        sheet_name=ts_data_sheet_name,
+        startrow=66,
+        startcol=9,
+        header=False,
+        index=False,
+    )
+
+    # Meteo data
+    daily_meteo_data["05NB016"].to_excel(
+        writer,
+        sheet_name=ts_data_sheet_name,
+        startrow=5,
+        startcol=27,
+        header=False,
+        index=False,
+    )
+    daily_meteo_data["05NCM01"].to_excel(
+        writer,
+        sheet_name=ts_data_sheet_name,
+        startrow=5,
+        startcol=34,
+        header=False,
+        index=False,
+    )
+    daily_meteo_data["oxbow"][["oxbow_precip"]].to_excel(
+        writer,
+        sheet_name=ts_data_sheet_name,
+        startrow=5,
+        startcol=40,
+        header=False,
+        index=False,
+    )
+
+    if override_data is not None:
+        override_data.to_excel(
             writer,
-            sheet_name=ts_data_sheet_name,
+            sheet_name=original_ts_sheet_name,
             startrow=5,
-            startcol=12,
-            header=False,
-            index=False,
+            startcol=0,
         )
 
-        # Reservoir data
-        daily_data[
-            [
-                "05NA006_elevation",
-                "05NB020_elevation",
-                "05NB016_elevation",
-                "05NC002_elevation",
-                "05ND012_elevation",
-            ]
-        ].to_excel(
-            writer,
-            sheet_name=ts_data_sheet_name,
-            startrow=5,
-            header=False,
-            index=True,
-        )
+    # Format date.  Tried other methods, this is the one I found to work
+    worksheet = writer.sheets[ts_data_sheet_name]
+    for row in worksheet.iter_rows(min_row=4, max_row=400, max_col=1):
+        for cell in row:
+            cell.number_format = "yyyy-mm-dd"
 
-        monthly_elev_data["05NA006"].to_excel(
-            writer,
-            sheet_name=ts_data_sheet_name,
-            startrow=6,
-            startcol=9,
-            header=False,
-            index=False,
-        )
-        monthly_elev_data["05NB020"].to_excel(
-            writer,
-            sheet_name=ts_data_sheet_name,
-            startrow=21,
-            startcol=9,
-            header=False,
-            index=False,
-        )
-        monthly_elev_data["05NB016"].to_excel(
-            writer,
-            sheet_name=ts_data_sheet_name,
-            startrow=36,
-            startcol=9,
-            header=False,
-            index=False,
-        )
-        monthly_elev_data["05NC002"].to_excel(
-            writer,
-            sheet_name=ts_data_sheet_name,
-            startrow=51,
-            startcol=9,
-            header=False,
-            index=False,
-        )
-        monthly_elev_data["05ND012"].to_excel(
-            writer,
-            sheet_name=ts_data_sheet_name,
-            startrow=66,
-            startcol=9,
-            header=False,
-            index=False,
-        )
-
-        # Meteo data
-        daily_meteo_data["05NB016"].to_excel(
-            writer,
-            sheet_name=ts_data_sheet_name,
-            startrow=5,
-            startcol=27,
-            header=False,
-            index=False,
-        )
-        daily_meteo_data["05NCM01"].to_excel(
-            writer,
-            sheet_name=ts_data_sheet_name,
-            startrow=5,
-            startcol=34,
-            header=False,
-            index=False,
-        )
-        daily_meteo_data["oxbow"][["oxbow_precip"]].to_excel(
-            writer,
-            sheet_name=ts_data_sheet_name,
-            startrow=5,
-            startcol=40,
-            header=False,
-            index=False,
-        )
-
-        if override_data is not None:
-            override_data.to_excel(
-                writer,
-                sheet_name=override_sheet_name,
-                startrow=5,
-                startcol=0,
-            )
-        # Format date.  Tried other methods, this is the one I found to work
-        worksheet = writer.sheets[ts_data_sheet_name]
-        for row in worksheet.iter_rows(min_row=4, max_row=400, max_col=1):
-            for cell in row:
-                cell.number_format = "yyyy-mm-dd"
-        worksheet = writer.sheets[override_sheet_name]
-        for row in worksheet.iter_rows(min_row=7, max_row=400, max_col=1):
-            for cell in row:
-                cell.number_format = "yyyy-mm-dd"
-    return
+    worksheet = writer.sheets[original_ts_sheet_name]
+    for row in worksheet.iter_rows(min_row=7, max_row=400, max_col=1):
+        for cell in row:
+            cell.number_format = "yyyy-mm-dd"
+    writer.save()
+    return writer
 
 
 def fill_gaps_nan(
