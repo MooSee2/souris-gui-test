@@ -24,7 +24,8 @@ from pathlib import Path
 import pandas as pd
 from loguru import logger
 
-import souris.core.configs as cfg
+import src.souris.core.dates as dates
+import src.souris.core.boxes as bx
 import souris.core.core_meteo as met
 import souris.core.core_reservoirs as res
 import souris.utils.reservoir_capacity as rcap
@@ -74,37 +75,22 @@ def main(
         #     "05114000",
         # )
 
-        logger.info("Reading Inputs...")
-        # These are adapter classes so I don't have to rewrite some of the below code.
-        # If new reported flows are added then then it would be best to add them here
-        # to use them in the code below.
-        reported_flows = cfg.Boxes(
-            box_5b=model_inputs.pipeline,
-            box_11=model_inputs.long_creek_minor_project_diversion,
-            box_12=model_inputs.us_diversion,
-            box_16=model_inputs.weyburn_pumpage,
-            box_18=model_inputs.weyburn_return_flow,
-            box_25=model_inputs.upper_souris_minor_diversion,
-            box_27=model_inputs.estevan_net_pumpage,
-            box_28=model_inputs.short_creek_diversions,
-            box_29=model_inputs.lower_souris_minor_diversion,
-            box_37=model_inputs.moose_mountain_minor_diversion,
-        )
-        souris_dates = cfg.Dates(
+        # Adapter class for Dates.
+        souris_dates = dates.Dates(
             wateryear=model_inputs.appor_year,
             start_apportion=model_inputs.appor_start,
             end_apportion=model_inputs.appor_end,
             evap_start_date=model_inputs.evap_start,
             evap_end_date=model_inputs.evap_end,
         )
-        logger.info("Inputs Read!")
 
         # Met data
         roughbark_meteo_daily = model_inputs.met[[col for col in model_inputs.met.columns if "05NB016" in col]]
         handsworth_meteo_daily = model_inputs.met[[col for col in model_inputs.met.columns if "05NCM01" in col]]
+        oxbow_precip = model_inputs.met[[col for col in model_inputs.met.columns if "oxbow" in col]]
 
         # Precip data
-        precip_daily = pd.concat([roughbark_meteo_daily["05NB016_precip"], handsworth_meteo_daily["05NCM01_precip"]], axis=1)
+        precip_daily = pd.concat([roughbark_meteo_daily["05NB016_precip"], handsworth_meteo_daily["05NCM01_precip"], oxbow_precip["oxbow_precip"]], axis=1)
         precip_daily.loc[precip_daily.index.month.isin([1, 2, 3, 4, 11, 12])] = 0
 
         precip_monthly = util.rename_monthly_index(precip_daily.resample("ME").sum()) * MM_TO_METERS
@@ -136,7 +122,7 @@ def main(
 
         handsworth_loss = (handsworth_penman_monthly_sum["penman"] - precip_monthly["05NCM01_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
 
-        # oxbow_loss = (handsworth_penman_monthly_sum["penman"] - precip_monthly["oxbow_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
+        oxbow_loss = (handsworth_penman_monthly_sum["penman"] - precip_monthly["oxbow_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
 
         ############################################################################################
         #                                  End Reservoir Loss Calculations                         #
@@ -147,7 +133,7 @@ def main(
         # # -----------------------------------------------------------------------------------------#
         # May need to break up reservoir data into the {staid: df} format to reuse this function.
         reservoir_sacs_daily, reservoir_sacs_monthly = res.process_reservoir_sacs(
-            reservoir_elevation_daily,
+            model_inputs.reservoirs,
             wateryear=souris_dates.wateryear,
         )
 
@@ -155,39 +141,51 @@ def main(
         #                                  Box Calculations                                        #
         # -----------------------------------------------------------------------------------------#
         logger.info("Begin box calculations...")
+        boxes = bx.Boxes(
+            box_5b=model_inputs.pipeline,
+            box_11=model_inputs.long_creek_minor_project_diversion,
+            box_12=model_inputs.us_diversion,
+            box_16=model_inputs.weyburn_pumpage,
+            box_18=model_inputs.weyburn_return_flow,
+            box_25=model_inputs.upper_souris_minor_diversion,
+            box_27=model_inputs.estevan_net_pumpage,
+            box_28=model_inputs.short_creek_diversions,
+            box_29=model_inputs.lower_souris_minor_diversion,
+            box_37=model_inputs.moose_mountain_minor_diversion,
+        )
         # * 1.1.1 Larsen Reservoir Storage Change
-        boxes["box1"] = reservoir_sacs_daily["05NA006"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NA006"]["capacity_dam3"].iloc[0]
+        boxes.box_1 = reservoir_sacs_daily["05NA006"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NA006"]["capacity_dam3"].iloc[0]
         # * 1.1.2 Larsen Reservoir Net Evaporation & Seepage
-        boxes["box2"] = (reservoir_sacs_monthly["05NA006"]["area_dam2"] * roughbark_loss).sum()
+        boxes.box_2 = (reservoir_sacs_monthly["05NA006"]["area_dam2"] * roughbark_loss).sum()
         # * 1.1.3 Larsen Reservoir Diversion
-        boxes["box3"] = boxes["box1"] + boxes["box2"]
+        boxes.box_3 = boxes["box1"] + boxes["box2"]
         # * 1.2 Town of Radville Pumpage
         # boxes["box4"] = 0  # box 4 is obsolete as of 2017
-        boxes["box5a"] = int(discharge_daily["05113600"].sum().sum() * CMS_TO_DAM3days)
+        boxes.box_5a = int(discharge_daily["05113600"].sum().sum() * CMS_TO_DAM3days)
         # * 1.3.2 Long Creek near Estevan
-        boxes["box6"] = discharge_daily["05NB001"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_6 = discharge_daily["05NB001"].sum().sum() * CMS_TO_DAM3days
         # * 1.3.3 Estevan Pipeline
         # boxes["box7"] = 0  # box 7 is obsolete as of 2021
         # * 1.3.4 Diversion Canal
-        boxes["box8"] = discharge_daily["05NB038"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_8 = discharge_daily["05NB038"].sum().sum() * CMS_TO_DAM3days
         # * 1.3.5 Boundary Reservoir Total Outflow
-        boxes["box9"] = boxes["box6"] + boxes["box8"]
+        boxes.box_9 = boxes["box6"] + boxes["box8"]
         # * 1.3.6	Boundary Reservoir Diversion
-        boxes["box10"] = (boxes["box5a"] + reported_flows.box_5b) - boxes["box9"]
+        boxes.box_10 = (boxes["box5a"] + boxes.box_5b) - boxes["box9"]
         # * 1.6 Total Diversion Long Creek
-        boxes["box13"] = boxes["box3"] + boxes["box10"] + reported_flows.box_11 + reported_flows.box_12
+        boxes.box_13 = boxes["box3"] + boxes["box10"] + boxes.box_11 + boxes.box_12
         # * 2.1.1 Nickle Lake Reservoir Storage Change
-        boxes["box14"] = reservoir_sacs_daily["05NB020"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NB020"]["capacity_dam3"].iloc[0]
+        boxes.box_14 = reservoir_sacs_daily["05NB020"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NB020"]["capacity_dam3"].iloc[0]
         # * 2.1.2 Nickle Lake Reservoir Net Evaporation & Seepage
-        boxes["box15"] = (reservoir_sacs_monthly["05NB020"]["area_dam2"] * roughbark_loss).sum()
+        boxes.box_15 = (reservoir_sacs_monthly["05NB020"]["area_dam2"] * roughbark_loss).sum()
         # * 2.1.4 Nickle Lake Reservoir Diversion
-        boxes["box17"] = boxes["box14"] + boxes["box15"] + reported_flows.box_16
+        boxes.box_17 = boxes["box14"] + boxes["box15"] + boxes.box_16
         # * 2.3.1 Roughbark Reservoir Storage Change
-        boxes["box19"] = reservoir_sacs_daily["05NB016"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NB016"]["capacity_dam3"].iloc[0]
+        boxes.box_19 = reservoir_sacs_daily["05NB016"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NB016"]["capacity_dam3"].iloc[0]
         # * 2.3.2 Roughbark Reservoir Net Evaporation & Seepage
-        boxes["box20"] = (reservoir_sacs_monthly["05NB016"]["area_dam2"] * roughbark_loss).sum()
+        boxes.box_20 = (reservoir_sacs_monthly["05NB016"]["area_dam2"] * roughbark_loss).sum()
         # * 2.3 Roughbark Reservoir Depletion, box20_roughbark_netloss includes seepage calculation
-        boxes["box21"] = boxes["box19"] + boxes["box20"]
+        boxes.box_21 = boxes["box19"] + boxes["box20"]
         """
         Rafferty inflow is the summation of volumes from:
         Jewel Creek near Goodwater: 05NB014
@@ -205,80 +203,80 @@ def main(
         """
         normal_staids = ["05NB014", "05NB038", "05NB039", "05NB040", "05NB041"]
         # * 2.4 Rafferty Reservoir Depletion
-        boxes["box22"] = 0
+        boxes.box_22 = 0
         for station in normal_staids:
-            boxes["box22"] += discharge_daily[station].sum().sum()
+            boxes.box_22 += discharge_daily[station].sum().sum()
 
         """Estimate the three ungaged tributaries with Mosley and Cook
         discharge data and convert all to dam3"""
-        boxes["box22"] += discharge_daily["05NB033"].sum().sum() * 2
-        boxes["box22"] += discharge_daily["05NB035"].sum().sum() * 3
-        boxes["box22"] *= CMS_TO_DAM3days
+        boxes.box_22 += discharge_daily["05NB033"].sum().sum() * 2
+        boxes.box_22 += discharge_daily["05NB035"].sum().sum() * 3
+        boxes.box_22 *= CMS_TO_DAM3days
 
         # * 2.4.2 Rafferty Reservoir Outflow
-        if reported_flows.wateryear == 2023:
+        if souris_dates.wateryear == 2023:
             # Special values for 2023 comuputation.  Flush line = 63 DAM3, Rafferty -> Estevan pipeline = 1468 DAM3
-            boxes["box23a"] = discharge_daily["05NB036"].sum().sum() * CMS_TO_DAM3days + 63 + 1468
+            boxes.box_23a = discharge_daily["05NB036"].sum().sum() * CMS_TO_DAM3days + 63 + 1468
         else:
-            boxes["box23a"] = discharge_daily["05NB036"].sum().sum() * CMS_TO_DAM3days
+            boxes.box_23a = discharge_daily["05NB036"].sum().sum() * CMS_TO_DAM3days
 
         # * 2.4.3 Rafferty Reservoir Diversion
-        boxes["box24"] = boxes["box22"] - (boxes["box23a"] + reported_flows.box_5b)
+        boxes.box_24 = boxes.box_22 - (boxes.box_23a + boxes.box_5b)
         # * 2.6 Total Diversion Upper Souris River
-        boxes["box26"] = boxes["box17"] - reported_flows.box_18 + boxes["box21"] + boxes["box24"] + reported_flows.box_25
+        boxes.box_26 = boxes.box_17 - souris_dates.box_18 + boxes.box_21 + boxes.box_24 + souris_dates.box_25
 
         # * 3.4 Total Diversion Lower Souris River
-        if reported_flows.wateryear == 2023:
+        if souris_dates.wateryear == 2023:
             # Special values for 2023 comuputation.  Duck pond release = 345 DAM3
-            reported_flows.box_27 = reported_flows.box_27 - 345
+            boxes.box_27 = boxes.box_27 - 345
         else:
-            reported_flows.box_27 = reported_flows.box_27
+            boxes.box_27 = boxes.box_27
 
-        boxes["box30"] = reported_flows.box_27 + reported_flows.box_28 + reported_flows.box_29
+        boxes.box_30 = boxes.box_27 + boxes.box_28 + boxes.box_29
         # * 4.1.1 Moose Mountain Lake Storage Change
-        boxes["box31"] = reservoir_sacs_daily["05NC002"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NC002"]["capacity_dam3"].iloc[0]
+        boxes.box_31 = reservoir_sacs_daily["05NC002"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NC002"]["capacity_dam3"].iloc[0]
         # * 4.1.2 Moose Mountain Lake Net Evaporation & Seepage
-        boxes["box32"] = (reservoir_sacs_monthly["05NC002"]["area_dam2"] * handsworth_loss).sum()
+        boxes.box_32 = (reservoir_sacs_monthly["05NC002"]["area_dam2"] * handsworth_loss).sum()
         # * 4.1.3 Moose Mountain Lake Diversion
-        boxes["box33"] = boxes["box31"] + boxes["box32"]
+        boxes.box_33 = boxes.box_31 + boxes.box_32
         # * 4.2.1 Grant Devine Reservoir Storage Change
-        boxes["box34"] = reservoir_sacs_daily["05ND012"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05ND012"]["capacity_dam3"].iloc[0]
+        boxes.box_34 = reservoir_sacs_daily["05ND012"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05ND012"]["capacity_dam3"].iloc[0]
         # * 4.2.2 Grant Devine Reservoir Net Evaporation & Seepage
-        boxes["box35"] = (reservoir_sacs_monthly["05ND012"]["area_dam2"] * oxbow_loss).sum()
+        boxes.box_35 = (reservoir_sacs_monthly["05ND012"]["area_dam2"] * oxbow_loss).sum()
         # * 4.2 Grant Devine Reservoir
-        boxes["box36"] = boxes["box34"] + boxes["box35"]
+        boxes.box_36 = boxes.box_34 + boxes.box_35
         # * 4.4 Total Diversions Moose Mountain Creek Basin
-        boxes["box38"] = boxes["box33"] + boxes["box36"] + reported_flows.box_37
+        boxes.box_38 = boxes.box_33 + boxes.box_36 + boxes.box_37
         # * 5.1 Yellow Grass Ditch
-        boxes["box39"] = discharge_daily["05NB011"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_39 = discharge_daily["05NB011"].sum().sum() * CMS_TO_DAM3days
         # * 5.2 Tatagwa Lake Drain
-        boxes["box40"] = discharge_daily["05NB018"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_40 = discharge_daily["05NB018"].sum().sum() * CMS_TO_DAM3days
         # * 5.3 Total Additions
-        boxes["box41"] = boxes["box39"] + boxes["box40"]
+        boxes.box_41 = boxes.box_39 + boxes.box_40
         # * 6.1 Total Diversion Souris River Basin
-        boxes["box42"] = boxes["box13"] + boxes["box26"] + boxes["box30"] + boxes["box38"]
+        boxes.box_42 = boxes.box_13 + boxes.box_26 + boxes.box_30 + boxes.box_38
         # * 6.2 Recorded Flow at Sherwood
-        boxes["box43"] = discharge_daily["05114000"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_43 = discharge_daily["05114000"].sum().sum() * CMS_TO_DAM3days
         # * 6.3 Natural Flow at Sherwood
-        boxes["box44"] = boxes["box42"] + boxes["box43"] - boxes["box41"]
-        darling_condition = rcap.lake_darling_condition(start_date=souris_dates.start_apportion, sherwood=boxes["box44"])
+        boxes.box_44 = boxes.box_42 + boxes.box_43 - boxes.box_41
+        darling_condition = rcap.lake_darling_condition(start_date=souris_dates.start_apportion, sherwood=boxes.box_44)
         # * 6.4 U.S. Share at Sherwood – 50% vs 40% Note: True=1, False=0
-        boxes["box45a"] = 0.4 * boxes["box44"] if darling_condition else 0
-        boxes["box45b"] = 0 if darling_condition else 0.5 * boxes["box44"]
-        boxes["box46"] = reported_flows.box_12 + reported_flows.box_28 + boxes["box43"]
+        boxes.box_45a = 0.4 * boxes.box_44 if darling_condition else 0
+        boxes.box_45b = 0 if darling_condition else 0.5 * boxes.box_44
+        boxes.box_46 = boxes.box_12 + boxes.box_28 + boxes.box_43
         # * 6.6 Surplus or Deficit to U.S.
-        boxes["box47a"] = boxes["box46"] - boxes["box45a"] if boxes["box45a"] else 0
-        boxes["box47b"] = boxes["box46"] - boxes["box45b"] if boxes["box45b"] else 0
+        boxes.box_47a = boxes.box_46 - boxes.box_45a if boxes.box_45a else 0
+        boxes.box_47b = boxes.box_46 - boxes.box_45b if boxes.box_45b else 0
         # * 7.1 Recorded Flow at Western Crossing
-        boxes["box48"] = discharge_daily["05NA003"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_48 = discharge_daily["05NA003"].sum().sum() * CMS_TO_DAM3days
         # * 7.2 Recorded Flow at Eastern Crossing
-        boxes["box49"] = discharge_daily["05113600"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_49 = discharge_daily["05113600"].sum().sum() * CMS_TO_DAM3days
         """If the box50 difference is positive,
         then more water was delivered annually from the U.S. than consumed and Recommendation 2 is met."""
         # * 7.3 Surplus or Deficit from U.S.
-        boxes["box50"] = boxes["box49"] - boxes["box48"]
+        boxes.box_50 = boxes.box_49 - boxes.box_48
 
-        boxes = {key: int(item) for key, item in boxes.items()}
+        # boxes = {key: int(item) for key, item in boxes.items()}
 
         ############################################################################################
         #                                  End Box Calculations                                    #
@@ -330,13 +328,11 @@ def main(
 
         logger.info("Writing Data to Excel Workbook...")
         report = util.souris_excel_writer(
-            reported_flows=reported_flows,
             dates=souris_dates,
             boxes=boxes,
             daily_data=master_daily_df,
             monthly_elev_data=reservoir_elevations_monthly,
             daily_meteo_data=master_meteo_dict,
-            approval_dict=approval_dict,
             report_template=TEMPLATE_PATH,
         )
 

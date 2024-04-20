@@ -105,5 +105,5 @@ met_station_names = [
     {"name": ["Handsworth", "Solar Radiation", "w/m\u00b2"], "id": "05NCM01_sol_rad_approval"},
     {"name": ["Handsworth", "Relative Humidity", "%"], "id": "05NCM01_rel_humidity", "type": "numeric"},
     {"name": ["Handsworth", "Relative Humidity", "%"], "id": "05NCM01_rel_humidity_approval"},
-    {"name": ["Oxbow", "Precipitation", "mm"], "id": "Oxbow", "type": "numeric"},
+    {"name": ["Oxbow", "Precipitation", "mm"], "id": "oxbow_precip", "type": "numeric"},
 ]

@@ -9,7 +9,8 @@ import pandas as pd
 from loguru import logger
 from openpyxl import load_workbook
 
-import souris.core.configs as cfg
+import src.souris.core.dates as dates
+import src.souris.core.boxes as bx
 
 
 def get_newest_log(path: Path) -> Path:
@@ -197,9 +198,8 @@ def penman(
 
 
 def souris_excel_writer(
-    reported_flows: cfg.Boxes,
-    dates: cfg.Dates,
-    boxes: dict,
+    dates: dates.Dates,
+    boxes: bx.Boxes,
     daily_data: pd.DataFrame,
     monthly_elev_data: pd.DataFrame,
     daily_meteo_data: dict,
@@ -224,7 +224,6 @@ def souris_excel_writer(
     log_sheet = wb["Log"]
     ts_data_sheet = wb[ts_data_sheet_name]
     original_ts_data_sheet = wb[original_ts_sheet_name]
-    
 
     # Header
     summary_sheet["B5"] = f"For the period of {app_range}"  # type: ignore erroneous pylance subscript error

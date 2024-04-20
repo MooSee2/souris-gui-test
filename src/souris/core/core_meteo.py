@@ -1,6 +1,6 @@
 import pandas as pd
 
-import souris.core.configs as cfg
+import src.souris.core.dates as dates
 import souris.utils.utilities as util
 
 """
@@ -25,7 +25,7 @@ MM_TO_METERS = 0.001
 
 
 def process_instant_meteo(
-    dates: cfg.Dates,
+    dates: dates.Dates,
     roughbark_instant: dict,
     handsworth_instant: dict,
 ) -> tuple:
@@ -72,7 +72,7 @@ def process_instant_meteo(
 
 
 def process_penman(
-    dates: cfg.Dates,
+    dates: dates.Dates,
     roughbark_meteo_daily: pd.DataFrame,
     handsworth_meteo_daily: pd.DataFrame,
 ) -> tuple:
