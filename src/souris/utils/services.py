@@ -114,8 +114,8 @@ class NWISWaterService:
             dfs = {staid: df.reindex(idx) for staid, df in dfs.items()}
         return dfs
 
-    def get(self, params: dict, local_data: bool = False) -> dict[str, pd.DataFrame]:
-        data = self.load_json() if local_data else self._get(params=params)
+    def get(self, params: dict) -> dict[str, pd.DataFrame]:
+        data = self._get(params=params)
         data = self.parse_nwis_json(data)
         data = self.nwis_to_dataframes(data, params)
         return data

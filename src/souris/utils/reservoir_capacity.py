@@ -14,8 +14,8 @@ def assign_res_sac(staid: str, dataframe: pd.DataFrame) -> pd.DataFrame:
         "05NB016": "souris/data/stage_area_capacity_tables/roughbark_sac.csv",
     }
     sac_table = pd.read_csv(SAC_TABLES[staid])
-    data = dataframe.dropna().round(decimals=3).sort_values(by=["value"])
-    merged_df = pd.merge_asof(data, sac_table, left_on="value", right_on="elevation_m", direction="forward")  # left keys must be sorted i.e. stage/discharge
+    data = dataframe.dropna().round(decimals=3).sort_values(by=[staid])
+    merged_df = pd.merge_asof(data, sac_table, left_on=staid, right_on="elevation_m", direction="forward")  # left keys must be sorted i.e. stage/discharge
     merged_df = merged_df.drop("elevation_m", axis=1)
     merged_df.set_index(data.index, inplace=True)
     merged_df.sort_index(inplace=True)
@@ -71,11 +71,11 @@ def lake_darling_condition(start_date: str, sherwood: Number) -> bool:
     nwis_service = serv.NWISWaterService(service="dv")
     lake_darling = nwis_service.get(
         dict(
-            service="dv",
-            sites="05115500",
+            sites=["05115500"],
             startDt=f"{start_date.year}-06-01",
             endDt=f"{start_date.year}-06-01",
             parameterCd="00065",  # Gage height (ft)
+            format="json",
         )
     )
     lake_darling["value"] = lake_darling["value"] + NGVD29_OFFSET
