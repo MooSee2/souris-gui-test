@@ -71,13 +71,18 @@ def lake_darling_condition(start_date: str, sherwood: Number) -> bool:
     nwis_service = serv.NWISWaterService(service="dv")
     lake_darling = nwis_service.get(
         dict(
-            sites=["05115500"],
+            sites="05115500",
             startDt=f"{start_date.year}-06-01",
             endDt=f"{start_date.year}-06-01",
             parameterCd="00065",  # Gage height (ft)
             format="json",
         )
     )
+
+    # If running apportionment before June 1, default to True.
+    if not lake_darling:
+        return True
+
     lake_darling["value"] = lake_darling["value"] + NGVD29_OFFSET
     darling_current_elev = lake_darling.loc[f"{start_date.year}-06-01"]["value"]
 

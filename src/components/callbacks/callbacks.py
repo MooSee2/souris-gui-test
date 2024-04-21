@@ -3,6 +3,7 @@ from time import sleep
 
 # from dataclasses import dataclass
 from typing import Optional, Union
+from io import BytesIO
 
 # import modules.server as serv
 import pandas as pd
@@ -411,9 +412,11 @@ def calculate_apportionment(
 
     # This should return the excel file for the moment.  Later it will need to return all
     # the data that went into excel as well so it can be used in the html version of the report
-    report_file = dl.run_main(model_inputs)
+    report_stream = dl.run_main(model_inputs)
+    dt_now = dt.now().strftime("%Y-%m-%d %H.%M.%S.%f")
+    filename = f"Souris Natural Flow Report {appor_start}__{appor_end} on {dt_now}.xlsx"
 
-    return html.Div(className="tab2-thing"), False, dcc.send_file(report_file, "new_excel_file.xlsx")
+    return html.Div(className="tab2-thing"), False, dcc.send_bytes(report_stream.getvalue(), filename)
 
 
 # @callback(

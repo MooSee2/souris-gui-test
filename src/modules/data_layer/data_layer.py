@@ -21,6 +21,4 @@ def get_discharge_data(apportionment_year: int):
 
 def run_main(model_inputs):
     # Wrapper function for main app
-    main(model_inputs)
-    sleep(5)
-    return None
+    return main(model_inputs)

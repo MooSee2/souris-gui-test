@@ -19,7 +19,6 @@ Version 2.0- Jonathan O'Connell, joconnell@usgs.gov (November 2023)
 
 import os
 from datetime import datetime as dt
-from pathlib import Path
 
 import pandas as pd
 from loguru import logger
@@ -30,6 +29,7 @@ import souris.core.core_meteo as met
 import souris.core.core_reservoirs as res
 import souris.utils.reservoir_capacity as rcap
 import souris.utils.utilities as util
+import souris.utils.excel_writer as excel
 from modules.data_layer.model_inputs import SourisModelInputs
 
 
@@ -41,7 +41,6 @@ def main(
     MM_TO_METERS = 0.001
     M_TO_DAM = 0.1
     RESERVOIR_SEEPAGE = 0.015
-    TEMPLATE_PATH = Path("souris/data/xlsx_template/BLANK_souris_natural_flow_apportionment_report.xlsx")
 
     with logger.catch():
         dt_dt_now = dt.now()
@@ -49,20 +48,22 @@ def main(
         logger.info(f"Program starting at {dt_now}")
         logger.debug(f"CWD: {os.getcwd()}")
 
-        # ca_discharge_stations = (
-        #     "05NA003",
-        #     "05NB001",
-        #     "05NB011",
-        #     "05NB014",
-        #     "05NB018",
-        #     "05NB033",
-        #     "05NB035",
-        #     "05NB036",
-        #     "05NB038",
-        #     "05NB039",
-        #     "05NB040",
-        #     "05NB041",
-        # )
+        discharge_stations = (
+            "05NB001",
+            "05NB036",
+            "05NB011",
+            "05NB018",
+            "05NA003",
+            "05NB040",
+            "05NB041",
+            "05NB038",
+            "05NB014",
+            "05NB035",
+            "05NB033",
+            "05NB039",
+            "05113600",
+            "05114000",
+        )
         # nwis_discharge_stations = (
         #     "05113600",
         #     "05114000",
@@ -83,10 +84,10 @@ def main(
         # Met data
         roughbark_meteo_daily = met_data[[col for col in met_data.columns if "05NB016" in col]]
         handsworth_meteo_daily = met_data[[col for col in met_data.columns if "05NCM01" in col]]
-        oxbow_precip = met_data[[col for col in met_data.columns if "oxbow" in col]]
+        oxbow_precip_daily = met_data[[col for col in met_data.columns if "oxbow" in col]]
 
         # Precip data
-        precip_daily = pd.concat([roughbark_meteo_daily["05NB016_precip"], handsworth_meteo_daily["05NCM01_precip"], oxbow_precip["oxbow_precip"]], axis=1)
+        precip_daily = pd.concat([roughbark_meteo_daily["05NB016_precip"], handsworth_meteo_daily["05NCM01_precip"], oxbow_precip_daily["oxbow_precip"]], axis=1)
         precip_daily.loc[precip_daily.index.month.isin([1, 2, 3, 4, 11, 12])] = 0
 
         precip_monthly = util.rename_monthly_index(precip_daily.resample("ME").sum()) * MM_TO_METERS
@@ -273,8 +274,6 @@ def main(
         # * 7.3 Surplus or Deficit from U.S.
         boxes.box_50 = boxes.box_49 - boxes.box_48
 
-        # boxes = {key: int(item) for key, item in boxes.items()}
-
         ############################################################################################
         #                                  End Box Calculations                                    #
         ############################################################################################
@@ -283,54 +282,36 @@ def main(
         #                                  Process data for Report                                 #
         # -----------------------------------------------------------------------------------------#
         """All this can probably go"""
-        # Combine all daily dischage
-        daily_idx = pd.date_range(souris_dates.start_apportion, souris_dates.end_apportion, freq="D")
-        master_daily_df = pd.DataFrame(index=daily_idx, columns=["temp"])
-
-        reservoir_elevation_daily = {staid: dataframe.rename(columns={"value": f"{staid}_elevation"}) for staid, dataframe in reservoir_elevation_daily.items()}
-        discharge_daily = {staid: dataframe.rename(columns={"value": f"{staid}_discharge"}) for staid, dataframe in discharge_daily.items()}
-        reservoir_elevations_monthly = {staid: dataframe.rename(columns={"value": f"{staid}_elevation"}) for staid, dataframe in reservoir_sacs_monthly.items()}
-        reservoir_elevations_monthly = {staid: dataframe[[f"{staid}_elevation"]].copy() for staid, dataframe in reservoir_elevations_monthly.items()}
-
-        for dataframe in discharge_daily.values():
-            dataframe = dataframe * CMS_TO_DAM3days
-            master_daily_df = master_daily_df.join(dataframe)
-
-        for dataframe in reservoir_elevation_daily.values():
-            master_daily_df = master_daily_df.join(dataframe)
-        del master_daily_df["temp"]
-
-        monthly_idx = pd.date_range(souris_dates.start_apportion, souris_dates.end_apportion, freq="ME")
-        master_monthly_df = pd.DataFrame(index=monthly_idx, columns=["temp"])
-        master_monthly_df = master_monthly_df.set_index(monthly_idx.strftime("%Y-%m"))
-
-        for dataframe in reservoir_elevations_monthly.values():
-            master_monthly_df = master_monthly_df.join(dataframe.round(3))
-        del master_monthly_df["temp"]
-
-        # Combine all meteo station data into dict to send to report
-        roughbark_meteo_daily = roughbark_meteo_daily.join(precip_daily["05NB016_precip"])
-        handsworth_meteo_daily = handsworth_meteo_daily.join(precip_daily["05NCM01_precip"])
-        precip_daily = {staid: dataframe.rename(columns={"value": staid}) for staid, dataframe in precip_daily.items()}
-        master_meteo_dict = {
-            "05NB016": roughbark_meteo_daily,
-            "05NCM01": handsworth_meteo_daily,
-            "oxbow": precip_daily["oxbow_precip"],
-        }
+        # Fastest way to reorg columns without writing it all out.
+        discharge_daily_dict = {staid: discharge[[staid, f"{staid}_approval"]] for staid in discharge_stations}
+        discharge_daily_df = pd.concat(list(discharge_daily_dict.values()), axis=1)
 
         # -----------------------------------------------------------------------------------------#
         #                                  Reporting                                               #
         # -----------------------------------------------------------------------------------------#
-        logger.info("Apportionment Calculations Complete")
+        # send daily discharge df
+
+        # send daily reservoir and sacs dict: df
+        #    reservoir_sacs_daily
+
+        # send daily met dfs
+        #   roughbark_meteo_daily
+        #   handsworth_meteo_daily
+        #   oxbow_precip
+
+        # send monthly reservoir SAC
+        # send monthly reservoir loss
+        # send monthly roughbark/handsworth penman evap and total precip
 
         logger.info("Writing Data to Excel Workbook...")
-        report = util.souris_excel_writer(
+        report = excel.souris_excel_writer(
             dates=souris_dates,
             boxes=boxes,
-            daily_data=master_daily_df,
-            monthly_elev_data=reservoir_elevations_monthly,
-            daily_meteo_data=master_meteo_dict,
-            report_template=TEMPLATE_PATH,
+            daily_discharge=discharge_daily_df,
+            daily_reservoir=reservoir_sacs_daily,
+            daily_roughbark=roughbark_meteo_daily,
+            daily_handsworth=handsworth_meteo_daily,
+            daily_oxbow=oxbow_precip_daily,
         )
 
         logger.info("Apportionment complete!")

@@ -34,11 +34,11 @@ class NWISWaterService:
         service: str,
         freq: Union[str, None] = None,
     ) -> None:
-        self._url = f"https://waterservices.usgs.gov/nwis/{service}"
+        self._url = f"https://waterservices.usgs.gov/nwis/{service}/"
         self._freq = freq
 
     def _get(self, params: dict) -> None:
-        if "sites" in params and is_iterable(params["sites"]):
+        if "sites" in params and isinstance(params["sites"], list):
             params["sites"] = ",".join(params["sites"])
 
         response = requests.get(
@@ -49,6 +49,7 @@ class NWISWaterService:
 
         if response.status_code >= 200 and response.status_code <= 299:
             return response.json()
+
         raise Exception(f"Error: {response.url}")
 
     def load_json(
