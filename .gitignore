@@ -164,3 +164,4 @@ cython_debug/
 
 
 src/.cache/*
+tests/test_report/*.xlsx
