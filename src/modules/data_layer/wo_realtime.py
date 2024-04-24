@@ -75,28 +75,28 @@ def process_data(data: dict[str, pd.DataFrame]):
     return joined
 
 
-def get_wo_realtime_discharge(year):
+def get_wo_realtime_discharge(year: int):
     ca_discharge = serv.WaterOfficeRealTime()
 
     raw_data = ca_discharge.get(
         params={
             "stations[]": ca_discharge_stations,
             "start_date": f"{year}-01-01",
-            "end_date": f"{year}-12-31",
+            "end_date": f"{year+1}-01-01",
             "parameters[]": 47,
         },
     )
 
-    return process_data(raw_data).fillna("-6999")
+    return process_data(raw_data)  # .fillna("-6999")
 
 
-def get_wo_realtime_reservoirs(year):
+def get_wo_realtime_reservoirs(year: int):
     ca_discharge = serv.WaterOfficeRealTime()
     raw_data = ca_discharge.get(
         params={
             "stations[]": ca_reservoir_stations,
             "start_date": f"{year}-01-01",
-            "end_date": f"{year}-12-31",
+            "end_date": f"{year+1}-01-01",
             "parameters[]": 46,
         },
     )
