@@ -109,32 +109,40 @@ def main(
             handsworth_meteo_daily=handsworth_meteo_daily,
         )
 
-        # -----------------------------------------------------------------------------------------#
-        #                                  Reservoir Loss Calculations                             #
-        # -----------------------------------------------------------------------------------------#
+        # ----------------------------------------------------------------------------------------#
+        #                                  Reservoir Loss Calculations                            #
+        # ----------------------------------------------------------------------------------------#
         """A constant monthly seepage value (RESERVOIR_SEEPAGE) of 0.015 m is assumed year-round
         Calculate the net evaporation:
         evap (m) - precip (m) and add seepage (m) then convert m to dam"""
         roughbark_loss = (roughbark_penman_monthly_sum["penman"] - precip_monthly["05NB016_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
-
         handsworth_loss = (handsworth_penman_monthly_sum["penman"] - precip_monthly["05NCM01_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
-
         oxbow_loss = (handsworth_penman_monthly_sum["penman"] - precip_monthly["oxbow_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
 
-        ############################################################################################
-        #                                  End Reservoir Loss Calculations                         #
-        ############################################################################################
-
-        # # -----------------------------------------------------------------------------------------#
-        # #                              Assign reservoir Stage-Area-Capacities                      #
-        # # -----------------------------------------------------------------------------------------#
-        # May need to break up reservoir data into the {staid: df} format to reuse this function.
-
-        # reservoir_dict = {staid: model_inputs.reservoirs[[staid, f"{staid}_approval"]] for staid in ca_reservoir_stations}
+        # -----------------------------------------------------------------------------------------#
+        #                              Assign reservoir Stage-Area-Capacities                     #
+        # -----------------------------------------------------------------------------------------#
         reservoir_sacs_daily, reservoir_sacs_monthly = res.process_reservoir_sacs(
             reservoirs,
             wateryear=souris_dates.wateryear,
         )
+
+        # -----------------------------------------------------------------------------------------#
+        #                              Reservoir Loss                                             #
+        # -----------------------------------------------------------------------------------------#
+        reservoir_loss = {
+            # Larsen
+            "05NA006": reservoir_sacs_monthly["05NA006"]["area_dam2"] * roughbark_loss,
+            # Nickle
+            "05NB020": reservoir_sacs_monthly["05NB020"]["area_dam2"] * roughbark_loss,
+            # Roughbark
+            "05NB016": reservoir_sacs_monthly["05NB016"]["area_dam2"] * roughbark_loss,
+            # Moose
+            "05NC002": reservoir_sacs_monthly["05NC002"]["area_dam2"] * handsworth_loss,
+            # Grant Devine
+            "05ND012": reservoir_sacs_monthly["05ND012"]["area_dam2"] * oxbow_loss,
+        }
+
         # -----------------------------------------------------------------------------------------#
         #                                  Box Calculations                                        #
         # -----------------------------------------------------------------------------------------#
@@ -154,7 +162,7 @@ def main(
         # * 1.1.1 Larsen Reservoir Storage Change
         boxes.box_1 = reservoir_sacs_daily["05NA006"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NA006"]["capacity_dam3"].iloc[0]
         # * 1.1.2 Larsen Reservoir Net Evaporation & Seepage
-        boxes.box_2 = (reservoir_sacs_monthly["05NA006"]["area_dam2"] * roughbark_loss).sum()
+        boxes.box_2 = reservoir_loss["05NA006"].sum()
         # * 1.1.3 Larsen Reservoir Diversion
         boxes.box_3 = boxes.box_1 + boxes.box_2
         # * 1.2 Town of Radville Pumpage
@@ -175,13 +183,13 @@ def main(
         # * 2.1.1 Nickle Lake Reservoir Storage Change
         boxes.box_14 = reservoir_sacs_daily["05NB020"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NB020"]["capacity_dam3"].iloc[0]
         # * 2.1.2 Nickle Lake Reservoir Net Evaporation & Seepage
-        boxes.box_15 = (reservoir_sacs_monthly["05NB020"]["area_dam2"] * roughbark_loss).sum()
+        boxes.box_15 = reservoir_loss["05NB020"].sum()
         # * 2.1.4 Nickle Lake Reservoir Diversion
         boxes.box_17 = boxes.box_14 + boxes.box_15 + boxes.box_16
         # * 2.3.1 Roughbark Reservoir Storage Change
         boxes.box_19 = reservoir_sacs_daily["05NB016"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NB016"]["capacity_dam3"].iloc[0]
         # * 2.3.2 Roughbark Reservoir Net Evaporation & Seepage
-        boxes.box_20 = (reservoir_sacs_monthly["05NB016"]["area_dam2"] * roughbark_loss).sum()
+        boxes.box_20 = reservoir_loss["05NB016"].sum()
         # * 2.3 Roughbark Reservoir Depletion, box20_roughbark_netloss includes seepage calculation
         boxes.box_21 = boxes.box_19 + boxes.box_20
         """
@@ -234,13 +242,13 @@ def main(
         # * 4.1.1 Moose Mountain Lake Storage Change
         boxes.box_31 = reservoir_sacs_daily["05NC002"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NC002"]["capacity_dam3"].iloc[0]
         # * 4.1.2 Moose Mountain Lake Net Evaporation & Seepage
-        boxes.box_32 = (reservoir_sacs_monthly["05NC002"]["area_dam2"] * handsworth_loss).sum()
+        boxes.box_32 = reservoir_loss["05NC002"].sum()
         # * 4.1.3 Moose Mountain Lake Diversion
         boxes.box_33 = boxes.box_31 + boxes.box_32
         # * 4.2.1 Grant Devine Reservoir Storage Change
         boxes.box_34 = reservoir_sacs_daily["05ND012"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05ND012"]["capacity_dam3"].iloc[0]
         # * 4.2.2 Grant Devine Reservoir Net Evaporation & Seepage
-        boxes.box_35 = (reservoir_sacs_monthly["05ND012"]["area_dam2"] * oxbow_loss).sum()
+        boxes.box_35 = reservoir_loss["05ND012"].sum()
         # * 4.2 Grant Devine Reservoir
         boxes.box_36 = boxes.box_34 + boxes.box_35
         # * 4.4 Total Diversions Moose Mountain Creek Basin
@@ -259,12 +267,12 @@ def main(
         boxes.box_44 = boxes.box_42 + boxes.box_43 - boxes.box_41
         darling_condition = rcap.lake_darling_condition(start_date=souris_dates.start_apportion, sherwood=boxes.box_44)
         # * 6.4 U.S. Share at Sherwood – 50% vs 40% Note: True=1, False=0
-        boxes.box_45a = 0.4 * boxes.box_44 if darling_condition else 0
+        boxes.box_45a = 0.4 * boxes.box_44 if darling_condition else None
         boxes.box_45b = 0 if darling_condition else 0.5 * boxes.box_44
         boxes.box_46 = boxes.box_12 + boxes.box_28 + boxes.box_43
         # * 6.6 Surplus or Deficit to U.S.
-        boxes.box_47a = boxes.box_46 - boxes.box_45a if boxes.box_45a else 0
-        boxes.box_47b = boxes.box_46 - boxes.box_45b if boxes.box_45b else 0
+        boxes.box_47a = boxes.box_46 - boxes.box_45a if boxes.box_45a else None
+        boxes.box_47b = boxes.box_46 - boxes.box_45b if boxes.box_45b else None
         # * 7.1 Recorded Flow at Western Crossing
         boxes.box_48 = discharge["05NA003"].sum().sum() * CMS_TO_DAM3days
         # * 7.2 Recorded Flow at Eastern Crossing
@@ -274,6 +282,9 @@ def main(
         # * 7.3 Surplus or Deficit from U.S.
         boxes.box_50 = boxes.box_49 - boxes.box_48
 
+        # Round all boxes to integers for report.
+        boxes.round_boxes(0)
+
         ############################################################################################
         #                                  End Box Calculations                                    #
         ############################################################################################
@@ -281,28 +292,17 @@ def main(
         # -----------------------------------------------------------------------------------------#
         #                                  Process data for Report                                 #
         # -----------------------------------------------------------------------------------------#
-        """All this can probably go"""
         # Fastest way to reorg columns without writing it all out.
         discharge_daily_dict = {staid: discharge[[staid, f"{staid}_approval"]] for staid in discharge_stations}
         discharge_daily_df = pd.concat(list(discharge_daily_dict.values()), axis=1)
 
+        # Combine evap and precip data to send to report.
+        roughbark_evap_precip = pd.concat([roughbark_penman_monthly_sum["penman"], precip_monthly["05NB016_precip"]], axis=1)
+        handsworth_evap_precip = pd.concat([handsworth_penman_monthly_sum["penman"], precip_monthly["05NCM01_precip"]], axis=1)
+
         # -----------------------------------------------------------------------------------------#
         #                                  Reporting                                               #
         # -----------------------------------------------------------------------------------------#
-        # send daily discharge df
-
-        # send daily reservoir and sacs dict: df
-        #    reservoir_sacs_daily
-
-        # send daily met dfs
-        #   roughbark_meteo_daily
-        #   handsworth_meteo_daily
-        #   oxbow_precip
-
-        # send monthly reservoir SAC
-        # send monthly reservoir loss
-        # send monthly roughbark/handsworth penman evap and total precip
-
         logger.info("Writing Data to Excel Workbook...")
         report = excel.souris_excel_writer(
             dates=souris_dates,
@@ -312,6 +312,10 @@ def main(
             daily_roughbark=roughbark_meteo_daily,
             daily_handsworth=handsworth_meteo_daily,
             daily_oxbow=oxbow_precip_daily,
+            monthly_reservoir_SAC=reservoir_sacs_monthly,
+            monthly_roughbark_evap_precip=roughbark_evap_precip,
+            monthly_handsworth_evap_precip=handsworth_evap_precip,
+            monthly_oxbow_precip=precip_monthly[["oxbow_precip"]],
         )
 
         logger.info("Apportionment complete!")
