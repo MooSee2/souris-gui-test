@@ -45,8 +45,19 @@ def resolve_approvals(data):
     return {staid: df.resample("D").apply(lambda x: x.mode())[[f"{staid}_approval"]] for staid, df in data.items()}
 
 
-def join_values_and_approvals(values, approvals):
-    return pd.concat(list(values.values()) + list(approvals.values()), axis=1)
+def join_values_and_approvals(
+    values: dict,
+    approvals: dict,
+    staids: list,
+):
+    dfs = []
+    for staid in staids:
+        df = pd.concat([values[staid], approvals[staid]], axis=1)
+        mask = df[f"{staid}_approval"] == "Unknown"
+        df.loc[mask, staid] = float("NaN")
+        dfs.extend([df])
+    # return pd.concat(list(values.values()) + list(approvals.values()), axis=1)
+    return pd.concat(dfs, axis=1)
 
 
 # def set_dtype_float(data: dict[str, pd.DataFrame]):
@@ -57,17 +68,17 @@ def fill_approvals(data):
     return_dict = {}
     for staid, df in data.items():
         mask = ~df[f"{staid}_approval"].isin(["Approved", "Provisional", "Final"])
-        df.loc[mask, f"{staid}_approval"] = "Unverified"
+        df.loc[mask, f"{staid}_approval"] = "Unknown"
         return_dict[staid] = df
     return return_dict
 
 
-def process_data(data: dict[str, pd.DataFrame]):
+def process_data(data: dict[str, pd.DataFrame], staids: list) -> pd.DataFrame:
     processed_data = drop_and_rename_columns(data)
     approval_dvs = resolve_approvals(processed_data)
     value_dvs = calc_trapz_integration(processed_data)
     infilled_approvals = fill_approvals(approval_dvs)
-    joined = join_values_and_approvals(value_dvs, infilled_approvals)
+    joined = join_values_and_approvals(value_dvs, infilled_approvals, staids)
     joined["date"] = joined.index.strftime("%Y-%m-%d")
     # Last row is always garbage because trapz integration cuts it off.
     joined.drop(joined.index[-1], inplace=True)
@@ -75,7 +86,10 @@ def process_data(data: dict[str, pd.DataFrame]):
     return joined
 
 
-def get_wo_realtime_discharge(year: int):
+def fill_unverifieds(df: pd.DataFrame) -> pd.DataFrame: ...
+
+
+def get_wo_realtime_discharge(year: int) -> pd.DataFrame:
     ca_discharge = serv.WaterOfficeRealTime()
 
     raw_data = ca_discharge.get(
@@ -87,7 +101,7 @@ def get_wo_realtime_discharge(year: int):
         },
     )
 
-    return process_data(raw_data)  # .fillna("-6999")
+    return process_data(raw_data, staids=ca_discharge_stations)  # .fillna("-6999")
 
 
 def get_wo_realtime_reservoirs(year: int):
@@ -101,4 +115,4 @@ def get_wo_realtime_reservoirs(year: int):
         },
     )
 
-    return process_data(raw_data)
+    return process_data(raw_data, staids=ca_reservoir_stations)
