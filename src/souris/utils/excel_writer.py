@@ -45,7 +45,21 @@ def df_writer(
     return None
 
 
-def souris_excel_writer(dates: dates.Dates, boxes: bx.Boxes, daily_discharge: pd.DataFrame, daily_reservoir: dict[str : pd.DataFrame], daily_roughbark: pd.DataFrame, daily_handsworth: pd.DataFrame, daily_oxbow: pd.DataFrame, monthly_reservoir_SAC: dict[str : pd.DataFrame], monthly_roughbark_evap_precip: pd.DataFrame, monthly_handsworth_evap_precip: pd.DataFrame, monthly_oxbow_precip: pd.DataFrame, report_template=Path("souris/data/xlsx_template/BLANK_souris_natural_flow_apportionment_report.xlsx")):
+def souris_excel_writer(
+    dates: dates.Dates,
+    boxes: bx.Boxes,
+    daily_discharge: pd.DataFrame,
+    daily_reservoir: dict[str : pd.DataFrame],
+    daily_roughbark: pd.DataFrame,
+    daily_handsworth: pd.DataFrame,
+    daily_oxbow: pd.DataFrame,
+    monthly_reservoir_SAC: dict[str : pd.DataFrame],
+    monthly_roughbark_evap_precip: pd.DataFrame,
+    monthly_handsworth_evap_precip: pd.DataFrame,
+    monthly_oxbow_precip: pd.DataFrame,
+    reservoir_losses: dict[str : pd.DataFrame],
+    report_template=Path("souris/data/xlsx_template/BLANK_souris_natural_flow_apportionment_report.xlsx"),
+):
 
     # debug_excel = os.getenv("DEBUG_EXCEL", False).lower() in ("true", "1", "t")
     debug_excel = False
