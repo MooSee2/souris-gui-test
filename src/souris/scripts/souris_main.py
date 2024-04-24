@@ -130,7 +130,7 @@ def main(
         # -----------------------------------------------------------------------------------------#
         #                              Reservoir Loss                                             #
         # -----------------------------------------------------------------------------------------#
-        reservoir_loss = {
+        reservoir_losses = {
             # Larsen
             "05NA006": reservoir_sacs_monthly["05NA006"]["area_dam2"] * roughbark_loss,
             # Nickle
@@ -162,7 +162,7 @@ def main(
         # * 1.1.1 Larsen Reservoir Storage Change
         boxes.box_1 = reservoir_sacs_daily["05NA006"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NA006"]["capacity_dam3"].iloc[0]
         # * 1.1.2 Larsen Reservoir Net Evaporation & Seepage
-        boxes.box_2 = reservoir_loss["05NA006"].sum()
+        boxes.box_2 = reservoir_losses["05NA006"].sum()
         # * 1.1.3 Larsen Reservoir Diversion
         boxes.box_3 = boxes.box_1 + boxes.box_2
         # * 1.2 Town of Radville Pumpage
@@ -183,13 +183,13 @@ def main(
         # * 2.1.1 Nickle Lake Reservoir Storage Change
         boxes.box_14 = reservoir_sacs_daily["05NB020"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NB020"]["capacity_dam3"].iloc[0]
         # * 2.1.2 Nickle Lake Reservoir Net Evaporation & Seepage
-        boxes.box_15 = reservoir_loss["05NB020"].sum()
+        boxes.box_15 = reservoir_losses["05NB020"].sum()
         # * 2.1.4 Nickle Lake Reservoir Diversion
         boxes.box_17 = boxes.box_14 + boxes.box_15 + boxes.box_16
         # * 2.3.1 Roughbark Reservoir Storage Change
         boxes.box_19 = reservoir_sacs_daily["05NB016"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NB016"]["capacity_dam3"].iloc[0]
         # * 2.3.2 Roughbark Reservoir Net Evaporation & Seepage
-        boxes.box_20 = reservoir_loss["05NB016"].sum()
+        boxes.box_20 = reservoir_losses["05NB016"].sum()
         # * 2.3 Roughbark Reservoir Depletion, box20_roughbark_netloss includes seepage calculation
         boxes.box_21 = boxes.box_19 + boxes.box_20
         """
@@ -242,27 +242,27 @@ def main(
         # * 4.1.1 Moose Mountain Lake Storage Change
         boxes.box_31 = reservoir_sacs_daily["05NC002"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NC002"]["capacity_dam3"].iloc[0]
         # * 4.1.2 Moose Mountain Lake Net Evaporation & Seepage
-        boxes.box_32 = reservoir_loss["05NC002"].sum()
+        boxes.box_32 = reservoir_losses["05NC002"].sum()
         # * 4.1.3 Moose Mountain Lake Diversion
         boxes.box_33 = boxes.box_31 + boxes.box_32
         # * 4.2.1 Grant Devine Reservoir Storage Change
         boxes.box_34 = reservoir_sacs_daily["05ND012"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05ND012"]["capacity_dam3"].iloc[0]
         # * 4.2.2 Grant Devine Reservoir Net Evaporation & Seepage
-        boxes.box_35 = reservoir_loss["05ND012"].sum()
+        boxes.box_35 = reservoir_losses["05ND012"].sum()
         # * 4.2 Grant Devine Reservoir
         boxes.box_36 = boxes.box_34 + boxes.box_35
         # * 4.4 Total Diversions Moose Mountain Creek Basin
         boxes.box_38 = boxes.box_33 + boxes.box_36 + boxes.box_37
         # * 5.1 Yellow Grass Ditch
-        boxes.box_39 = discharge["05NB011"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_39 = discharge["05NB011"].sum() * CMS_TO_DAM3days
         # * 5.2 Tatagwa Lake Drain
-        boxes.box_40 = discharge["05NB018"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_40 = discharge["05NB018"].sum() * CMS_TO_DAM3days
         # * 5.3 Total Additions
         boxes.box_41 = boxes.box_39 + boxes.box_40
         # * 6.1 Total Diversion Souris River Basin
         boxes.box_42 = boxes.box_13 + boxes.box_26 + boxes.box_30 + boxes.box_38
         # * 6.2 Recorded Flow at Sherwood
-        boxes.box_43 = discharge["05114000"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_43 = discharge["05114000"].sum() * CMS_TO_DAM3days
         # * 6.3 Natural Flow at Sherwood
         boxes.box_44 = boxes.box_42 + boxes.box_43 - boxes.box_41
         darling_condition = rcap.lake_darling_condition(start_date=souris_dates.start_apportion, sherwood=boxes.box_44)
@@ -274,9 +274,9 @@ def main(
         boxes.box_47a = boxes.box_46 - boxes.box_45a if boxes.box_45a else None
         boxes.box_47b = boxes.box_46 - boxes.box_45b if boxes.box_45b else None
         # * 7.1 Recorded Flow at Western Crossing
-        boxes.box_48 = discharge["05NA003"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_48 = discharge["05NA003"].sum() * CMS_TO_DAM3days
         # * 7.2 Recorded Flow at Eastern Crossing
-        boxes.box_49 = discharge["05113600"].sum().sum() * CMS_TO_DAM3days
+        boxes.box_49 = discharge["05113600"].sum() * CMS_TO_DAM3days
         """If the box50 difference is positive,
         then more water was delivered annually from the U.S. than consumed and Recommendation 2 is met."""
         # * 7.3 Surplus or Deficit from U.S.
@@ -316,6 +316,7 @@ def main(
             monthly_roughbark_evap_precip=roughbark_evap_precip,
             monthly_handsworth_evap_precip=handsworth_evap_precip,
             monthly_oxbow_precip=precip_monthly[["oxbow_precip"]],
+            reservoir_losses=reservoir_losses,
         )
 
         logger.info("Apportionment complete!")
