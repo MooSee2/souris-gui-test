@@ -61,7 +61,7 @@ class Boxes:
     box_49: Optional[int] = None
     box_50: Optional[int] = None
 
-    def round_boxes(self, decimal: int):
+    def round_boxes(self, decimal: Optional[int] = None):
         for attr, value in vars(self).items():
             if isinstance(value, (int, float)):
-                setattr(self, attr, round(value))
+                setattr(self, attr, round(value, ndigits=decimal))
