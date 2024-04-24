@@ -1,6 +1,8 @@
 import pickle
 from pathlib import Path
 
+import pandas as pd
+
 from src.souris.utils.excel_writer import souris_excel_writer
 
 
@@ -22,6 +24,12 @@ def test_souris_excel_writer():
         oxbow_precip_daily = pickle.load(file)
     with open("tests/test_data/excel_writer/reservoir_sacs_monthly.pkl", "rb") as file:
         reservoir_sacs_monthly = pickle.load(file)
+    with open("tests/test_data/excel_writer/roughbark_evap_precip.pkl", "rb") as file:
+        roughbark_evap_precip = pickle.load(file)
+    with open("tests/test_data/excel_writer/handsworth_evap_precip.pkl", "rb") as file:
+        handsworth_evap_precip = pickle.load(file)
+    with open("tests/test_data/excel_writer/monthly_oxbow_precip.pkl", "rb") as file:
+        monthly_oxbow_precip = pd.DataFrame(pickle.load(file))
 
     report = souris_excel_writer(
         dates=souris_dates,
@@ -31,7 +39,10 @@ def test_souris_excel_writer():
         daily_roughbark=roughbark_meteo_daily,
         daily_handsworth=handsworth_meteo_daily,
         daily_oxbow=oxbow_precip_daily,
-        monthly_reservoir=reservoir_sacs_monthly,
+        monthly_reservoir_SAC=reservoir_sacs_monthly,
+        monthly_roughbark_evap_precip=roughbark_evap_precip,
+        monthly_handsworth_evap_precip=handsworth_evap_precip,
+        monthly_oxbow_precip=monthly_oxbow_precip,
         report_template=Path("src/souris/data/xlsx_template/BLANK_souris_natural_flow_apportionment_report.xlsx"),
     )
 
