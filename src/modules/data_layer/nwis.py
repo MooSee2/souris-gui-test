@@ -3,6 +3,9 @@ import modules.data_layer.download_api_services as serv
 import modules.data_layer.trapz_integration as trapz
 
 
+CFS_TO_CMS = 0.0283168466
+
+
 def get_nwis_data(year):
     nwis = serv.NWISWaterService(service="dv")
     data = nwis.get(
@@ -15,6 +18,7 @@ def get_nwis_data(year):
             endDT=f"{year}-12-31",
             parameterCd="00060",
             format="json",
+            access=0,
         )
     )
 
@@ -23,6 +27,7 @@ def get_nwis_data(year):
         df[f"{staid}_approval"] = df["qualifiers"].apply(lambda x: "Approved" if "A" in x else "Unapproved")
         df.rename(columns={"value": staid}, inplace=True)
         df.drop("qualifiers", axis=1, inplace=True)
+        df[staid] = df[staid].mul(CFS_TO_CMS).round(3)
         dfs[staid] = df
 
     return pd.concat(list(dfs.values()), axis=1)
