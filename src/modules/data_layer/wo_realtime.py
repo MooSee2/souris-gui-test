@@ -75,13 +75,14 @@ def fill_approvals(data):
 
 def process_data(data: dict[str, pd.DataFrame], staids: list) -> pd.DataFrame:
     processed_data = drop_and_rename_columns(data)
-    approval_dvs = resolve_approvals(processed_data)
-    value_dvs = calc_trapz_integration(processed_data)
-    infilled_approvals = fill_approvals(approval_dvs)
-    joined = join_values_and_approvals(value_dvs, infilled_approvals, staids)
+    # approval_dvs = resolve_approvals(processed_data)
+    # value_dvs = calc_trapz_integration(processed_data)
+    # infilled_approvals = fill_approvals(approval_dvs)
+    # joined = join_values_and_approvals(value_dvs, infilled_approvals, staids)
+    joined = pd.concat(list(processed_data.values()), axis=1)
     joined["date"] = joined.index.strftime("%Y-%m-%d")
     # Last row is always garbage because trapz integration cuts it off.
-    joined.drop(joined.index[-1], inplace=True)
+    # joined.drop(joined.index[-1], inplace=True)
 
     return joined
 
@@ -96,8 +97,8 @@ def get_wo_realtime_discharge(year: int) -> pd.DataFrame:
         params={
             "stations[]": ca_discharge_stations,
             "start_date": f"{year}-01-01",
-            "end_date": f"{year+1}-01-01",
-            "parameters[]": 47,
+            "end_date": f"{year}-12-31",
+            "parameters[]": 6,
         },
     )
 
@@ -110,8 +111,8 @@ def get_wo_realtime_reservoirs(year: int):
         params={
             "stations[]": ca_reservoir_stations,
             "start_date": f"{year}-01-01",
-            "end_date": f"{year+1}-01-01",
-            "parameters[]": 46,
+            "end_date": f"{year}-12-31",
+            "parameters[]": 3,
         },
     )
 
