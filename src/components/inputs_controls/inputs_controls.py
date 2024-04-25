@@ -66,32 +66,31 @@ def aside():
                     evap_end.evap_end(),
                 ],
             ),
-            dcc.Loading(
+            html.Div(
+                className="config-card",
                 children=[
-                    html.Div(
-                        className="config-card",
-                        children=[
-                            dbc.Button(
-                                "Load Data",
-                                color="secondary",
-                                id="load-data-button",
-                                n_clicks=0,
-                                className="usa-menu-btn",
-                            ),
-                        ],
-                    ),
+                    dcc.Loading(
+                        dbc.Button(
+                            "Load Data",
+                            color="secondary",
+                            id="load-data-button",
+                            n_clicks=0,
+                            className="usa-menu-btn",
+                        ),
+                    )
                 ],
             ),
             calculation_modal,
             html.Div(
                 className="config-card",
                 children=[
-                    dbc.Button(
-                        "Begin Apportionment",
-                        color="secondary",
-                        id="apportion-button",
-                        # disabled=True,
-                        className="usa-menu-btn",
+                    dcc.Loading(
+                        dbc.Button(
+                            "Begin Apportionment",
+                            color="secondary",
+                            id="apportion-button",
+                            className="usa-menu-btn",
+                        ),
                     ),
                 ],
             ),

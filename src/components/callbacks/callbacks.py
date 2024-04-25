@@ -134,27 +134,28 @@ def get_2023_met_data(n_clicks):
     return df.to_dict("records"), 1
 
 
-@callback(
-    Output("reservoir-data", "data"),
-    Output("reservoir-status-btn", "n_clicks"),
-    Input("load-data-button", "n_clicks"),
-    State("apportionment-year", "value"),
-    prevent_initial_call=True,
-)
-def download_reservoir_data(n_clicks, apportionment_year: int):
-    if n_clicks is None or n_clicks <= 0:
-        raise PreventUpdate
+# @callback(
+#     Output("reservoir-data", "data"),
+#     Output("reservoir-status-btn", "n_clicks"),
+#     Input("load-data-button", "n_clicks"),
+#     State("apportionment-year", "value"),
+#     prevent_initial_call=True,
+# )
+# def download_reservoir_data(n_clicks, apportionment_year: int):
+#     if n_clicks is None or n_clicks <= 0:
+#         raise PreventUpdate
 
-    reservoirs = dl.get_reservoir_data(apportionment_year)
+#     reservoirs = dl.get_reservoir_data(apportionment_year)
 
-    return reservoirs.to_dict("records"), 1
+#     return reservoirs.to_dict("records"), 1
 
 
 @callback(
     Output("discharge-data", "data"),
+    Output("reservoir-data", "data"),
     # Output("apportion-button", "disabled"),
     # Output("timeseries-dropdown", "disabled"),
-    Output("discharge-status-btn", "n_clicks"),
+    Output("load-data-button", "n_clicks"),
     # Output("load-data-button", "n_clicks"),
     Input("load-data-button", "n_clicks"),
     State("apportionment-year", "value"),
@@ -164,9 +165,9 @@ def download_discharge_data(n_clicks, apportionment_year: int):
     if n_clicks is None or n_clicks <= 0:
         raise PreventUpdate
 
-    discharge = dl.get_discharge_data(apportionment_year)
+    discharge, reservoir = dl.get_discharge_data(apportionment_year)
 
-    return discharge.to_dict("records"), 1
+    return discharge.to_dict("records"), reservoir.to_dict("records"), 1
 
 
 # @callback(
@@ -312,6 +313,7 @@ def toggle_calculation_modal(_) -> bool:
     Output("report-container", "children"),
     Output("calculation-modal", "is_open"),
     Output("report-download", "data"),
+    Output("apportion-button", "n_clicks"),
     Input("apportion-button", "n_clicks"),
     #### DATA ####
     # Reported Flows.
@@ -416,7 +418,7 @@ def calculate_apportionment(
     dt_now = dt.now().strftime("%Y-%m-%d %H.%M.%S.%f")
     filename = f"Souris Natural Flow Report {appor_start}__{appor_end} on {dt_now}.xlsx"
 
-    return html.Div(className="tab2-thing"), False, dcc.send_bytes(report_stream.getvalue(), filename)
+    return html.Div(children="Under Construction", className="tab2-thing"), False, dcc.send_bytes(report_stream.getvalue(), filename), 1
 
 
 # @callback(
