@@ -12,7 +12,7 @@ def report():
                 children=[
                     html.Div(
                         children=[
-                            html.P("Report goes here", className="card-text"),
+                            html.P("Under Construction", className="card-text"),
                         ],
                     ),
                 ],
