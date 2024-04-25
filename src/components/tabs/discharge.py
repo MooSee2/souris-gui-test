@@ -8,7 +8,7 @@ import app_data.stations as const
 import modules.utils.make_conditionals as make_conditionals
 
 stations = [
-    "datetime",
+    # "datetime",
     "05NB001",
     "05NB036",
     "05NB011",
@@ -24,20 +24,10 @@ stations = [
 ]
 
 columns = const.reservoir_station_names
-# hidden_columns = [f"{station}_approval" for station in stations]
-
-datetime_conditional = [
-    {
-        "if": {
-            "column_id": "date",
-        },
-        "backgroundColor": "#fafafa",
-        "verticalAlign": "middle",
-    },
-]
 
 # conditionals = utils.make_approved_conditionals(stations=stations) + utils.make_unapproved_conditionals(stations=stations) + datetime_conditional
-conditionals = make_conditionals.make_conditionals(stations=stations) + datetime_conditional
+conditionals = make_conditionals.make_conditionals(stations=stations)  # + datetime_conditional
+# station = "05113600_approval"
 
 
 def discharge():
@@ -54,6 +44,16 @@ def discharge():
                         merge_duplicate_headers=True,
                         page_action="none",
                         style_data_conditional=conditionals,
+                        # [
+                        #     {
+                        #         "if": {
+                        #             "filter_query": f"{{{station}}} = 'Approved'",
+                        #             "column_id": "05113600_approval",
+                        #         },
+                        #         "backgroundColor": "#D1E5F0",
+                        #         "color": "black",
+                        #     },
+                        # ],
                         style_table={
                             "overflowY": "auto",
                         },

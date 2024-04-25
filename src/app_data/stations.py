@@ -68,7 +68,7 @@ discharge_station_names = [
     {"name": ["Discharge", "Units: m\u00b3/s", "Tributary near Outram", "05NB039"], "id": "05NB039_approval"},
     # USGS stations
     {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Noonan, ND", "05113600"], "id": "05113600", "type": "numeric"},
-    {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Noonan, ND", "05113600"], "id": "05113600_approval"},
+    {"name": ["Discharge", "Units: m\u00b3/s", "Long Creek near Noonan, ND", "05113600"], "id": "05113600_approval", "type": "text"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Souris River near Sherwood, ND", "05114000"], "id": "05114000", "type": "numeric"},
     {"name": ["Discharge", "Units: m\u00b3/s", "Souris River near Sherwood, ND", "05114000"], "id": "05114000_approval"},
 ]
