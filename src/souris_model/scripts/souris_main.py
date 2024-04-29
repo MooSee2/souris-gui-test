@@ -23,13 +23,13 @@ from datetime import datetime as dt
 import pandas as pd
 from loguru import logger
 
-import src.souris.core.dates as dates
-import src.souris.core.boxes as bx
-import souris.core.core_meteo as met
-import souris.core.core_reservoirs as res
-import souris.utils.reservoir_capacity as rcap
-import souris.utils.utilities as util
-import souris.utils.excel_writer as excel
+import src.souris_model.core.dates as dates
+import src.souris_model.core.boxes as bx
+import souris_model.core.core_meteo as met
+import souris_model.core.core_reservoirs as res
+import souris_model.utils.reservoir_capacity as rcap
+import souris_model.utils.utilities as util
+import souris_model.utils.excel_writer as excel
 from modules.data_layer.model_inputs import SourisModelInputs
 
 

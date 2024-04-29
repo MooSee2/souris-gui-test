@@ -1,4 +1,4 @@
-from src.souris.core.boxes import Boxes
+from src.souris_model.core.boxes import Boxes
 
 
 def test_boxes_round():

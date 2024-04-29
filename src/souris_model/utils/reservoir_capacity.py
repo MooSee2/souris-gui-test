@@ -2,7 +2,7 @@ from datetime import datetime as dt
 from numbers import Number
 
 import pandas as pd
-import souris.utils.services as serv
+import souris_model.utils.services as serv
 
 
 def assign_res_sac(staid: str, dataframe: pd.DataFrame) -> pd.DataFrame:

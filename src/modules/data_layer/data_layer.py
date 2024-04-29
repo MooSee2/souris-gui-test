@@ -2,7 +2,7 @@ import pandas as pd
 
 from modules.data_layer import nwis
 from modules.data_layer import wo_realtime as wo
-from souris.scripts.souris_main import main
+from souris_model.scripts.souris_main import main
 
 
 # def get_reservoir_data(apportionment_year: int):

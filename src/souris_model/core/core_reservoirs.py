@@ -1,7 +1,7 @@
 import pandas as pd
 
-import souris.utils.reservoir_capacity as rcap
-import souris.utils.utilities as util
+import souris_model.utils.reservoir_capacity as rcap
+import souris_model.utils.utilities as util
 
 ca_reservoir_stations = (
     "05NA006",

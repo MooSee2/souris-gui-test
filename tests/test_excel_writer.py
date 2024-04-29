@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.souris.utils.excel_writer import souris_excel_writer
+from src.souris_model.utils.excel_writer import souris_excel_writer
 
 
 def test_souris_excel_writer():
