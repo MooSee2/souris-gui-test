@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 
 import modules.data_layer.download_api_services as serv
@@ -25,6 +27,20 @@ ca_discharge_stations = (
     "05NB040",
     "05NB041",
 )
+
+# "Wind Speed", "m/s": 35
+# "Air Temperature", "C": 1
+# "Precipitation", "mm": 19?
+# "Solar Radiation", "w/m2": 27
+# "Relative Humidity", "%": 28
+
+met_codes = {
+    "35": "wind_speed",
+    "1": "air_temp",
+    "19": "precip",
+    "27": "sol_rad",
+    "28": "rel_humidity",
+}
 
 
 def drop_and_rename_columns(data: dict[str : pd.DataFrame]):
@@ -114,3 +130,23 @@ def get_wo_realtime_public_reservoirs(year: int):
     )
 
     return process_data(raw_data, staids=ca_reservoir_stations)
+
+
+def process_met_data(data: dict[str : pd.DataFrame]) -> pd.DataFrame:
+    grouped_data = data["05NB016"].groupby("parameter")
+    renamed_columns = {station: group.rename(columns={"value": station, "approval": f"{station}_approval"}) for station, group in grouped_data}
+    return
+
+
+def get_wo_realtime_partner_met(year: int):
+    partner_realtime = serv.WaterOfficePartnerRealTime(username=os.getenv("WORT_USERNAME"), password=os.getenv("WORT_PASSWORD"))
+    raw_data = partner_realtime.get(
+        params={
+            "stations[]": ["05NB016", "05NCM01"],
+            "start_date": f"2023-05-01%2000:00:00",
+            "end_date": f"2023-05-05%2023:59:59",
+            "parameters[]": ["35", "1", "19", "27", "28"],
+        }
+    )
+
+    return process_met_data(raw_data)

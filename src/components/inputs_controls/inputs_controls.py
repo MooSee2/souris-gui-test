@@ -7,6 +7,7 @@ from components.inputs_controls import (
     evap_end,
     evap_start,
     wateryear,
+    credentials,
 )
 
 calculation_modal = dbc.Modal(
@@ -55,6 +56,13 @@ def aside():
     return html.Div(
         className="asideaside",
         children=[
+            html.Div(
+                className="config-card",
+                children=[
+                    html.H4("Credentials"),
+                    credentials.credentials(),
+                ],
+            ),
             html.Div(
                 className="config-card",
                 children=[

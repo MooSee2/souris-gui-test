@@ -153,21 +153,30 @@ def get_2023_met_data(n_clicks):
 @callback(
     Output("discharge-data", "data"),
     Output("reservoir-data", "data"),
+    Output("raw-discharge", "data"),
+    Output("raw-reservoir", "data"),
     # Output("apportion-button", "disabled"),
     # Output("timeseries-dropdown", "disabled"),
     Output("load-data-button", "n_clicks"),
     # Output("load-data-button", "n_clicks"),
     Input("load-data-button", "n_clicks"),
     State("apportionment-year", "value"),
+    State("username-input", "value"),
+    State("password-input", "value"),
     prevent_initial_call=True,
 )
-def download_discharge_data(n_clicks, apportionment_year: int):
+def download_discharge_reservoir_met_data(
+    n_clicks,
+    apportionment_year: int,
+    username: str,
+    password: str,
+):
     if n_clicks is None or n_clicks <= 0:
         raise PreventUpdate
 
-    discharge, reservoir = dl.get_discharge_data(apportionment_year)
+    discharge, reservoir = dl.get_data(apportionment_year, username=username, password=password)
 
-    return discharge.to_dict("records"), reservoir.to_dict("records"), 1
+    return discharge.to_dict("records"), reservoir.to_dict("records"), discharge.to_dict("records"), reservoir.to_dict("records"), 1
 
 
 # @callback(
@@ -341,6 +350,9 @@ def toggle_calculation_modal(_) -> bool:
     State("appor-end-picker", "date"),
     State("evap-start-picker", "date"),
     State("evap-end-picker", "date"),
+    State("raw-discharge", "data"),
+    State("raw-reservoir", "data"),
+    State("raw-met", "data"),
     prevent_initial_call=True,
 )
 def calculate_apportionment(
@@ -369,6 +381,9 @@ def calculate_apportionment(
     appor_end,
     evap_start,
     evap_end,
+    raw_discharge,
+    raw_reservoirs,
+    raw_met,
 ):
     """This function collects all the inputs and data for the apportionment calculation"""
     if n_clicks == 0 or n_clicks is None:
@@ -400,10 +415,13 @@ def calculate_apportionment(
         moose_mountain_minor_diversion=moose_mountain,
         # Discharge table
         discharge=discharge,
+        raw_discharge=raw_discharge,
         # Reservoir table
         reservoirs=reservoirs,
+        raw_reservoirs=raw_reservoirs,
         # Met table
         met=met,
+        raw_met=raw_met,
         #### CONFIG
         appor_year=appor_year,
         appor_start=appor_start,
