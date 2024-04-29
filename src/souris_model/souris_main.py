@@ -300,6 +300,12 @@ def main(
         roughbark_evap_precip = pd.concat([roughbark_penman_monthly_sum["penman"], precip_monthly["05NB016_precip"]], axis=1)
         handsworth_evap_precip = pd.concat([handsworth_penman_monthly_sum["penman"], precip_monthly["05NCM01_precip"]], axis=1)
 
+        raw_discharge = pd.DataFrame(model_inputs.raw_discharge)
+        raw_discharge.set_index("date", drop=True, inplace=True)
+        raw_reservoirs = pd.DataFrame(model_inputs.raw_reservoirs)
+        raw_reservoirs.set_index("date", drop=True, inplace=True)
+        raw_discharge_reservoirs = pd.concat([raw_discharge, raw_reservoirs], axis=1)
+
         # -----------------------------------------------------------------------------------------#
         #                                  Reporting                                               #
         # -----------------------------------------------------------------------------------------#
@@ -317,11 +323,10 @@ def main(
             monthly_handsworth_evap_precip=handsworth_evap_precip,
             monthly_oxbow_precip=precip_monthly[["oxbow_precip"]],
             reservoir_losses=reservoir_losses,
+            raw_discharge_reservoirs=raw_discharge_reservoirs,
         )
 
         logger.info("Apportionment complete!")
-        dt_now = dt.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-        logger.info(f"Program completed at {dt_now}")
         return report
         ############################################################################################
         #                                  End Reporting                                           #

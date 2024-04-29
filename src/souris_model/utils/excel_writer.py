@@ -49,6 +49,7 @@ def souris_excel_writer(
     dates: dates.Dates,
     boxes: bx.Boxes,
     daily_discharge: pd.DataFrame,
+    raw_discharge_reservoirs: pd.DataFrame,
     daily_reservoir: dict[str : pd.DataFrame],
     daily_roughbark: pd.DataFrame,
     daily_handsworth: pd.DataFrame,
@@ -218,6 +219,9 @@ def souris_excel_writer(
     df_writer(monthly_roughbark_evap_precip, sheet=monthly_tables_sheet, start_row=6, start_col=14)
     df_writer(monthly_handsworth_evap_precip, sheet=monthly_tables_sheet, start_row=21, start_col=14)
     df_writer(monthly_oxbow_precip, sheet=monthly_tables_sheet, start_row=35, start_col=14)
+
+    # Raw data
+    df_writer(raw_discharge_reservoirs, sheet=raw_data_sheet, start_row=1, start_col=1, index=True, header=True)
 
     # # Format date.  Tried other methods, this is the one I found to work
     # worksheet = writer.sheets[discharge_sheet_name]

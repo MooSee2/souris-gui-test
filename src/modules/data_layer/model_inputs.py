@@ -16,10 +16,13 @@ class SourisModelInputs:
     moose_mountain_minor_diversion: int
     # Discharge table
     discharge: int
+    raw_discharge: int
     # Reservoir table
     reservoirs: int
+    raw_reservoirs: int
     # Met table
     met: int
+    raw_met: int
     #### CONFIGS ####
     appor_year: int
     appor_start: int

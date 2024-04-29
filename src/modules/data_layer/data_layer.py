@@ -10,7 +10,12 @@ from src.souris_model.souris_main import main
 #     return wo_realtime_reservoirs
 
 
-def get_discharge_data(apportionment_year: int):
+def get_data(
+    apportionment_year: int,
+    username: str,
+    password: str,
+):
+    # wo_realtime_partner = wo.get_wo_realtime_partner_met(apportionment_year)
     nwis_discharge = nwis.get_nwis_data(apportionment_year)
     wo_realtime_discharge = wo.get_wo_realtime_public_discharge(apportionment_year)
     wo_realtime_reservoirs = wo.get_wo_realtime_public_reservoirs(apportionment_year)
