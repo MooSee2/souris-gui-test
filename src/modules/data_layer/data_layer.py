@@ -12,8 +12,8 @@ from souris.scripts.souris_main import main
 
 def get_discharge_data(apportionment_year: int):
     nwis_discharge = nwis.get_nwis_data(apportionment_year)
-    wo_realtime_discharge = wo.get_wo_realtime_discharge(apportionment_year)
-    wo_realtime_reservoirs = wo.get_wo_realtime_reservoirs(apportionment_year)
+    wo_realtime_discharge = wo.get_wo_realtime_public_discharge(apportionment_year)
+    wo_realtime_reservoirs = wo.get_wo_realtime_public_reservoirs(apportionment_year)
     return pd.concat([wo_realtime_discharge, nwis_discharge], axis=1), wo_realtime_reservoirs
 
 

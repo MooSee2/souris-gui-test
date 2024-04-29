@@ -32,45 +32,45 @@ def drop_and_rename_columns(data: dict[str : pd.DataFrame]):
     return {station: df.rename(columns={"value": station, "approval": f"{station}_approval"}) for station, df in drop_columns.items()}
 
 
-def calc_trapz_integration(data):
-    return {staid: trapz.daily_value_integration(dataframe, column=staid, freq="h").round(3) for staid, dataframe in data.items()}
+# def calc_trapz_integration(data):
+#     return {staid: trapz.daily_value_integration(dataframe, column=staid, freq="h").round(3) for staid, dataframe in data.items()}
 
 
-def resolve_approvals(data):
-    # mouse = {}
-    # for staid, df in data.items():
-    #     df = df.resample("D").apply(lambda x: x.mode())
-    #     mouse[staid] = df
-    # return mouse
-    return {staid: df.resample("D").apply(lambda x: x.mode())[[f"{staid}_approval"]] for staid, df in data.items()}
+# def resolve_approvals(data):
+#     # mouse = {}
+#     # for staid, df in data.items():
+#     #     df = df.resample("D").apply(lambda x: x.mode())
+#     #     mouse[staid] = df
+#     # return mouse
+#     return {staid: df.resample("D").apply(lambda x: x.mode())[[f"{staid}_approval"]] for staid, df in data.items()}
 
 
-def join_values_and_approvals(
-    values: dict,
-    approvals: dict,
-    staids: list,
-):
-    dfs = []
-    for staid in staids:
-        df = pd.concat([values[staid], approvals[staid]], axis=1)
-        mask = df[f"{staid}_approval"] == "Unknown"
-        df.loc[mask, staid] = float("NaN")
-        dfs.extend([df])
-    # return pd.concat(list(values.values()) + list(approvals.values()), axis=1)
-    return pd.concat(dfs, axis=1)
+# def join_values_and_approvals(
+#     values: dict,
+#     approvals: dict,
+#     staids: list,
+# ):
+#     dfs = []
+#     for staid in staids:
+#         df = pd.concat([values[staid], approvals[staid]], axis=1)
+#         mask = df[f"{staid}_approval"] == "Unknown"
+#         df.loc[mask, staid] = float("NaN")
+#         dfs.extend([df])
+#     # return pd.concat(list(values.values()) + list(approvals.values()), axis=1)
+#     return pd.concat(dfs, axis=1)
 
 
-# def set_dtype_float(data: dict[str, pd.DataFrame]):
-#     return {staid: df.astype(float) for staid, df in data.items()}
+# # def set_dtype_float(data: dict[str, pd.DataFrame]):
+# #     return {staid: df.astype(float) for staid, df in data.items()}
 
 
-def fill_approvals(data):
-    return_dict = {}
-    for staid, df in data.items():
-        mask = ~df[f"{staid}_approval"].isin(["Approved", "Provisional", "Final"])
-        df.loc[mask, f"{staid}_approval"] = "Unknown"
-        return_dict[staid] = df
-    return return_dict
+# def fill_approvals(data):
+#     return_dict = {}
+#     for staid, df in data.items():
+#         mask = ~df[f"{staid}_approval"].isin(["Approved", "Provisional", "Final"])
+#         df.loc[mask, f"{staid}_approval"] = "Unknown"
+#         return_dict[staid] = df
+#     return return_dict
 
 
 def process_data(data: dict[str, pd.DataFrame], staids: list) -> pd.DataFrame:
@@ -87,11 +87,8 @@ def process_data(data: dict[str, pd.DataFrame], staids: list) -> pd.DataFrame:
     return joined
 
 
-def fill_unverifieds(df: pd.DataFrame) -> pd.DataFrame: ...
-
-
-def get_wo_realtime_discharge(year: int) -> pd.DataFrame:
-    ca_discharge = serv.WaterOfficeRealTime()
+def get_wo_realtime_public_discharge(year: int) -> pd.DataFrame:
+    ca_discharge = serv.WaterOfficePublicRealTime()
 
     raw_data = ca_discharge.get(
         params={
@@ -102,11 +99,11 @@ def get_wo_realtime_discharge(year: int) -> pd.DataFrame:
         },
     )
 
-    return process_data(raw_data, staids=ca_discharge_stations)  # .fillna("-6999")
+    return process_data(raw_data, staids=ca_discharge_stations)
 
 
-def get_wo_realtime_reservoirs(year: int):
-    ca_discharge = serv.WaterOfficeRealTime()
+def get_wo_realtime_public_reservoirs(year: int):
+    ca_discharge = serv.WaterOfficePublicRealTime()
     raw_data = ca_discharge.get(
         params={
             "stations[]": ca_reservoir_stations,

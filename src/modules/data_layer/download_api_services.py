@@ -163,7 +163,7 @@ class NWISWaterData:
         return data
 
 
-class WaterOfficeRealTime:
+class WaterOfficePublicRealTime:
     """
     https://wateroffice.ec.gc.ca/services/links_e.html
     Returns instantaneous data, usually 5 minute freq.
@@ -243,7 +243,7 @@ class WaterOfficeRealTime:
         df["approval"] = df["approval"].replace(["Provisional/Provisoire"], "Provisional")
         return df
 
-    def _process_wateroffice_dataframes(self, stations: list, params: dict) -> list:
+    def _process_wateroffice_dataframes(self, data: str, params: dict) -> list:
         """Take in list of DataFrames and process them into time-series data
 
         Parameters
@@ -256,7 +256,7 @@ class WaterOfficeRealTime:
         list
             List of processed Pandas DataFrames.
         """
-        df = pd.read_csv(StringIO(stations))
+        df = pd.read_csv(StringIO(data))
         df = self._df_process_helper(df)
         dfs = dict(iter(df.groupby("staid")))
         dfs = {staid: df.set_index(pd.DatetimeIndex(df["datetime"])) for staid, df in dfs.items() if not df.empty}
@@ -333,3 +333,109 @@ class MESOnet:
         ]
         results = await asyncio.gather(*tasks)
         return self._process_gilford_dataframes(results, params)
+
+
+class WaterOfficePartnerRealTime:
+    """
+    Access the partner side of WaterOffice data
+    """
+
+    def __init__(
+        self,
+        username: str,
+        password: str,
+    ) -> None:
+        self.username = username
+        self.password = password
+        self._auth_url = "https://wateroffice.ec.gc.ca/services/auth"
+        self._query_url = "https://wateroffice.ec.gc.ca/services/real_time_data/csv/inline"
+        self._token = self._get_token()
+
+    def _get_token(self):
+        response = requests.post(
+            url=self._auth_url,
+            params={
+                "username": self.username,
+                "password": self.password,
+            },
+        )
+        return response.text
+
+    def _get(self, params: dict) -> str:
+        """Download station time-series data from WaterOffice API.
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+
+        Notes
+        -----
+        Dates sent to the WaterOffice API are assumed to be UTC+00:00
+        """
+        params["token"] = self._token
+        response = requests.get(
+            url=self._query_url,
+            params=params,
+            headers={"user-agent": "python"},
+        )
+        return response.text
+
+    def _df_process_helper(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Helper function for processing dataframes from WaterOffice
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            pandas DataFrame of time-series data
+
+        Returns
+        -------
+        pd.DataFrame
+            Processed DataFrame.
+
+        Notes
+        -----
+        The timestamp data comes with a UTC offset of 0 and is represented by a "Z"
+        This is accounted for by tz_convert(None) and subtracting 6 hours to get to MST.
+        """
+        #  No mistake, the ID column has a leading space.
+        col_names = {
+            " ID": "staid",
+            "Date": "datetime",
+            "Parameter/Paramètre": "parameter",
+            "Value/Valeur": "value",
+            "Qualifier/Qualificatif": "qualifiers",
+            "Symbol/Symbole": "symbol",
+            "Approval/Approbation": "approval",
+        }
+        df = df.rename(columns=col_names)
+        df["datetime"] = pd.to_datetime(df["datetime"])
+        df["approval"] = df["approval"].replace(["Final/Finales"], "Final")
+        df["approval"] = df["approval"].replace(["Provisional/Provisoire"], "Provisional")
+        return df
+
+    def _process_wateroffice_dataframes(self, data: str) -> dict:
+        """Take in list of DataFrames and process them into time-series data
+
+        Parameters
+        ----------
+        data : str
+            response.text string.
+
+        Returns
+        -------
+        dict
+            dict of processed Pandas DataFrames.
+        """
+        df = pd.read_csv(StringIO(data))
+        df = self._df_process_helper(df)
+        dfs = dict(iter(df.groupby("staid")))
+        dfs = {staid: df.set_index(pd.DatetimeIndex(df["datetime"])) for staid, df in dfs.items() if not df.empty}
+        dfs = {staid: df.drop("datetime", axis=1) for staid, df in dfs.items() if not df.empty}
+        return dfs
+
+    def get(self, params: dict) -> dict[str, pd.DataFrame]:
+        data = self._get(params=params)
+        return self._process_wateroffice_dataframes(data)
