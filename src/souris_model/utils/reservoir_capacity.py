@@ -7,11 +7,11 @@ import souris_model.utils.services as serv
 
 def assign_res_sac(staid: str, dataframe: pd.DataFrame) -> pd.DataFrame:
     SAC_TABLES = {
-        "05ND012": "souris/data/stage_area_capacity_tables/grant_devine_sac.csv",
-        "05NA006": "souris/data/stage_area_capacity_tables/larsen_sac.csv",
-        "05NC002": "souris/data/stage_area_capacity_tables/moose_mountain_sac.csv",
-        "05NB020": "souris/data/stage_area_capacity_tables/nickle_sac.csv",
-        "05NB016": "souris/data/stage_area_capacity_tables/roughbark_sac.csv",
+        "05ND012": "souris_model/data/stage_area_capacity_tables/grant_devine_sac.csv",
+        "05NA006": "souris_model/data/stage_area_capacity_tables/larsen_sac.csv",
+        "05NC002": "souris_model/data/stage_area_capacity_tables/moose_mountain_sac.csv",
+        "05NB020": "souris_model/data/stage_area_capacity_tables/nickle_sac.csv",
+        "05NB016": "souris_model/data/stage_area_capacity_tables/roughbark_sac.csv",
     }
     sac_table = pd.read_csv(SAC_TABLES[staid])
     data = dataframe.dropna().round(decimals=3).sort_values(by=[staid])

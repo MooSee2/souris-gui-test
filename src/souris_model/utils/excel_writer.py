@@ -58,7 +58,7 @@ def souris_excel_writer(
     monthly_handsworth_evap_precip: pd.DataFrame,
     monthly_oxbow_precip: pd.DataFrame,
     reservoir_losses: dict[str : pd.DataFrame],
-    report_template=Path("souris/data/xlsx_template/BLANK_souris_natural_flow_apportionment_report.xlsx"),
+    report_template=Path("souris_model/data/xlsx_template/BLANK_souris_natural_flow_apportionment_report.xlsx"),
 ):
 
     # debug_excel = os.getenv("DEBUG_EXCEL", False).lower() in ("true", "1", "t")
