@@ -1,8 +1,7 @@
-import dash_bootstrap_components as dbc
 from dash import html
 
 
-def make_long_creek_panel():
+def make_long_creek_basin_panel():
     return html.Div(
         className="report-panel",
         id="long-creek-basin-panel",
