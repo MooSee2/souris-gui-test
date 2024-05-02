@@ -1,0 +1,46 @@
+#report-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.report-panel {
+    width: 100%;
+    flex-basis: 16vh;
+    background-color: beige;
+    border: 2px solid black;
+}
+
+.report-table-header {
+    width: 100%;
+    height: 3vh;
+    text-align: center;
+    background-color: darkgray;
+    border-bottom: 1px solid black;
+}
+
+.report-table-body-long {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    grid-template-rows: 1fr 1.2rem 1fr 1fr;
+    height: calc(100% - 3vh);
+}
+
+.box-header {
+    background-color: rgb(214, 214, 214);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.box-container {
+    text-align: center;
+    vertical-align: middle;
+    background-color: antiquewhite;
+}
+
+.box-number {
+    text-align: center;
+    vertical-align: middle;
+    background-color: azure;
+}
