@@ -1,5 +1,4 @@
 import dash_bootstrap_components as dbc
-from dash import html
 from components.tabs.report.long_creek_basin import make_long_creek_basin_panel
 from components.tabs.report.upper_souris_basin import make_upper_souris_basin_panel
 from components.tabs.report.lower_souris_moose import make_lower_souris_moose_panel

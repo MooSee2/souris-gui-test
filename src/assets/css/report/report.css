@@ -8,7 +8,7 @@
 .report-panel {
     width: 100%;
     flex-basis: 16vh;
-    background-color: beige;
+    background-color:rgb(240, 240, 240);
     border: 2px solid black;
 }
 
@@ -16,7 +16,7 @@
     width: 100%;
     height: 3vh;
     text-align: center;
-    background-color: darkgray;
+    background-color:rgb(240, 240, 240);
     border-bottom: 1px solid black;
 }
 

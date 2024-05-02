@@ -87,7 +87,7 @@ def make_upper_souris_basin_panel():
                         className="box-content",
                         id="box-18-container",
                         children=[
-                            html.Div(className="box-content-title", children=["Storage Change"]),
+                            html.Div(className="box-content-title", children=["City of Weyburn Return Flow"]),
                             html.Div(className="box-content-value", id="box-18-value", children=["-"]),
                             html.Div(className="box-content-subscript", children=[" "]),
                         ],
@@ -165,7 +165,7 @@ def make_upper_souris_basin_panel():
                         className="box-content",
                         id="box-22-container",
                         children=[
-                            html.Div(className="box-content-title", children=["Storage Change"]),
+                            html.Div(className="box-content-title", children=["Inflow"]),
                             html.Div(className="box-content-value", id="box-22-value", children=["-"]),
                             html.Div(className="box-content-subscript", children=[" "]),
                         ],
@@ -174,7 +174,7 @@ def make_upper_souris_basin_panel():
                         className="box-content",
                         id="box-23-container",
                         children=[
-                            html.Div(className="box-content-title", children=["Net Evaporation and Seepage"]),
+                            html.Div(className="box-content-title", children=["Outflow"]),
                             html.Div(className="box-content-value", id="box-23-value", children=["-"]),
                             html.Div(className="box-content-subscript", children=[" "]),
                         ],
@@ -203,7 +203,7 @@ def make_upper_souris_basin_panel():
                         className="box-content",
                         id="box-25-container",
                         children=[
-                            html.Div(className="box-content-title", children=["Storage Change"]),
+                            html.Div(className="box-content-title", children=["Minor Project Diversions"]),
                             html.Div(className="box-content-value", id="box-25-value", children=["-"]),
                             html.Div(className="box-content-subscript", children=[" "]),
                         ],
@@ -212,7 +212,7 @@ def make_upper_souris_basin_panel():
                         className="box-content",
                         id="box-26-container",
                         children=[
-                            html.Div(className="box-content-title", children=["Storage Change"]),
+                            html.Div(className="box-content-title", children=["Total Diversion Upper Souris River"]),
                             html.Div(className="box-content-value", id="box-26-value", children=["-"]),
                             html.Div(className="box-content-subscript", children=["17-18+21+24+25"]),
                         ],

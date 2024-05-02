@@ -201,7 +201,7 @@ def make_long_creek_basin_panel():
                         className="box-content",
                         id="box-11-container",
                         children=[
-                            html.Div(className="box-content-title", children=["Minor project diversions"]),
+                            html.Div(className="box-content-title", children=["Minor Project Diversions"]),
                             html.Div(className="box-content-value", id="box-11-value", children=["-"]),
                             html.Div(className="box-content-subscript", children=[""]),
                         ],
@@ -210,7 +210,7 @@ def make_long_creek_basin_panel():
                         className="box-content",
                         id="box-12-container",
                         children=[
-                            html.Div(className="box-content-title", children=["USA diversion between Western and Eastern Crossing"]),
+                            html.Div(className="box-content-title", children=["USA Diversion Between Western and Eastern Crossing"]),
                             html.Div(className="box-content-value", id="box-12-value", children=["-"]),
                             html.Div(className="box-content-subscript", children=[""]),
                         ],
