@@ -2,6 +2,8 @@ import dash_bootstrap_components as dbc
 from dash import html
 from components.tabs.report.long_creek_basin import make_long_creek_panel
 from components.tabs.report.upper_souris_basin import make_upper_souris_basin_panel
+from components.tabs.report.lower_souris_moose import make_lower_souris_moose_panel
+from components.tabs.report.summary_panel import make_summary_panel
 
 
 def make_report_panels():
@@ -15,22 +17,8 @@ def make_report_panels():
                 children=[
                     make_long_creek_panel(),
                     make_upper_souris_basin_panel(),
-                    html.Div(
-                        className="report-panel",
-                        id="lower-souris-moose-basin",
-                        children=[
-                            html.Div(className="report-table-header"),
-                            html.Div(className="report-table-body"),
-                        ],
-                    ),
-                    html.Div(
-                        className="report-panel",
-                        id="summary",
-                        children=[
-                            html.Div(className="report-table-header"),
-                            html.Div(className="report-table-body"),
-                        ],
-                    ),
+                    make_lower_souris_moose_panel(),
+                    make_summary_panel(),
                 ],
             ),
         ),
