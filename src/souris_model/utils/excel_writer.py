@@ -215,6 +215,13 @@ def souris_excel_writer(
     df_writer(monthly_reservoir_SAC["05NC002"], sheet=monthly_tables_sheet, start_row=51, start_col=3)
     df_writer(monthly_reservoir_SAC["05ND012"], sheet=monthly_tables_sheet, start_row=66, start_col=3)
 
+    # Monthly reservoir loss
+    df_writer(reservoir_losses["05NA006"], sheet=monthly_tables_sheet, start_row=6, start_col=9)
+    df_writer(reservoir_losses["05NB020"], sheet=monthly_tables_sheet, start_row=21, start_col=9)
+    df_writer(reservoir_losses["05NB016"], sheet=monthly_tables_sheet, start_row=36, start_col=9)
+    df_writer(reservoir_losses["05NC002"], sheet=monthly_tables_sheet, start_row=51, start_col=9)
+    df_writer(reservoir_losses["05ND012"], sheet=monthly_tables_sheet, start_row=66, start_col=9)
+
     # Roughbark, Handsworth precip/evap and oxbow precip
     df_writer(monthly_roughbark_evap_precip, sheet=monthly_tables_sheet, start_row=6, start_col=14)
     df_writer(monthly_handsworth_evap_precip, sheet=monthly_tables_sheet, start_row=21, start_col=14)
