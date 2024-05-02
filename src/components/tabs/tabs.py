@@ -11,7 +11,9 @@ from components.tabs import (
 
 def tabs():
     return dbc.Tabs(
-        [
+        # TODO remove active_tab for production.  Only used for quick testing of tabs.
+        active_tab="report-tab",
+        children=[
             reported_flows(),
             discharge(),
             reservoirs(),
