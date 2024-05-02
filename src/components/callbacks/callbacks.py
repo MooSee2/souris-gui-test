@@ -290,7 +290,7 @@ def toggle_calculation_modal(_) -> bool:
 
 
 @callback(
-    Output("report-container", "children", allow_duplicate=True),
+    # Output("report-container", "children", allow_duplicate=True),
     Output("calculation-modal", "is_open", allow_duplicate=True),
     Input("calc-continue-button", "n_clicks"),
     prevent_initial_call=True,
@@ -312,14 +312,14 @@ def toggle_calculation_modal(_) -> bool:
     Bool
         What state to set the modal display.
     """
-    return html.P("Blank Report goes here from modal continue button", className="card-text"), False
+    return False
 
 
 # def detect_missing_reported_flows(reported_flows: tuple) -> dict:
 
 
 @callback(
-    Output("report-container", "children"),
+    # Output("report-container", "children"),
     Output("calculation-modal", "is_open"),
     Output("report-download", "data"),
     Output("apportion-button", "n_clicks"),
@@ -436,7 +436,7 @@ def calculate_apportionment(
     dt_now = dt.now().strftime("%Y-%m-%d %H.%M.%S.%f")
     filename = f"Souris Natural Flow Report {appor_start}__{appor_end} on {dt_now}.xlsx"
 
-    return html.Div(children="Under Construction", className="tab2-thing"), False, dcc.send_bytes(report_stream.getvalue(), filename), 1
+    return False, dcc.send_bytes(report_stream.getvalue(), filename), 1
 
 
 # @callback(
