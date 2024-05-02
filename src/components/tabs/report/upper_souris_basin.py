@@ -1,4 +1,3 @@
-import dash_bootstrap_components as dbc
 from dash import html
 
 
@@ -215,7 +214,7 @@ def make_upper_souris_basin_panel():
                         children=[
                             html.Div(className="box-content-title", children=["Storage Change"]),
                             html.Div(className="box-content-value", id="box-26-value", children=["-"]),
-                            html.Div(className="box-content-subscript", children=[" "]),
+                            html.Div(className="box-content-subscript", children=["17-18+21+24+25"]),
                         ],
                     ),
                 ],
