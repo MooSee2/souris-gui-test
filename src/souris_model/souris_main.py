@@ -82,13 +82,16 @@ def main(
         )
 
         # Met data
+        # Data outside of evap should be 0
+        met_data[(met_data.index < souris_dates.evap_start_date) | (met_data.index > souris_dates.evap_end_date)] = 0
+
         roughbark_meteo_daily = met_data[[col for col in met_data.columns if "05NB016" in col]]
         handsworth_meteo_daily = met_data[[col for col in met_data.columns if "05NCM01" in col]]
         oxbow_precip_daily = met_data[[col for col in met_data.columns if "oxbow" in col]]
 
         # Precip data
         precip_daily = pd.concat([roughbark_meteo_daily["05NB016_precip"], handsworth_meteo_daily["05NCM01_precip"], oxbow_precip_daily["oxbow_precip"]], axis=1)
-        precip_daily.loc[precip_daily.index.month.isin([1, 2, 3, 4, 11, 12])] = 0
+        # precip_daily.loc[precip_daily.index.month.isin([1, 2, 3, 4, 11, 12])] = 0
 
         precip_monthly = util.rename_monthly_index(precip_daily.resample("ME").sum()) * MM_TO_METERS
 
@@ -132,15 +135,15 @@ def main(
         # -----------------------------------------------------------------------------------------#
         reservoir_losses = {
             # Larsen
-            "05NA006": reservoir_sacs_monthly["05NA006"]["area_dam2"] * roughbark_loss,
+            "05NA006": reservoir_sacs_monthly["05NA006"][["area_dam2"]] * roughbark_loss,
             # Nickle
-            "05NB020": reservoir_sacs_monthly["05NB020"]["area_dam2"] * roughbark_loss,
+            "05NB020": reservoir_sacs_monthly["05NB020"][["area_dam2"]] * roughbark_loss,
             # Roughbark
-            "05NB016": reservoir_sacs_monthly["05NB016"]["area_dam2"] * roughbark_loss,
+            "05NB016": reservoir_sacs_monthly["05NB016"][["area_dam2"]] * roughbark_loss,
             # Moose
-            "05NC002": reservoir_sacs_monthly["05NC002"]["area_dam2"] * handsworth_loss,
+            "05NC002": reservoir_sacs_monthly["05NC002"][["area_dam2"]] * handsworth_loss,
             # Grant Devine
-            "05ND012": reservoir_sacs_monthly["05ND012"]["area_dam2"] * oxbow_loss,
+            "05ND012": reservoir_sacs_monthly["05ND012"][["area_dam2"]] * oxbow_loss,
         }
 
         # -----------------------------------------------------------------------------------------#
