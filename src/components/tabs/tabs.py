@@ -18,7 +18,7 @@ def tabs():
             discharge(),
             reservoirs(),
             met_data(),
-            report(),
+            report.make_report_panels(),
             graphs(),
         ],
     )
