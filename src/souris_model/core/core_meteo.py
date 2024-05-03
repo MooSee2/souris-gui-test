@@ -82,7 +82,7 @@ def process_penman(
     # Perform the penman calculation for both the Roughbark and Handsworth stations
     # Monthly evaporation is determined by summing the daily averages for the associated month
     roughbark_penman_daily = util.penman(
-        dataframe=roughbark_meteo_daily,
+        df=roughbark_meteo_daily,
         wind="05NB016_wind_speed",
         temp="05NB016_air_temp",
         rel_hum="05NB016_rel_humidity",
@@ -90,33 +90,36 @@ def process_penman(
         ELEV=567,
     )
     handsworth_penman_daily = util.penman(
-        dataframe=handsworth_meteo_daily,
+        df=handsworth_meteo_daily,
         wind="05NCM01_wind_speed",
         temp="05NCM01_air_temp",
         rel_hum="05NCM01_rel_humidity",
         rad="05NCM01_sol_rad",
         ELEV=682,
     )
+
     roughbark_meteo_daily = roughbark_meteo_daily.join(roughbark_penman_daily)
     handsworth_meteo_daily = handsworth_meteo_daily.join(handsworth_penman_daily)
 
-    # For January, February, March, November, and December:
-    # evaporation is considered negligible due to cold weather and general ice cover
+    # Evap outside of start and end dates is considered negligable due to cold weather and ice cover.
+    roughbark_meteo_daily.loc[(roughbark_meteo_daily.index < dates.evap_start_date) | (roughbark_meteo_daily.index > dates.evap_end_date), "penman"] = 0
+    handsworth_meteo_daily.loc[(handsworth_meteo_daily.index < dates.evap_start_date) | (handsworth_meteo_daily.index > dates.evap_end_date), "penman"] = 0
 
-    handsworth_meteo_daily.loc[handsworth_meteo_daily.index.month.isin([11, 12]), "penman"] = 0
-    roughbark_meteo_daily.loc[roughbark_meteo_daily.index.month.isin([11, 12]), "penman"] = 0
+    # handsworth_meteo_daily.loc[handsworth_meteo_daily.index.month.isin([11, 12]), "penman"] = 0
+    # roughbark_meteo_daily.loc[roughbark_meteo_daily.index.month.isin([11, 12]), "penman"] = 0
 
-    roughbark_meteo_daily.loc[f"{dates.wateryear}-01-01" : dates.evap_start_date, "penman"] = 0
-    handsworth_meteo_daily.loc[f"{dates.wateryear}-01-01" : dates.evap_start_date, "penman"] = 0
+    # roughbark_meteo_daily.loc[dates.evap_start_date : dates.evap_start_date, "penman"] = 0
+    # handsworth_meteo_daily.loc[f"{dates.wateryear}-01-01" : dates.evap_start_date, "penman"] = 0
 
     # Calculate monthy sums and convert summation to meters of evaporation
     roughbark_penman_monthly_sum = util.rename_monthly_index(roughbark_meteo_daily[["penman"]].resample("ME").sum())
     handsworth_penman_monthly_sum = util.rename_monthly_index(handsworth_meteo_daily[["penman"]].resample("ME").sum())
 
-    roughbark_meteo_daily = roughbark_meteo_daily * MM_TO_METERS
-    handsworth_meteo_daily = handsworth_meteo_daily * MM_TO_METERS
-    roughbark_penman_monthly_sum = roughbark_penman_monthly_sum * MM_TO_METERS
-    handsworth_penman_monthly_sum = handsworth_penman_monthly_sum * MM_TO_METERS
+    # roughbark_meteo_daily["penman"] = roughbark_meteo_daily["penman"] * MM_TO_METERS
+    # handsworth_meteo_daily["penman"] = handsworth_meteo_daily["penman"] * MM_TO_METERS
+    # # handsworth_meteo_daily = handsworth_meteo_daily * MM_TO_METERS
+    # roughbark_penman_monthly_sum = roughbark_penman_monthly_sum * MM_TO_METERS
+    # handsworth_penman_monthly_sum = handsworth_penman_monthly_sum * MM_TO_METERS
     return (
         roughbark_penman_monthly_sum,
         handsworth_penman_monthly_sum,

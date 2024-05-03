@@ -84,7 +84,7 @@ def main(
 
         # Met data
         # Data outside of evap should be 0
-        met_data[(met_data.index < souris_dates.evap_start_date) | (met_data.index > souris_dates.evap_end_date)] = 0
+        # met_data[(met_data.index < souris_dates.evap_start_date) | (met_data.index > souris_dates.evap_end_date)] = 0
 
         roughbark_meteo_daily = met_data[[col for col in met_data.columns if "05NB016" in col]]
         handsworth_meteo_daily = met_data[[col for col in met_data.columns if "05NCM01" in col]]
@@ -94,7 +94,7 @@ def main(
         precip_daily = pd.concat([roughbark_meteo_daily["05NB016_precip"], handsworth_meteo_daily["05NCM01_precip"], oxbow_precip_daily["oxbow_precip"]], axis=1)
         # precip_daily.loc[precip_daily.index.month.isin([1, 2, 3, 4, 11, 12])] = 0
 
-        precip_monthly = util.rename_monthly_index(precip_daily.resample("ME").sum()) * MM_TO_METERS
+        precip_monthly = util.rename_monthly_index(precip_daily.resample("ME").sum())
 
         # -----------------------------------------------------------------------------------------#
         #                                    Penman Calculations                                   #
@@ -119,9 +119,9 @@ def main(
         """A constant monthly seepage value (RESERVOIR_SEEPAGE) of 0.015 m is assumed year-round
         Calculate the net evaporation:
         evap (m) - precip (m) and add seepage (m) then convert m to dam"""
-        roughbark_loss = (roughbark_penman_monthly_sum["penman"] - precip_monthly["05NB016_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
-        handsworth_loss = (handsworth_penman_monthly_sum["penman"] - precip_monthly["05NCM01_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
-        oxbow_loss = (handsworth_penman_monthly_sum["penman"] - precip_monthly["oxbow_precip"] + RESERVOIR_SEEPAGE) * M_TO_DAM
+        roughbark_loss = (roughbark_penman_monthly_sum["penman"] * MM_TO_METERS - precip_monthly["05NB016_precip"] * MM_TO_METERS + RESERVOIR_SEEPAGE) * M_TO_DAM
+        handsworth_loss = (handsworth_penman_monthly_sum["penman"] * MM_TO_METERS - precip_monthly["05NCM01_precip"] * MM_TO_METERS + RESERVOIR_SEEPAGE) * M_TO_DAM
+        oxbow_loss = (handsworth_penman_monthly_sum["penman"] * MM_TO_METERS - precip_monthly["oxbow_precip"] * MM_TO_METERS + RESERVOIR_SEEPAGE) * M_TO_DAM
 
         # -----------------------------------------------------------------------------------------#
         #                              Assign reservoir Stage-Area-Capacities                     #

@@ -93,7 +93,7 @@ def join_data(data: dict) -> pd.DataFrame:
 
 
 def penman(
-    dataframe: pd.DataFrame,
+    df: pd.DataFrame,
     wind: str,
     temp: str,
     rel_hum: str,
@@ -123,52 +123,52 @@ def penman(
     -----
 
     """
-    ANNEMOMETER_HEIGHT = 3
-    dataframe = dataframe.copy()
+    # ANNEMOMETER_HEIGHT = 3
+    df = df.copy()
 
     # wind speed [km/h] from wind speed [m/s]
-    dataframe["daily_wind"] = dataframe[wind] * 3.6
+    # df["daily_wind"] = df[wind].mul(4.544759748970231)
 
     # latent heat of vaporization of water [cal/g] from temperature [C]
-    dataframe["latent_heat"] = 597.3 - 0.566 * dataframe[temp]
+    df["latent_heat"] = df[temp].mul(0.556).rsub(597.3)
 
     # saturated vapor pressure [mb] from temperature [C]
-    dataframe["sat_vapor"] = 6.11 * np.exp((17.26 * dataframe[temp]) / (dataframe[temp] + 237.3))
+    df["sat_vapor"] = np.exp((df[temp].mul(17.26)).div((df[temp].add(237.3)))).rmul(6.11)
 
     # radiation [MJ/m2] from radiation [W/m2]
-    dataframe["daily_rad"] = dataframe[rad] * 0.0864
+    df["daily_rad"] = df[rad].mul(0.0864)
 
     # pressure [mb] from elevation [m]
-    dataframe["atm_pressure"] = 1013.25 * (1 - 0.0000225577 * ELEV) ** 5.25588
+    df["atm_pressure"] = 1013.25 * (1 - 0.0000225577 * ELEV) ** 5.25588
 
     # dewpoint temperautre [C] from relative humidity and temperature [C]
-    dataframe["daily_dew"] = 237.3 / (17.27 / (np.log(dataframe[rel_hum] / 100) + 17.27 * dataframe[temp] / (237.3 + dataframe[temp])) - 1)
+    df["daily_dew"] = ((np.log(df[rel_hum].div(100)).add(df[temp].mul(17.27).div(df[temp].add(237.3)))).rdiv(17.27).sub(1)).rdiv(237.3)
 
     # dewpoint vapor pressure [mb] from temperature [C]
-    dataframe["vap_pressure"] = 6.11 * (np.exp((17.26 * dataframe["daily_dew"]) / (dataframe["daily_dew"] + 237.3)))
+    df["vap_pressure"] = np.exp((df["daily_dew"].mul(17.26)).div(df["daily_dew"].add(237.3))).mul(6.11)
 
     # wind corrected to a height of 7.6 m above the ground [km/h] from wind [km/h] and
     # annemometer height [m] (set to 3 m as that's ECCC and USGS standard)
-    dataframe["adj_wind"] = dataframe["daily_wind"] * (7.62 / ANNEMOMETER_HEIGHT) ** 0.25
+    df["adj_wind"] = df[wind].mul(4.544759748970231)
 
-    # rate of change of vapor pressure at temp [mb/C] from latent hear of vaporization [cal/g],
+    # rate of change of vapor pressure at temp [mb/C] from latent heat of vaporization [cal/g],
     # saturated vapor pressure [mb], and temp [C]
-    dataframe["vapor_change"] = 18.02 * dataframe["latent_heat"] * dataframe["sat_vapor"] / 1.9872 / (273.16 + dataframe[temp]) ** 2
+    df["vapor_change"] = df["latent_heat"].mul(18.02).mul(df["sat_vapor"]).div(1.9872).div(df[temp].add(273.16).pow(2))
 
     # net radiation in units of evap [mm] from radiation [MJ/m2] and latent heat of vaporization of water [cal/g]
-    dataframe["net_rad"] = 238.95 * dataframe["daily_rad"] / dataframe["latent_heat"]
+    df["net_rad"] = df["daily_rad"].mul(238.95).div(df["latent_heat"])
 
     # psychrometric constant [mb/C] from pressure [mb] and latent heat of vaporization of water [cal/g]
-    dataframe["gamma"] = 0.24 * dataframe["atm_pressure"] / 0.622 / dataframe["latent_heat"]
+    df["gamma"] = df["atm_pressure"].mul(0.24).div(0.622).div(df["latent_heat"])
 
     # aerodynamic estimate of evaporation [mm] from saturated vapor pressure [mb], dewpoint vapor pressure [mb],
     # corrected wind [km/h], and elevation [m]
-    dataframe["Ea"] = 10.1 / 30.4 * (dataframe["sat_vapor"] - dataframe["vap_pressure"]) * (1 + 0.062139 * dataframe["adj_wind"]) * (1 + 0.0000328084 * ELEV)
+    df["Ea"] = (df["sat_vapor"].sub(df["vap_pressure"])).mul(10.1 / 30.4).mul(df["adj_wind"].mul(0.062139).add(1)).mul(1 + 0.0000328084 * ELEV)
 
     # Penman evaporation [mm] from vapor pressure change at temp [mb/C], net radiation in evap [mm], psychrometric
     # constant [mb/C], and aerodynamic evaporation [mm]
-    dataframe["penman"] = (dataframe["vapor_change"] * dataframe["net_rad"] + dataframe["gamma"] * dataframe["Ea"]) / (dataframe["vapor_change"] + dataframe["gamma"])
-    return dataframe[["penman"]]
+    df["penman"] = (df["vapor_change"].mul(df["net_rad"]).add(df["gamma"].mul(df["Ea"]))).div(df["vapor_change"].add(df["gamma"]))
+    return df[["penman"]]
 
 
 def debug_boxes_df(data: dict) -> pd.DataFrame:
