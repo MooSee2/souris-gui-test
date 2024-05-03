@@ -1,9 +1,11 @@
+from io import BytesIO
+
 import pandas as pd
 
 from modules.data_layer import nwis
 from modules.data_layer import wo_realtime as wo
+from src.souris_model.core.boxes import Boxes
 from src.souris_model.souris_main import main
-
 
 # def get_reservoir_data(apportionment_year: int):
 #     wo_realtime_reservoirs = wo.get_wo_realtime_reservoirs(apportionment_year)
@@ -22,6 +24,6 @@ def get_data(
     return pd.concat([wo_realtime_discharge, nwis_discharge], axis=1), wo_realtime_reservoirs
 
 
-def run_main(model_inputs):
+def run_main(model_inputs) -> tuple[BytesIO, Boxes]:
     # Wrapper function for main app
     return main(model_inputs)

@@ -1,65 +1,65 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 
 @dataclass
 class Boxes:
     """This class houses the reported flows as boxes for calculations."""
 
-    box_1: Optional[int] = None
-    box_2: Optional[int] = None
-    box_3: Optional[int] = None
-    box_4: Optional[int] = None
-    box_5a: Optional[int] = None
-    box_5b: Optional[int] = None
-    box_6: Optional[int] = None
-    box_7: Optional[int] = None
-    box_8: Optional[int] = None
-    box_9: Optional[int] = None
-    box_10: Optional[int] = None
-    box_11: Optional[int] = None
-    box_12: Optional[int] = None
-    box_13: Optional[int] = None
-    box_14: Optional[int] = None
-    box_15: Optional[int] = None
-    box_16: Optional[int] = None
-    box_17: Optional[int] = None
-    box_18: Optional[int] = None
-    box_19: Optional[int] = None
-    box_20: Optional[int] = None
-    box_21: Optional[int] = None
-    box_22: Optional[int] = None
-    box_23a: Optional[int] = None
-    box_23b: Optional[int] = None
-    box_24: Optional[int] = None
-    box_25: Optional[int] = None
-    box_26: Optional[int] = None
-    box_27: Optional[int] = None
-    box_28: Optional[int] = None
-    box_29: Optional[int] = None
-    box_30: Optional[int] = None
-    box_31: Optional[int] = None
-    box_32: Optional[int] = None
-    box_33: Optional[int] = None
-    box_34: Optional[int] = None
-    box_35: Optional[int] = None
-    box_36: Optional[int] = None
-    box_37: Optional[int] = None
-    box_38: Optional[int] = None
-    box_39: Optional[int] = None
-    box_40: Optional[int] = None
-    box_41: Optional[int] = None
-    box_42: Optional[int] = None
-    box_43: Optional[int] = None
-    box_44: Optional[int] = None
-    box_45a: Optional[int] = None
-    box_45b: Optional[int] = None
-    box_46: Optional[int] = None
-    box_47a: Optional[int] = None
-    box_47b: Optional[int] = None
-    box_48: Optional[int] = None
-    box_49: Optional[int] = None
-    box_50: Optional[int] = None
+    box_1: Union[int, str] = "-"
+    box_2: Union[int, str] = "-"
+    box_3: Union[int, str] = "-"
+    box_4: Union[int, str] = "-"
+    box_5a: Union[int, str] = "-"
+    box_5b: Union[int, str] = "-"
+    box_6: Union[int, str] = "-"
+    box_7: Union[int, str] = "-"
+    box_8: Union[int, str] = "-"
+    box_9: Union[int, str] = "-"
+    box_10: Union[int, str] = "-"
+    box_11: Union[int, str] = "-"
+    box_12: Union[int, str] = "-"
+    box_13: Union[int, str] = "-"
+    box_14: Union[int, str] = "-"
+    box_15: Union[int, str] = "-"
+    box_16: Union[int, str] = "-"
+    box_17: Union[int, str] = "-"
+    box_18: Union[int, str] = "-"
+    box_19: Union[int, str] = "-"
+    box_20: Union[int, str] = "-"
+    box_21: Union[int, str] = "-"
+    box_22: Union[int, str] = "-"
+    box_23a: Union[int, str] = "-"
+    box_23b: Union[int, str] = "-"
+    box_24: Union[int, str] = "-"
+    box_25: Union[int, str] = "-"
+    box_26: Union[int, str] = "-"
+    box_27: Union[int, str] = "-"
+    box_28: Union[int, str] = "-"
+    box_29: Union[int, str] = "-"
+    box_30: Union[int, str] = "-"
+    box_31: Union[int, str] = "-"
+    box_32: Union[int, str] = "-"
+    box_33: Union[int, str] = "-"
+    box_34: Union[int, str] = "-"
+    box_35: Union[int, str] = "-"
+    box_36: Union[int, str] = "-"
+    box_37: Union[int, str] = "-"
+    box_38: Union[int, str] = "-"
+    box_39: Union[int, str] = "-"
+    box_40: Union[int, str] = "-"
+    box_41: Union[int, str] = "-"
+    box_42: Union[int, str] = "-"
+    box_43: Union[int, str] = "-"
+    box_44: Union[int, str] = "-"
+    box_45a: Union[int, str] = "-"
+    box_45b: Union[int, str] = "-"
+    box_46: Union[int, str] = "-"
+    box_47a: Union[int, str] = "-"
+    box_47b: Union[int, str] = "-"
+    box_48: Union[int, str] = "-"
+    box_49: Union[int, str] = "-"
+    box_50: Union[int, str] = "-"
 
     def round_boxes(self, decimal: Optional[int] = None):
         for attr, value in vars(self).items():

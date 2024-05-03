@@ -175,7 +175,7 @@ def make_upper_souris_basin_panel():
                         id="box-23-container",
                         children=[
                             html.Div(className="box-content-title", children=["Outflow"]),
-                            html.Div(className="box-content-value", id="box-23-value", children=["-"]),
+                            html.Div(className="box-content-value", id="box-23a-value", children=["-"]),
                             html.Div(className="box-content-subscript", children=[" "]),
                         ],
                     ),

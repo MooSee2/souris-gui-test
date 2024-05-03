@@ -19,24 +19,25 @@ Version 2.0- Jonathan O'Connell, joconnell@usgs.gov (November 2023)
 
 import os
 from datetime import datetime as dt
+from io import BytesIO
 
 import pandas as pd
 from loguru import logger
 
-import src.souris_model.core.dates as dates
-import src.souris_model.core.boxes as bx
 import souris_model.core.core_meteo as met
 import souris_model.core.core_reservoirs as res
+import souris_model.utils.excel_writer as excel
 import souris_model.utils.reservoir_capacity as rcap
 import souris_model.utils.utilities as util
-import souris_model.utils.excel_writer as excel
+import src.souris_model.core.boxes as bx
+import src.souris_model.core.dates as dates
 from modules.data_layer.model_inputs import SourisModelInputs
 
 
 # TODO send script version num to excel
 def main(
     model_inputs: SourisModelInputs,
-) -> int:
+) -> tuple[BytesIO, bx.Boxes]:
     CMS_TO_DAM3days = 86.4  # 0.001 * 86400
     MM_TO_METERS = 0.001
     M_TO_DAM = 0.1
@@ -135,15 +136,15 @@ def main(
         # -----------------------------------------------------------------------------------------#
         reservoir_losses = {
             # Larsen
-            "05NA006": reservoir_sacs_monthly["05NA006"][["area_dam2"]] * roughbark_loss,
+            "05NA006": reservoir_sacs_monthly["05NA006"]["area_dam2"].mul(roughbark_loss),
             # Nickle
-            "05NB020": reservoir_sacs_monthly["05NB020"][["area_dam2"]] * roughbark_loss,
+            "05NB020": reservoir_sacs_monthly["05NB020"]["area_dam2"].mul(roughbark_loss),
             # Roughbark
-            "05NB016": reservoir_sacs_monthly["05NB016"][["area_dam2"]] * roughbark_loss,
+            "05NB016": reservoir_sacs_monthly["05NB016"]["area_dam2"].mul(roughbark_loss),
             # Moose
-            "05NC002": reservoir_sacs_monthly["05NC002"][["area_dam2"]] * handsworth_loss,
+            "05NC002": reservoir_sacs_monthly["05NC002"]["area_dam2"].mul(handsworth_loss),
             # Grant Devine
-            "05ND012": reservoir_sacs_monthly["05ND012"][["area_dam2"]] * oxbow_loss,
+            "05ND012": reservoir_sacs_monthly["05ND012"]["area_dam2"].mul(oxbow_loss),
         }
 
         # -----------------------------------------------------------------------------------------#
@@ -165,7 +166,7 @@ def main(
         # * 1.1.1 Larsen Reservoir Storage Change
         boxes.box_1 = reservoir_sacs_daily["05NA006"]["capacity_dam3"].iloc[-1] - reservoir_sacs_daily["05NA006"]["capacity_dam3"].iloc[0]
         # * 1.1.2 Larsen Reservoir Net Evaporation & Seepage
-        boxes.box_2 = reservoir_losses["05NA006"].sum()
+        boxes.box_2 = reservoir_losses["05NA006"].sum().sum()
         # * 1.1.3 Larsen Reservoir Diversion
         boxes.box_3 = boxes.box_1 + boxes.box_2
         # * 1.2 Town of Radville Pumpage
@@ -330,7 +331,7 @@ def main(
         )
 
         logger.info("Apportionment complete!")
-        return report
+        return report, boxes
         ############################################################################################
         #                                  End Reporting                                           #
         ############################################################################################

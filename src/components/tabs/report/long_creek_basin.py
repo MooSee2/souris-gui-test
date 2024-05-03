@@ -105,7 +105,7 @@ def make_long_creek_basin_panel():
                         id="box-5-container",
                         children=[
                             html.Div(className="box-content-title", children=["Long Creek at Eastern Crossing"]),
-                            html.Div(className="box-content-value", id="box-5-value", children=["-"]),
+                            html.Div(className="box-content-value", id="box-5a-value", children=["-"]),
                             html.Div(className="box-content-subscript", children=[" "]),
                         ],
                     ),
