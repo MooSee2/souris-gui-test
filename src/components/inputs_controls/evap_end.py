@@ -27,7 +27,7 @@ def evap_end():
             dcc.DatePickerSingle(
                 id="evap-end-picker",
                 className="evap-date-picker",
-                date=date(int(dt.now().year), 10, 15),
+                date=date(int(dt.now().year), 10, 31),
                 with_portal=True,
             ),
         ],

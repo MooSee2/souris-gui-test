@@ -32,7 +32,7 @@ def evap_start():
             dcc.DatePickerSingle(
                 id="evap-start-picker",
                 className="evap-date-picker",
-                date=date(const.current_year, 4, 15),
+                date=date(const.current_year, 4, 1),
             ),
         ],
     )
