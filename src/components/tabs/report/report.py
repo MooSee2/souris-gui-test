@@ -10,7 +10,7 @@ def make_report_panels():
         label="Report",
         tab_id="report-tab",
         children=dbc.Card(
-            className="mt-3",
+            className="report-body",
             children=dbc.CardBody(
                 id="report-container",
                 children=[
