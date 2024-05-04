@@ -132,8 +132,22 @@ def make_summary_panel():
                         id="box-45-container",
                         children=[
                             html.Div(className="box-content-title", children=["USA Share"]),
-                            html.Div(className="box-content-value", id="box-45a-value", children=["-"]),
-                            html.Div(className="box-content-subscript", children=[" "]),
+                            html.Div(
+                                className="box-content-value",
+                                children=[
+                                    html.Div(className="box-content-subscript", children=["40% of 44"]),
+                                    html.Div(id="box-45a-value", className="box-content-value", children=["-"]),
+                                ],
+                            ),
+                            html.Div(
+                                className="box-content-value",
+                                children=[
+                                    html.Div(className="box-content-subscript", children=["50% of 44"]),
+                                    html.Div(id="box-45b-value", className="box-content-value", children=["-"]),
+                                ],
+                            ),
+                            # html.Div(className="box-content-value", id="box-45a-value", children=["-"]),
+                            # html.Div(className="box-content-subscript", children=[" "]),
                         ],
                     ),
                     html.Div(
