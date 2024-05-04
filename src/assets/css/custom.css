@@ -85,6 +85,10 @@ footer {
 	height: 100%;
 }
 
+.nav-tabs {
+	margin-top: 8px;
+}
+
 .mt-3 {
 	margin-top: 0 !important;
 }
