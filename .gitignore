@@ -163,5 +163,5 @@ cython_debug/
 #.idea/
 
 
-src/.cache/*
+src/.filecache/*
 tests/test_report/*.xlsx
