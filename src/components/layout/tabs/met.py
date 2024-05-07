@@ -37,7 +37,7 @@ datetime_conditional = [
 conditionals = make_conditionals.make_conditionals(stations=stations)  # + datetime_conditional
 
 
-def met_data():
+def make_met_tab():
     return dbc.Tab(
         label="Met Data",
         children=dbc.Card(

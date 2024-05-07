@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-import modules.data_layer.download_api_services as serv
+import src.modules.data_layer.api_retrievers as serv
 import modules.data_layer.trapz_integration as trapz
 
 ca_reservoir_stations = (

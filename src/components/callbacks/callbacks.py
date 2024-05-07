@@ -9,21 +9,13 @@ from pathlib import Path
 # import modules.server as serv
 import pandas as pd
 import plotly.express as px
-from dash import Input, Output, State, callback, dash_table, html, dcc
+from dash import Input, Output, State, callback, dcc
 from dash.exceptions import PreventUpdate
 
 import modules.data_layer.data_layer as dl
 import modules.data_layer.model_inputs as mi
 
-# import src.modules.data_layer.download_api_services as dl
 
-# from app_data import stations as const
-
-# # cache this one
-# # @cache.memoize()
-# def get_data(start_date, end_date) -> None:
-#     sleep(1)
-#     return _download_data(start_date, end_date)
 now = dt.now()
 
 stations_dict = [
@@ -498,17 +490,17 @@ def calculate_apportionment(
         evap_end=evap_end,
     )
 
-    # This should return the excel file for the moment.  Later it will need to return all
-    # the data that went into excel as well so it can be used in the html version of the report
     boxes = dl.run_main(model_inputs)
-    # dt_now = dt.now().strftime("%Y-%m-%d %H.%M.%S.%f")
-    # filename = f"Souris Natural Flow Report {appor_start}__{appor_end} on {dt_now}.xlsx"
 
     # dcc.send_bytes(report_stream.getvalue(), filename),
     return (
+        # Close modal if open
         False,
+        # Enable Report download button
         False,
+        # Set active tab
         "report-tab",
+        # Return n_clicks for loading component of app. calculation button
         1,
         # Output Boxes
         boxes.box_1,

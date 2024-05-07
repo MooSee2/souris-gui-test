@@ -1,7 +1,6 @@
 import pandas as pd
-import modules.data_layer.download_api_services as serv
-import modules.data_layer.trapz_integration as trapz
 
+import src.modules.data_layer.api_retrievers as serv
 
 CFS_TO_CMS = 0.0283168466
 

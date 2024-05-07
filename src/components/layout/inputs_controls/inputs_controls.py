@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from components.inputs_controls import (
+from components.layout.inputs_controls import (
     appor_end,
     appor_start,
     evap_end,

@@ -108,7 +108,7 @@ reported_flows_container = [
 ]
 
 
-def reported_flows():
+def make_reported_flows_tab():
     return dbc.Tab(
         label="Reported Flows",
         children=dbc.Card(

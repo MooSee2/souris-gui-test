@@ -1,41 +1,8 @@
-import functools
-from pathlib import Path
 from typing import Union
 
 import numpy as np
 import pandas as pd
 from loguru import logger
-
-
-def logger_wraps(*, entry=True, exit=True, level="DEBUG"):
-    """Function decorator to log function information
-
-    Parameters
-    ----------
-    entry : bool, optional
-        _description_, by default True
-    exit : bool, optional
-        _description_, by default True
-    level : str, optional
-        _description_, by default "DEBUG"
-    """
-
-    def wrapper(func):
-        name = func.__name__
-
-        @functools.wraps(func)
-        def wrapped(*args, **kwargs):
-            logger_ = logger.opt(depth=1)
-            if entry:
-                logger_.log(level, "Entering '{}' (args={}, kwargs={})", name, args, kwargs)
-            result = func(*args, **kwargs)
-            if exit:
-                logger_.log(level, "Exiting '{}' (result={})", name, result)
-            return result
-
-        return wrapped
-
-    return wrapper
 
 
 def rename_monthly_index(data: Union[pd.Series, pd.DataFrame]) -> Union[pd.Series, pd.DataFrame]:

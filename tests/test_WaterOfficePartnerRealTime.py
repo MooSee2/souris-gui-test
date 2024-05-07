@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from dotenv import load_dotenv
 
-from src.modules.data_layer.download_api_services import WaterOfficePartnerRealTime
+from src.modules.data_layer.api_retrievers import WaterOfficePartnerRealTime
 
 # from src.modules.data_layer.wo_realtime import process_data
 

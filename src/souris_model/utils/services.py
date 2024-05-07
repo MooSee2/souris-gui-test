@@ -8,17 +8,6 @@ import aiohttp
 import pandas as pd
 import requests
 
-_UTC_neg7_stations = [
-    "05AE036",
-    "05AE029",
-    "05AE027",
-    "11AA032",
-    "11AA031",
-    "11AA001",
-    "11AA025",
-    "11AA005",
-]
-
 
 def is_iterable(obj):
     try:

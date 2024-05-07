@@ -8,12 +8,11 @@ from pathlib import Path
 import dash_bootstrap_components as dbc
 from dash import Dash, html
 from dotenv import load_dotenv
-from flask_caching import Cache
 from loguru import logger
 
 import components.callbacks.callbacks
-from components.custom_index import index_string
-from components.layout import make_layout
+from components.layout.custom_index import index_string
+from components.layout.layout import make_layout
 
 
 load_dotenv()

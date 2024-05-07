@@ -1,9 +1,9 @@
 import dash_bootstrap_components as dbc
 from dash import html, dcc
 
-from components.inputs_controls.inputs_controls import aside
-from components.navbar.navbar import navbar
-from components.tabs.tabs import tabs
+from components.layout.inputs_controls.inputs_controls import aside
+from components.layout.navbar.navbar import navbar
+from components.layout.tabs.tabs import tabs
 
 
 def make_main():
