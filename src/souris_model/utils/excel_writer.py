@@ -6,8 +6,8 @@ import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 
-import src.souris_model.core.boxes as bx
-import src.souris_model.core.dates as dates
+import souris_model.core.boxes as bx
+import souris_model.core.dates as dates
 
 
 def get_newest_log(path: Path) -> Path:

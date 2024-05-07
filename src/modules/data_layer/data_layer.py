@@ -4,8 +4,8 @@ import pandas as pd
 
 from modules.data_layer import nwis
 from modules.data_layer import wo_realtime as wo
-from src.souris_model.core.boxes import Boxes
-from src.souris_model.souris_main import main
+from souris_model.core.boxes import Boxes
+from souris_model.souris_main import main
 
 # def get_reservoir_data(apportionment_year: int):
 #     wo_realtime_reservoirs = wo.get_wo_realtime_reservoirs(apportionment_year)

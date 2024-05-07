@@ -1,6 +1,6 @@
 import pandas as pd
 
-import src.modules.data_layer.api_retrievers as serv
+import modules.data_layer.api_retrievers as serv
 
 CFS_TO_CMS = 0.0283168466
 

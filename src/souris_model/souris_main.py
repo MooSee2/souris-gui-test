@@ -29,8 +29,8 @@ import souris_model.core.core_reservoirs as res
 import souris_model.utils.excel_writer as excel
 import souris_model.utils.reservoir_capacity as rcap
 import souris_model.utils.utilities as util
-import src.souris_model.core.boxes as bx
-import src.souris_model.core.dates as dates
+import souris_model.core.boxes as bx
+import souris_model.core.dates as dates
 from modules.data_layer.model_inputs import SourisModelInputs
 
 

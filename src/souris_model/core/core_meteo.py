@@ -1,6 +1,6 @@
 import pandas as pd
 
-import src.souris_model.core.dates as dates
+import souris_model.core.dates as dates
 import souris_model.utils.utilities as util
 
 """
