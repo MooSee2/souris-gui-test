@@ -33,7 +33,6 @@ def appor_start():
                 id="appor-start-picker",
                 className="evap-date-picker",
                 date=date(const.current_year, 1, 1),
-                with_portal=True,
             ),
         ],
     )

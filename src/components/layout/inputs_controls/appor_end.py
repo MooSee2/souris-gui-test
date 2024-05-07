@@ -28,7 +28,6 @@ def appor_end():
                 id="appor-end-picker",
                 className="evap-date-picker",
                 date=date(int(dt.now().year), 12, 31),
-                with_portal=True,
             ),
         ],
     )

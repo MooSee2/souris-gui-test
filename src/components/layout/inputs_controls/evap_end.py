@@ -28,7 +28,6 @@ def evap_end():
                 id="evap-end-picker",
                 className="evap-date-picker",
                 date=date(int(dt.now().year), 10, 31),
-                with_portal=True,
             ),
         ],
     )
