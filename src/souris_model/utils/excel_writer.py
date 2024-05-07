@@ -43,12 +43,19 @@ def df_writer(
     return None
 
 
+def make_filecache_dir():
+    directory_path = Path(".filecache")
+    directory_path.mkdir(parents=True, exist_ok=True)
+    return None
+
+
 def clear_filecache():
     filecache = Path(".filecache")
 
     for file in filecache.iterdir():
         if file.is_file():
             file.unlink()
+    return None
 
 
 def souris_excel_writer(
@@ -246,11 +253,13 @@ def souris_excel_writer(
     # for row in worksheet.iter_rows(min_row=7, max_row=400, max_col=1):
     #     for cell in row:
     #         cell.number_format = "yyyy-mm-dd"
+
+    make_filecache_dir()
     clear_filecache()
     dt_now = dt.now().strftime("%Y-%m-%d %H.%M.%S.%f")
+
     filename = f".filecache/Souris Natural Flow Report {dates.start_apportion}__{dates.end_apportion} on {dt_now}.xlsx"
     wb.save(filename)
-    # excel_stream.seek(0)
     return None
 
 
