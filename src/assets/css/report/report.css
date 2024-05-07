@@ -3,10 +3,10 @@
     height: 100%;
     align-items: center;
 }
+
 #report-container {
     display: flex;
     flex-direction: column;
-    /* justify-content: space-around; */
     gap: 10px;
     max-width: 1200px;
     padding-top: 2px;
@@ -15,17 +15,16 @@
 }
 
 .report-panel {
-    display: grid;
-    grid-template-rows: 0.75fr 5fr;
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    /* flex-basis: 16vh; */
-    background-color:rgb(240, 240, 240);
+    flex-basis: 14vh;
+    background-color: rgb(240, 240, 240);
     border: 2px solid black;
 }
 
 .report-table-header {
     display: flex;
-    /* height: 3vh; */
     align-items: center;
     justify-content: center;
     background-color: rgb(220, 220, 220);
@@ -37,12 +36,11 @@
     grid-template-columns: repeat(13, 1fr);
     grid-template-rows: 0.8rem 0.8rem 1rem 1fr;
     height: 100%;
-    /* height: calc(100% - 3vh); */
 }
 
 .box-header {
     display: flex;
-    background-color:rgb(240, 240, 240);
+    background-color: rgb(240, 240, 240);
     align-items: center;
     justify-content: center;
     border: 1px solid black;
@@ -55,7 +53,7 @@
     flex-direction: column;
     text-align: center;
     vertical-align: middle;
-    background-color:rgb(240, 240, 240);
+    background-color: rgb(240, 240, 240);
     border: 1px solid black;
 }
 
@@ -64,7 +62,7 @@
     justify-content: center;
     align-items: end;
     text-align: center;
-    background-color:aliceblue;
+    background-color: aliceblue;
     border: 1px solid black;
     font-size: 0.8rem;
 }
@@ -76,6 +74,7 @@
     vertical-align: middle;
     background-color: aliceblue;
     border-top: 1px solid black;
+    font-size: 0.8rem;
 }
 
 .box-content-title {
