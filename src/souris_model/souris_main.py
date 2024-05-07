@@ -314,7 +314,7 @@ def main(
         #                                  Reporting                                               #
         # -----------------------------------------------------------------------------------------#
         logger.info("Writing Data to Excel Workbook...")
-        report = excel.souris_excel_writer(
+        excel.souris_excel_writer(
             dates=souris_dates,
             boxes=boxes,
             daily_discharge=discharge_daily_df,
@@ -331,7 +331,7 @@ def main(
         )
 
         logger.info("Apportionment complete!")
-        return report, boxes
+        return boxes
         ############################################################################################
         #                                  End Reporting                                           #
         ############################################################################################

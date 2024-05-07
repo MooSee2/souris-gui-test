@@ -45,6 +45,14 @@ def df_writer(
     return None
 
 
+def clear_filecache():
+    filecache = Path(".filecache")
+
+    for file in filecache.iterdir():
+        if file.is_file():
+            file.unlink()
+
+
 def souris_excel_writer(
     dates: dates.Dates,
     boxes: bx.Boxes,
@@ -64,7 +72,7 @@ def souris_excel_writer(
 
     # debug_excel = os.getenv("DEBUG_EXCEL", False).lower() in ("true", "1", "t")
     debug_excel = False
-    excel_stream = BytesIO()
+    # excel_stream = BytesIO()
 
     discharge_sheet_name = "Discharge Data"
     reservoir_sheet_name = "Reservoir Data"
@@ -240,9 +248,12 @@ def souris_excel_writer(
     # for row in worksheet.iter_rows(min_row=7, max_row=400, max_col=1):
     #     for cell in row:
     #         cell.number_format = "yyyy-mm-dd"
-    wb.save(excel_stream)
-    excel_stream.seek(0)
-    return excel_stream
+    clear_filecache()
+    dt_now = dt.now().strftime("%Y-%m-%d %H.%M.%S.%f")
+    filename = f".filecache/Souris Natural Flow Report {dates.start_apportion}__{dates.end_apportion} on {dt_now}.xlsx"
+    wb.save(filename)
+    # excel_stream.seek(0)
+    return None
 
 
 def fill_gaps_nan(

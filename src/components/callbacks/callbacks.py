@@ -4,6 +4,7 @@ from time import sleep
 # from dataclasses import dataclass
 from typing import Optional, Union
 from io import BytesIO
+from pathlib import Path
 
 # import modules.server as serv
 import pandas as pd
@@ -315,13 +316,29 @@ def toggle_calculation_modal(_) -> bool:
     return False
 
 
-# def detect_missing_reported_flows(reported_flows: tuple) -> dict:
+@callback(
+    Output("report-download", "data"),
+    Input("report-download-btn", "n_clicks"),
+    prevent_initial_call=True,
+)
+def download_report(n_clicks):
+    if n_clicks == 0 or n_clicks is None:
+        raise PreventUpdate
+
+    filecache = Path(".filecache")
+
+    # Grab first file in cache.  This should only ever be the most recent report.
+    report = next(filecache.glob("*"))
+
+    return dcc.send_file(report)
 
 
 @callback(
     # Output("report-container", "children"),
     Output("calculation-modal", "is_open"),
-    Output("report-download", "data"),
+    # Output("report-download", "data"),
+    Output("report-download-btn", "disabled"),
+    Output("main-tabs", "active_tab"),
     Output("apportion-button", "n_clicks"),
     # Output to report boxes
     Output("box-1-value", "children"),
@@ -483,13 +500,15 @@ def calculate_apportionment(
 
     # This should return the excel file for the moment.  Later it will need to return all
     # the data that went into excel as well so it can be used in the html version of the report
-    report_stream, boxes = dl.run_main(model_inputs)
-    dt_now = dt.now().strftime("%Y-%m-%d %H.%M.%S.%f")
-    filename = f"Souris Natural Flow Report {appor_start}__{appor_end} on {dt_now}.xlsx"
+    boxes = dl.run_main(model_inputs)
+    # dt_now = dt.now().strftime("%Y-%m-%d %H.%M.%S.%f")
+    # filename = f"Souris Natural Flow Report {appor_start}__{appor_end} on {dt_now}.xlsx"
 
+    # dcc.send_bytes(report_stream.getvalue(), filename),
     return (
         False,
-        dcc.send_bytes(report_stream.getvalue(), filename),
+        False,
+        "report-tab",
         1,
         # Output Boxes
         boxes.box_1,
